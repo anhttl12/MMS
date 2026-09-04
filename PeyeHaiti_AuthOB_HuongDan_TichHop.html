@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peye-Haiti ⇄ Open Banking — Chuẩn kết nối & ví dụ bản tin (v3.7, tự chứa)</title>
+<style>
+:root{--hb:#00209F;--red:#D21034;--ink:#1D2B4F;--mut:#69758A;--line:#DDE3EE;--ok:#067A52;--gold:#8A6A1F}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#F3F5FB;color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+header{background:linear-gradient(100deg,#0B1F4D,#1D2B4F 60%,#00209F);color:#fff;padding:18px 28px}
+header h1{margin:0;font-size:19px}
+header p{margin:6px 0 0;font-size:12.5px;opacity:.85}
+main{max-width:1180px;margin:0 auto;padding:20px 22px 70px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:18px 0;box-shadow:0 2px 10px rgba(15,27,45,.06)}
+h2{font-size:16px;color:var(--hb);margin:26px 4px 8px;text-transform:uppercase;letter-spacing:.5px}
+h2 small{color:var(--mut);font-weight:500;text-transform:none;letter-spacing:0;font-size:12px}
+h3{font-size:13.5px;margin:18px 0 6px;color:var(--ink)}
+p,li{font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border-radius:8px;overflow:hidden;margin:8px 0}
+th{background:#1D2B4F;color:#fff;text-align:left;padding:7px 10px;font-size:11.5px}
+td{border-bottom:1px solid var(--line);padding:7px 10px;vertical-align:top}
+td:first-child{white-space:nowrap;font-weight:600}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:#EEF3FF;padding:1px 5px;border-radius:4px;color:#0F2AA8}
+pre{background:#0F1B2D;color:#D8E1F0;border-radius:10px;padding:12px 16px;font-size:11.8px;line-height:1.55;overflow-x:auto;margin:8px 0;font-family:ui-monospace,Menlo,Consolas,monospace}
+pre .c{color:#8FA3C8}pre .k{color:#7ED8A9}pre .h{color:#F5C97B}
+.dir{display:inline-block;font-size:11px;font-weight:800;padding:2px 12px;border-radius:10px;margin-right:8px}
+.d-out{background:#EEF3FF;color:var(--hb)}.d-in{background:#FDECEF;color:#9F1239}.d-app{background:#F0FDF6;color:var(--ok)}
+.step{border:1px solid var(--line);border-left:4px solid var(--hb);border-radius:12px;padding:12px 18px;margin:14px 0;background:#fff}
+.step h3{margin:2px 0 8px;font-size:14px;color:var(--hb)}
+.note{background:#FFF8E8;border:1px solid #F0DCA8;border-radius:10px;padding:9px 14px;font-size:12.3px;color:#7A5A12;margin:8px 0}
+.ok{background:#F0FDF6;border:1px solid #A7DCC3;border-left:4px solid var(--ok);border-radius:10px;padding:10px 16px;font-size:12.6px;color:#14532D;margin:8px 0}
+.minute{background:#fff;border:2px solid var(--hb);border-radius:14px;padding:14px 20px}
+.minute li{margin:5px 0}
+.wrap{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px}
+footer{max-width:1180px;margin:0 auto;padding:0 22px 40px;font-size:11.5px;color:var(--mut)}
+@media print{.card,.step{box-shadow:none}}
+</style><link id="css-theme" rel="stylesheet" type="text/css" href="/css-theme_64a9c6dfdfdb962b532aba217da0dc7f2f49d7a3.css">
+<script id="scripts" type="text/javascript" src="/scripts_887a5339b2625a8970658c4f5f9bd94f1067ab7a.js"></script>
+<meta name="referrer" content="same-origin" />
+
+			<link rel="icon" sizes="16x16" type="image/png" href=/assets/favicon_16.png />
+			<link rel="icon" sizes="32x32" type="image/png" href=/assets/favicon_32.png />
+				<link rel="icon" sizes="any" type="image/svg+xml" href=/assets/favicon.svg />
+<title>Viettel Digital Workplace</title><meta name="application-name" content="Viettel Digital Workplace"><meta name="apple-mobile-web-app-title" content="Viettel Digital Workplace">
+<meta http-equiv="content-language" content=""><meta name="language" content="">
+<meta name="robots" content="INDEX,FOLLOW">
+<meta name="msvalidate.01" content="">
+<meta name="google-site-verification" content="">
+<meta property="fb:app_id" content="">
+<base href="/">
+<link id="style-genhub" rel="stylesheet" type="text/css" href="/style-genhub_0a2bfd393891f5c0ed2e661d92ed2a5a8d1f446c.css">
+</head><body>
+
+<noscript style="color: white; text-align:center">
+	You need to enable JavaScript to run this app.
+</noscript>
+<div id="react-root">
+	<div class="page-loading" role="alert" aria-busy="true" aria-live="polite" aria-label="loading">
+		<div class="loading__animation">
+			<div class="loading__animation__bounce"></div>
+			<div class="loading__animation__bounce"></div>
+			<div class="loading__animation__bounce"></div>
+		</div>
+	</div>
+</div>
+
+<style id='css-variables'> :root {}</style>
+
+<header>
+<h1>Peye-Haiti ⇄ Open Banking định chế — Chuẩn kết nối & VÍ DỤ BẢN TIN ĐẦY ĐỦ</h1>
+<p><b>v3.7 · 24/08/2026 · TÀI LIỆU TỰ CHỨA</b> — gửi đúng MỘT file này là đủ để đội tích hợp của định chế (ví / ngân hàng) hình dung toàn bộ: hai «chìa» phải code, luồng nghiệp vụ, và từng bản tin HTTP mẫu nguyên văn. Nguồn chuẩn đầy đủ: API Spec v3.7 (mục A.1b · F.3 · F.4 · F.5) + TSD v4.6.</p>
+</header>
+<main>
+
+<h2>0 · Đọc trong một phút</h2>
+<div class="minute"><ul>
+<li><b>MỘT THẺ duy nhất (K2)</b> cho cả danh tính lẫn nội dung: JWT <b>tự ký ES256</b>, đặt ở header riêng <code>x-system-token</code> (JWT trần — không tiền tố «Bearer») ở MỌI API, MỌI chiều. Request <b>có body</b> → thẻ kèm claim <code>body_sha256</code> = <b>hash body</b> (thẻ dùng một lần); <b>GET</b> → thẻ sống ≤5 phút, dùng lại được. Không <code>kid</code> · không <code>jti</code> · không máy chủ cấp token.</li>
+<li><b>Bên nhận verify tối đa 3 bước:</b> lấy JWKS theo <code>iss</code> → <code>jwt.verify(thẻ, khóa, {alg:["ES256"], aud:"tên mình"})</code> → có <code>body_sha256</code> thì tự tính hash body, so khớp rồi mới parse.</li>
+<li><b>Danh tính = TÊN TỔ CHỨC:</b> <code>iss/sub/aud</code> mang giá trị «Peye-Haiti» · «NatCash» · «MonCash» · «UniBank»… (danh mục BRH cấp; ánh xạ 1–1 với mã số 9332xx dùng trong QR).</li>
+<li><b>Token người dùng (K3)</b> theo liên kết tài khoản, sinh sau OTP của CHÍNH định chế — đi ở header <code>x-account-token</code>; 4 scope: <code>balance · history · credit-notify · payment</code>.</li>
+<li><b>Xác thực HAI BẬC (chốt 20/08), áp dụng MỌI VAI</b> (một app chọn vai — người bán cũng thanh toán được): ≤ <b>5.000 HTG</b> (<code>PAY_SCA_THRESHOLD</code>) chỉ PIN app · &gt; 5.000 HTG: PIN + <b>SMS OTP do ĐỊNH CHẾ gửi</b> tới chủ TK (xác nhận qua C.9). Trần ngày 25.000 HTG/≤20 lệnh chỉ áp bậc-PIN.</li>
+<li><b>Response tài chính</b> (số dư · lịch sử · kết quả trả) được định chế ký <b>thẻ response</b> cùng định dạng (kèm <code>body_sha256</code> của body trả về; POST kèm thêm <code>req_sha256</code> buộc với request) ở header <code>x-jws-signature</code>.</li>
+
+<li><b>Thẻ response với GET</b> (số dư · lịch sử · trạng thái lệnh): KHÔNG có <code>req_sha256</code> — toàn chuẩn không hash URL; bên gọi bù bằng <b>đối chiếu định danh trong body</b> với tài nguyên đã hỏi (C.5/C.6 echo <code>link_id</code> · C.8 <code>ext_payment_id</code>); POST giữ <code>req_sha256</code> = hash body request.</li>
+<li><b>Idempotency ca «đang xử lý»:</b> trùng <code>Idempotency-Key</code> + cùng body khi lệnh trước CHƯA có kết quả chốt → <code>409</code> kèm <code>details.state="processing"</code> + <code>Retry-After: 1</code> — GIỮ NGUYÊN key và gửi lại (hoặc hỏi trạng thái); có kết quả chốt → replay kèm <code>Idempotency-Replayed: true</code>. Không bao giờ sinh key mới cho cùng một lệnh.</li></ul></div>
+
+<h2>1 · Sơ đồ toàn cảnh <small>— hai «chìa» phải code (K2 · K3), mTLS là hạ tầng cấu hình một lần</small></h2>
+<div class="wrap">
+<svg viewBox="0 0 1520 1584" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+ <marker id="bB" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="#5B6B9E"/></marker>
+ <marker id="bG" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="#0A9D6C"/></marker>
+ <marker id="bR" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="#C2455E"/></marker>
+</defs>
+
+<!-- ===== CHÚ GIẢI ===== -->
+<text x="20" y="28" font-size="11" font-weight="800" fill="#33415C" letter-spacing=".5">HAI «CHÌA» DEV CẦN QUAN TÂM — VÀ MỘT LỚP HẠ TẦNG (MỜ)</text>
+<g opacity=".42">
+<rect x="20" y="40" width="340" height="104" rx="10" fill="#F4F6F8" stroke="#8B94A7" stroke-width="1.2" stroke-dasharray="5 3"/>
+<text x="36" y="62" font-size="11" font-weight="800" fill="#5B6472">K1 · mTLS — lớp hạ tầng</text>
+<text x="36" y="80" font-size="9" fill="#5B6472">chứng chỉ hai chiều + VPN + dải IP —</text>
+<text x="36" y="94" font-size="9" fill="#5B6472">đội hạ tầng hai bên cấu hình MỘT LẦN</text>
+<text x="36" y="108" font-size="9" fill="#5B6472">theo hồ sơ kết nạp (F.4).</text>
+<text x="36" y="130" font-size="9" font-weight="700" fill="#5B6472">Mọi mũi tên dưới đều chạy trong ống này.</text>
+</g>
+<rect x="380" y="40" width="545" height="104" rx="10" fill="#EEF3FF" stroke="#00209F" stroke-width="1.6"/>
+<text x="396" y="62" font-size="11" font-weight="800" fill="#00209F">K2 · Thẻ hệ thống TỰ KÝ — kiêm luôn «con dấu» nội dung</text>
+<text x="396" y="80" font-size="9" fill="#33415C">Ruột thẻ nói «tôi là ai»; request nào CÓ BODY thì kèm thêm HASH SHA-256 của body vào thẻ (claim body_sha256).</text>
+<text x="396" y="94" font-size="9" fill="#33415C">Không máy chủ cấp token — bên gọi tự ký, bên nhận kiểm bằng bảng khóa công khai đã đăng (JWKS).</text>
+<text x="396" y="108" font-size="9" fill="#33415C">GET (không body): thẻ sống ≤5 phút, dùng lại được · có body: thẻ MỚI cho từng request.</text>
+<text x="396" y="130" font-size="9" font-weight="800" fill="#067A52">MỘT thẻ thay cho «thẻ + con dấu» — một cặp khóa · một bảng JWKS · một hàm verify</text>
+<rect x="945" y="40" width="555" height="104" rx="10" fill="#F0FDF6" stroke="#0A9D6C" stroke-width="1.3"/>
+<text x="961" y="62" font-size="11" font-weight="800" fill="#067A52">K3 · Token NGƯỜI DÙNG theo liên kết</text>
+<text x="961" y="80" font-size="9" fill="#065F46">sinh sau OTP ưng thuận của CHỦ TÀI KHOẢN (OTP do chính định chế gửi khi liên kết); 4 scope chuẩn:</text>
+<text x="961" y="94" font-size="9" fill="#065F46">balance · history · credit-notify · payment; 90 ngày tự gia hạn · thu hồi tức thời.</text>
+<text x="961" y="108" font-size="9" fill="#065F46">Với lệnh trả: K3 chính là BẰNG CHỨNG ưng thuận mà định chế đã cấp cho kênh Peye-Haiti.</text>
+<text x="961" y="130" font-size="9" font-weight="700" fill="#067A52">Cất trong két mã hóa Vault — không bao giờ ghi log</text>
+
+<!-- ===== CƠ CHẾ THẺ K2 ===== -->
+<rect x="14" y="160" width="1492" height="384" rx="10" fill="#EEF3FF" opacity=".45"/>
+<text x="26" y="180" font-size="11" font-weight="800" fill="#00209F">CƠ CHẾ THẺ K2 — MỘT THẺ CHO CẢ DANH TÍNH LẪN NỘI DUNG · dev hai bên mỗi bên đúng một việc</text>
+<rect x="36" y="194" width="560" height="240" rx="10" fill="#fff" stroke="#00209F" stroke-width="1.4"/>
+<text x="56" y="216" font-size="10.5" font-weight="800" fill="#00209F">BÊN GỌI — ký thẻ</text>
+<text x="56" y="240" font-size="9.5" fill="#33415C">① Ruột thẻ: <tspan font-weight="700">iss = sub = TÊN TỔ CHỨC</tspan> (BRH cấp — vd MonCash · UniBank) · <tspan font-weight="700">aud</tspan> = tên bên nhận (vd Peye-Haiti) · <tspan font-weight="700">iat/exp ≤ 5′</tspan></text>
+<text x="56" y="264" font-size="9.5" fill="#33415C">② Request <tspan font-weight="800">CÓ BODY</tspan> → thêm claim <tspan font-family="monospace" font-size="9">body_sha256</tspan> = <tspan font-weight="700">hash body</tspan> (SHA-256 của body gửi đi)</text>
+<text x="72" y="280" font-size="9" fill="#69758A">— thẻ dùng MỘT LẦN cho request đó; retry phải ký lại với iat mới</text>
+<text x="56" y="304" font-size="9.5" fill="#33415C">③ Request <tspan font-weight="800">KHÔNG body</tspan> (GET) → thẻ không cần hash — dùng lại trong 5 phút</text>
+<text x="56" y="328" font-size="9.5" fill="#33415C">④ Ký <tspan font-weight="700">ES256</tspan> bằng khóa riêng (mỗi bên MỘT cặp khóa hiệu lực — không cần chọn khóa)</text>
+<text x="56" y="352" font-size="9.5" fill="#33415C">⑤ Đặt <tspan font-weight="800">LUÔN ở</tspan> <tspan font-family="monospace" font-size="9" font-weight="700">x-system-token</tspan> — mọi chiều, mọi nhóm API đối tác;</text>
+<text x="72" y="368" font-size="9.5" fill="#33415C">token người dùng K3 đi ở header riêng <tspan font-family="monospace" font-size="9">x-account-token</tspan></text>
+<text x="56" y="392" font-size="9.5" fill="#8A6A1F"><tspan font-weight="700">Response tài chính</tspan> (số dư · lịch sử · kết quả trả): bên trả lời ký thẻ CÙNG định dạng</text>
+<text x="72" y="408" font-size="9.5" fill="#8A6A1F">(chứa hash body trả về trong claim <tspan font-family="monospace" font-size="9">body_sha256</tspan>), đặt ở header <tspan font-family="monospace" font-size="9">x-jws-signature</tspan></text>
+<text x="72" y="426" font-size="9" fill="#69758A">API Gateway hai phía xác thực thẻ ở x-system-token tập trung ngay tại cổng — route đối tác từ chối Authorization</text>
+<rect x="924" y="194" width="560" height="240" rx="10" fill="#fff" stroke="#00209F" stroke-width="1.4"/>
+<text x="944" y="216" font-size="10.5" font-weight="800" fill="#00209F">BÊN NHẬN — check lại: tối đa BA bước</text>
+<text x="944" y="240" font-size="9.5" fill="#33415C">① Lấy bảng khóa công khai theo <tspan font-weight="700">danh tính iss trong thẻ</tspan> (giữ sẵn bản chép, 1 giờ tải lại;</text>
+<text x="960" y="256" font-size="9" fill="#69758A">bảng thường chỉ 1 khóa — lúc bên gọi giao thời thay khóa thì thử cả 2; fail hết → tải lại MỘT lần rồi thôi)</text>
+<text x="944" y="280" font-size="9.5" fill="#33415C">② Gọi MỘT lệnh thư viện: <tspan font-family="monospace" font-size="8.6">jwt.verify(thẻ, khóa, {alg:["ES256"], aud:"mình"})</tspan></text>
+<text x="960" y="296" font-size="9.5" fill="#33415C">— thư viện tự kiểm: chữ ký · hạn thẻ · đúng người nhận (dung sai giờ ±30s)</text>
+<text x="944" y="320" font-size="9.5" fill="#33415C">③ Thẻ có <tspan font-family="monospace" font-size="9">body_sha256</tspan> → tự tính hash body nhận được, so khớp — lệch 1 byte là lộ;</text>
+<text x="960" y="336" font-size="9.5" fill="#33415C">khớp mới parse JSON + khử trùng event_id; dữ liệu phải THUỘC đúng bên đang gọi</text>
+<text x="960" y="352" font-size="9" fill="#69758A">(thẻ nói «tôi là NatCash» → kiểm bằng bảng khóa NatCash — mạo danh là sai chữ ký, fail ngay;</text>
+<text x="960" y="365" font-size="9" fill="#69758A">báo Có của liên kết nhà ai thì chỉ nhà ấy được báo)</text>
+<text x="944" y="390" font-size="9.5" fill="#9F1239">Từ chối → <tspan font-family="monospace" font-size="9">401</tspan> kèm <tspan font-family="monospace" font-size="9">details.issue</tspan> = alg / sig / aud / expired / body-hash(-missing) / header</text>
+<text x="944" y="412" font-size="9" fill="#69758A">Chống phát lại: mTLS bó kênh + giờ ký 5′ + khử trùng event_id — không kho jti, không kid</text>
+<path d="M600 244 H918" stroke="#5B6B9E" stroke-width="1.3" fill="none" marker-end="url(#bB)"/>
+<text x="759" y="236" text-anchor="middle" font-size="9" fill="#5B6B9E" font-weight="700">request + thẻ K2</text>
+<rect x="640" y="290" width="240" height="112" rx="10" fill="#FDFBF3" stroke="#B48A2B" stroke-width="1.4"/>
+<text x="760" y="310" text-anchor="middle" font-size="9.5" font-weight="800" fill="#8A6A1F">JWKS của bên gọi</text>
+<text x="760" y="326" text-anchor="middle" font-size="8.6" font-family="monospace" fill="#6B5417">https://…/.well-known/jwks.json</text>
+<text x="760" y="344" text-anchor="middle" font-size="8.6" fill="#6B5417">= BẢNG khóa công khai đã đăng của một bên</text>
+<text x="760" y="358" text-anchor="middle" font-size="8.6" font-weight="700" fill="#6B5417">— thường chỉ có ĐÚNG 1 khóa;</text>
+<text x="760" y="372" text-anchor="middle" font-size="8.6" fill="#6B5417">riêng lúc thay khóa tạm thời có 2 (cũ + mới),</text>
+<text x="760" y="386" text-anchor="middle" font-size="8.6" fill="#6B5417">bên nhận thử lần lượt là xong</text>
+<path d="M596 344 H634" stroke="#B48A2B" stroke-width="1.1" stroke-dasharray="4 3" fill="none"/>
+<text x="614" y="334" text-anchor="middle" font-size="8.4" fill="#8A6A1F">công bố</text>
+<rect x="36" y="446" width="1448" height="86" rx="8" fill="#fff" stroke="#AAB6CC" stroke-width="1"/>
+<text x="52" y="466" font-size="9.5" font-weight="800" fill="#33415C">VÍ DỤ — thẻ K2 của một webhook báo Có (NatCash gọi vào Peye-Haiti, request có body) giải mã ra:</text>
+<text x="52" y="486" font-size="8.8" font-family="monospace" fill="#00209F">header  { "alg": "ES256", "typ": "JWT" }</text>
+<text x="52" y="503" font-size="8.8" font-family="monospace" fill="#00209F">payload { "iss": "NatCash", "sub": "NatCash", "aud": "Peye-Haiti", "iat": 1760012345, "exp": 1760012645, "body_sha256": "9f2a4c…e81d" }   <tspan fill="#69758A">← danh tính + hash body trong CÙNG một thẻ</tspan></text>
+<text x="52" y="520" font-size="8.8" font-family="monospace" fill="#5B6472">gửi đi  x-system-token: eyJhbGciOiJFUzI1NiIs…​.eyJpc3MiOiJOYXRDYXNoIi…​.MEUCIQDx8vT2…   <tspan fill="#69758A">← 3 khúc base64: header.payload.chữ-ký · GET thì payload không có body_sha256</tspan></text>
+
+<!-- ===== 2 BÊN + 5 NHÓM ===== -->
+<rect x="60" y="558" width="360" height="54" rx="10" fill="#F0FDF6" stroke="#0A9D6C" stroke-width="1.4"/>
+<text x="240" y="580" text-anchor="middle" font-size="12" font-weight="800" fill="#067A52">Peye-Haiti — nền tảng</text>
+<text x="240" y="598" text-anchor="middle" font-size="8.6" fill="#065F46">gọi ra: thẻ K2 ở x-system-token · K3 ở x-account-token</text>
+<rect x="1100" y="558" width="360" height="54" rx="10" fill="#fff" stroke="#33415C" stroke-width="1.4"/>
+<text x="1280" y="580" text-anchor="middle" font-size="12" font-weight="800" fill="#33415C">Định chế tài chính (ví / ngân hàng)</text>
+<text x="1280" y="598" text-anchor="middle" font-size="8.6" fill="#69758A">gọi vào: thẻ K2 ở x-system-token (kèm hash body khi có body)</text>
+<g stroke="#AAB6CC" stroke-width="1.4" stroke-dasharray="4 4">
+ <line x1="240" y1="616" x2="240" y2="1398"/>
+ <line x1="1280" y1="616" x2="1280" y2="1398"/>
+</g>
+<text x="760" y="634" text-anchor="middle" font-size="9" fill="#8B94A7" font-style="italic" opacity=".8">— toàn bộ mũi tên dưới đây chạy trong «ống» mTLS + VPN (K1 · hạ tầng, cấu hình một lần theo hồ sơ kết nạp F.4 — không vẽ lại) —</text>
+
+<!-- NHÓM 1 -->
+<rect x="14" y="646" width="1492" height="190" rx="10" fill="#F7FAFF"/>
+<text x="26" y="666" font-size="10" font-weight="800" fill="#00209F">NHÓM 1 · LIÊN KẾT TÀI KHOẢN LẦN ĐẦU — đi xin chìa người dùng K3 <tspan fill="#8B94A7" font-weight="600">(mục C.1–C.2)</tspan></text>
+<path d="M246 698 H1274" stroke="#5B6B9E" stroke-width="1.2" fill="none" marker-end="url(#bB)"/>
+<text x="760" y="690" text-anchor="middle" font-size="9.5" fill="#5B6B9E" font-weight="600">① yêu cầu liên kết: số tài khoản + số điện thoại</text>
+<rect x="670" y="706" width="180" height="17" rx="8" fill="#EEF3FF" stroke="#00209F"/><text x="760" y="718" text-anchor="middle" font-size="8" font-weight="700" fill="#00209F">K2 · thẻ + hash body</text>
+<text x="760" y="748" text-anchor="middle" font-size="9.5" fill="#7A5A12" font-style="italic">định chế nhắn OTP thẳng tới số điện thoại chủ tài khoản mình đang giữ — sự ưng thuận nằm ở đây</text>
+<path d="M246 778 H1274" stroke="#5B6B9E" stroke-width="1.2" fill="none" marker-end="url(#bB)"/>
+<text x="760" y="770" text-anchor="middle" font-size="9.5" fill="#5B6B9E" font-weight="600">② nộp mã OTP người dùng đọc cho ứng dụng</text>
+<rect x="670" y="786" width="180" height="17" rx="8" fill="#EEF3FF" stroke="#00209F"/><text x="760" y="798" text-anchor="middle" font-size="8" font-weight="700" fill="#00209F">K2 · thẻ + hash body</text>
+<path d="M1274 822 H246" stroke="#0A9D6C" stroke-width="1.4" fill="none" marker-end="url(#bG)"/>
+<text x="700" y="814" text-anchor="middle" font-size="9.5" fill="#067A52" font-weight="700">③ CẤP TOKEN NGƯỜI DÙNG — chìa K3 sinh ra, scope đúng theo bảng chuẩn A.1b.4</text>
+
+<!-- NHÓM 2 -->
+<rect x="14" y="844" width="1492" height="118" rx="10" fill="#FBFCFE"/>
+<text x="26" y="864" font-size="10" font-weight="800" fill="#067A52">NHÓM 2 · TRUY VẤN SỐ DƯ · LỊCH SỬ — dùng chìa người dùng <tspan fill="#8B94A7" font-weight="600">(mục C.5–C.6)</tspan></text>
+<path d="M246 896 H1274" stroke="#5B6B9E" stroke-width="1.2" fill="none" marker-end="url(#bB)"/>
+<text x="760" y="888" text-anchor="middle" font-size="9.5" fill="#5B6B9E" font-weight="600">④ hỏi số dư / sao kê của tài khoản đã liên kết (GET — thẻ dùng lại được)</text>
+<rect x="600" y="904" width="120" height="17" rx="8" fill="#EEF3FF" stroke="#00209F"/><text x="660" y="916" text-anchor="middle" font-size="8" font-weight="700" fill="#00209F">K2 · thẻ tự ký</text>
+<rect x="728" y="904" width="150" height="17" rx="8" fill="#F0FDF6" stroke="#0A9D6C"/><text x="803" y="916" text-anchor="middle" font-size="8" font-weight="700" fill="#067A52">K3 · token người dùng</text>
+<path d="M1274 936 H246" stroke="#5B6B9E" stroke-width="1.2" fill="none" marker-end="url(#bB)"/>
+<text x="680" y="928" text-anchor="middle" font-size="9.5" fill="#5B6B9E" font-weight="600">⑤ trả số liệu — response ký thẻ cùng định dạng (x-jws-signature)</text>
+<rect x="1060" y="920" width="200" height="17" rx="8" fill="#FDFBF3" stroke="#B48A2B"/><text x="1160" y="932" text-anchor="middle" font-size="8" font-weight="700" fill="#8A6A1F">thẻ response + hash body</text>
+
+<!-- NHÓM 3 -->
+<rect x="14" y="970" width="1492" height="212" rx="10" fill="#F0FDF6"/>
+<text x="26" y="990" font-size="10" font-weight="800" fill="#067A52">NHÓM 3 · LỆNH TRẢ TIỀN — xác thực HAI BẬC (chốt BRH 20/08): ≤ 5.000 G nhập PIN app Peye-Haiti · &gt; 5.000 G thêm SMS OTP DO ĐỊNH CHẾ GỬI <tspan fill="#8B94A7" font-weight="600">(C.7 đi · C.9 xác nhận OTP · B.4 kết quả về)</tspan></text>
+<text x="760" y="1014" text-anchor="middle" font-size="9" fill="#065F46">mọi vai đều trả được (20/08 — người bán trả nhà cung cấp): PIN app luôn là bước đầu; món &gt; 5.000 G (PAY_SCA_THRESHOLD — ngưỡng CHUẨN HÓA): định chế trả «sca_required» + TỰ nhắn OTP tới chủ TK → nhập OTP trong app, xác nhận qua API chuẩn hóa (C.9)</text>
+<path d="M246 1044 H1274" stroke="#C2455E" stroke-width="1.4" fill="none" marker-end="url(#bR)"/>
+<text x="600" y="1036" text-anchor="middle" font-size="9.5" fill="#C2455E" font-weight="700">⑥ khởi tạo lệnh trả — sau khi Peye-Haiti đã xác thực người mua xong</text>
+<rect x="480" y="1052" width="180" height="17" rx="8" fill="#EEF3FF" stroke="#00209F"/><text x="570" y="1064" text-anchor="middle" font-size="8" font-weight="700" fill="#00209F">K2 · thẻ + hash body</text>
+<rect x="668" y="1052" width="150" height="17" rx="8" fill="#F0FDF6" stroke="#0A9D6C"/><text x="743" y="1064" text-anchor="middle" font-size="8" font-weight="700" fill="#067A52">K3 · quyền «trả tiền»</text>
+<rect x="950" y="1082" width="380" height="40" rx="8" fill="#fff" stroke="#33415C" stroke-width="1.3"/>
+<text x="1140" y="1098" text-anchor="middle" font-size="8.8" font-weight="700" fill="#33415C">≤ 5.000 G: định chế KHÔNG hỏi thêm — thực thi theo token K3</text>
+<text x="1140" y="1112" text-anchor="middle" font-size="8.8" fill="#33415C">(ưng thuận đã cấp khi liên kết) + HẠN MỨC tự áp; &gt; 5.000 G: gửi OTP + chờ xác nhận (C.9)</text>
+<path d="M1274 1144 H246" stroke="#5B6B9E" stroke-width="1.2" fill="none" marker-end="url(#bB)"/>
+<text x="640" y="1136" text-anchor="middle" font-size="9.5" fill="#5B6B9E" font-weight="600">⑦ webhook kết quả cuối (thành công / thất bại + lý do)</text>
+<rect x="1040" y="1150" width="220" height="17" rx="8" fill="#EEF3FF" stroke="#00209F"/><text x="1150" y="1162" text-anchor="middle" font-size="8" font-weight="700" fill="#00209F">K2 · thẻ + hash body (định chế)</text>
+<text x="640" y="1178" text-anchor="middle" font-size="9" fill="#7A5A12" font-style="italic">bằng chứng khi tranh chấp: bản ghi PIN/OTP phía Peye-Haiti + chính lệnh ⑥ mang chữ ký (định chế lưu 5 năm) — trách nhiệm xác thực thuộc Peye-Haiti, ghi thành điều khoản hợp đồng</text>
+
+<!-- NHÓM 4 -->
+<rect x="14" y="1190" width="1492" height="120" rx="10" fill="#F7FAFF"/>
+<text x="26" y="1210" font-size="10" font-weight="800" fill="#00209F">NHÓM 4 · ĐỊNH CHẾ GỌI VÀO PEYE-HAITI <tspan fill="#8B94A7" font-weight="600">(B.1 báo Có · B.5 tra cứu QR)</tspan></text>
+<path d="M1274 1242 H246" stroke="#C2455E" stroke-width="1.4" fill="none" marker-end="url(#bR)"/>
+<text x="640" y="1234" text-anchor="middle" font-size="9.5" fill="#C2455E" font-weight="700">⑧ webhook báo Có thời gian thực — nguồn «ting ting»</text>
+<rect x="1040" y="1250" width="220" height="17" rx="8" fill="#EEF3FF" stroke="#00209F"/><text x="1150" y="1262" text-anchor="middle" font-size="8" font-weight="700" fill="#00209F">K2 · thẻ + hash body (định chế)</text>
+<path d="M1274 1288 H246" stroke="#5B6B9E" stroke-width="1.2" fill="none" marker-end="url(#bB)"/>
+<text x="620" y="1280" text-anchor="middle" font-size="9.5" fill="#5B6B9E" font-weight="600">⑨ tra cứu xác minh QR trước khi trừ tiền — có body nên thẻ vẫn kèm hash body</text>
+<rect x="1078" y="1294" width="180" height="17" rx="8" fill="#EEF3FF" stroke="#00209F"/><text x="1168" y="1306" text-anchor="middle" font-size="8" font-weight="700" fill="#00209F">K2 · thẻ + hash body</text>
+
+<!-- NHÓM 5 -->
+<rect x="14" y="1318" width="1492" height="64" rx="10" fill="#F4F6F8"/>
+<text x="26" y="1338" font-size="10" font-weight="800" fill="#5B6472">NHÓM 5 · VÒNG ĐỜI CHÌA K3 <tspan fill="#8B94A7" font-weight="600">(C.3 gia hạn · C.4 thu hồi)</tspan> — mang thẻ K2, nền tảng tự chăm sóc</text>
+<path d="M246 1366 H1274" stroke="#5B6B9E" stroke-width="1.2" fill="none" marker-end="url(#bB)"/>
+<text x="760" y="1358" text-anchor="middle" font-size="9.5" fill="#5B6B9E" font-weight="600">⑩ tự GIA HẠN trước hạn 7 ngày · THU HỒI tức thời khi người dùng hủy liên kết</text>
+
+<!-- TÓM TẮT -->
+<rect x="14" y="1396" width="1492" height="164" rx="10" fill="#FFF8E8" stroke="#F0DCA8" stroke-width="1.2"/>
+<text x="30" y="1418" font-size="10" font-weight="800" fill="#00209F">① MỘT THẺ duy nhất cho cả danh tính lẫn nội dung: request có body → thẻ kèm hash SHA-256 của body (thẻ dùng một lần) · GET → thẻ 5 phút dùng lại. Không kid · không jti · không token endpoint.</text>
+<text x="30" y="1440" font-size="10" font-weight="800" fill="#8A6A1F">② Một cặp khóa · một bảng JWKS · một hàm verify — x-system-token luôn là thẻ hệ thống (gateway hai phía kiểm tập trung) · K3 ở x-account-token · response tài chính ký thẻ cùng định dạng ở x-jws-signature.</text>
+<text x="30" y="1462" font-size="10" font-weight="700" fill="#067A52">③ Xác thực HAI BẬC (chốt 20/08): PIN CỦA APP PEYE-HAITI luôn là bước đầu (độc lập với PIN ví/ngân hàng) · món &gt; 5.000 G ≈ 38 USD (PAY_SCA_THRESHOLD): thêm SMS OTP DO ĐỊNH CHẾ gửi tới chủ TK, nhập ngay trong app (C.9) — ngưỡng chuẩn hóa: định chế chặt hơn được, lỏng hơn không.</text>
+<text x="30" y="1484" font-size="10" font-weight="700" fill="#33415C">④ Bậc PIN thuộc Peye-Haiti · bậc OTP thuộc định chế (SMS GW CỦA ĐỊNH CHẾ — tái dùng kênh OTP liên kết): ≤ ngưỡng định chế không hỏi thêm, thực thi theo K3 + hạn mức tự áp; trách nhiệm chia theo bậc, ghi hợp đồng, bằng chứng lưu 5 năm.</text>
+<text x="30" y="1506" font-size="10" font-weight="700" fill="#9F1239">⑤ Bộ chuẩn OB 12 API · 41 mã lỗi · 42 màn — «hồ sơ kết nạp đối tác» (F.4) + bộ vector sandbox: nhất quán được ép bằng CHỨNG NHẬN, không bằng thiện chí.</text>
+<text x="30" y="1528" font-size="10" font-weight="700" fill="#5B6472">⑥ mTLS (K1) là lớp hạ tầng cấu hình một lần theo hồ sơ kết nạp — dev tích hợp không phải viết gì thêm.</text>
+<text x="30" y="1550" font-size="9" font-style="italic" fill="#8B94A7">Nâng cấp để dành cho phiên bản sau: kid (nhiều khóa song song) · token gắn chứng chỉ (FAPI) · sinh trắc thay PIN.</text>
+</svg>
+</div>
+
+<h2>2 · Thẻ hệ thống K2 — chi tiết đủ để code</h2>
+<div class="card">
+<h3>Ruột thẻ (claims)</h3>
+<table>
+<tr><th>Trường</th><th>Quy định</th><th>Ví dụ</th></tr>
+<tr><td>header <code>alg</code> / <code>typ</code></td><td>Chỉ <code>ES256</code> (danh sách trắng — từ chối mọi giá trị khác, kể cả <code>none</code>) / <code>JWT</code></td><td><code>"ES256"</code></td></tr>
+<tr><td><code>iss</code> = <code>sub</code></td><td>TÊN tổ chức bên gọi theo danh mục BRH</td><td><code>"NatCash"</code></td></tr>
+<tr><td><code>aud</code></td><td>TÊN bên nhận — sai <code>aud</code> là bị từ chối (thẻ không dùng lại được cho bên thứ ba)</td><td><code>"Peye-Haiti"</code></td></tr>
+<tr><td><code>iat</code> / <code>exp</code></td><td><code>exp − iat ≤ 300 giây</code>; lệch đồng hồ cho phép ±30s (NTP bắt buộc)</td><td>—</td></tr>
+<tr><td><code>body_sha256</code></td><td><b>Hash body</b>: SHA-256 hex (chữ thường) của raw body bytes — BẮT BUỘC khi request có body; KHÔNG có với GET. Lệch 1 byte là hash lệch</td><td><code>"9f2a4c…e81d"</code></td></tr>
+</table>
+<h3>Bên gọi — 3 quy tắc</h3>
+<p>① Có body → ký thẻ MỚI cho từng request (retry cũng ký lại với <code>iat</code> mới) · ② GET → thẻ dùng lại tới khi hết hạn · ③ mỗi bên MỘT cặp khóa hiệu lực, công bố khóa public tại <code>https://&lt;domain&gt;/.well-known/jwks.json</code> (không cần <code>kid</code>).</p>
+<h3>Bên nhận — 3 bước verify, rồi mới parse</h3>
+<p>① Lấy JWKS theo <code>iss</code> (cache 1 giờ; bảng thường 1 khóa — lúc bên gọi giao thời thay khóa thì có 2, thử lần lượt; fail hết → tải lại đúng 1 lần) · ② <code>jwt.verify(thẻ, khóa, {alg:["ES256"], aud:"tên mình"})</code> · ③ so <code>body_sha256</code> với hash body nhận được — khớp mới parse JSON + khử trùng <code>event_id</code>/<code>Idempotency-Key</code>; dữ liệu phải THUỘC đúng bên đang gọi (báo Có của liên kết nhà ai, chỉ nhà ấy được báo).</p>
+<p><b>Từ chối →</b> <code>401</code> kèm <code>details.issue</code> = <code>alg · sig · aud · expired · header</code> (header = gửi nhầm thẻ vào <code>Authorization</code> — route đối tác từ chối) (lỗi danh tính) hoặc <code>body-hash · body-hash-missing</code> (lỗi nội dung). <b>Chống phát lại:</b> mTLS bó kênh + hạn thẻ 5′ + khử trùng <code>event_id</code>/<code>Idempotency-Key</code> — không kho jti.</p>
+<h3>Xoay khóa</h3>
+<p>Thêm khóa MỚI vào JWKS (tạm thời 2 khóa) ≥7 ngày trước khi dùng → bên verify tự thử lần lượt → gỡ khóa cũ sau 7 ngày. Nghi lộ khóa: gỡ ngay + báo kênh vận hành hai bên.</p>
+</div>
+
+<h2>3 · Token người dùng K3 — bằng chứng ưng thuận</h2>
+<div class="card">
+<p>Sinh ra khi liên kết tài khoản (bước 1–2 ở mục 5): định chế nhắn OTP tới SĐT <b>chủ tài khoản mà mình đang giữ</b> — sự ưng thuận nằm ở đó. Token đi ở header <code>x-account-token</code> với các API theo tài khoản; hiệu lực 90 ngày, nền tảng tự gia hạn trước hạn 7 ngày; thu hồi tức thời khi người dùng hủy liên kết. Peye-Haiti cất token trong két mã hóa (Vault) — không bao giờ ghi log.</p>
+<table>
+<tr><th>Scope</th><th>Quyền</th><th>Liên kết NHẬN TIỀN (receiving — gắn gian hàng, merchant_ref)</th><th>Liên kết NGUỒN TRẢ (funding — gắn cá nhân, person_ref, MỌI vai)</th></tr>
+<tr><td><code>balance</code></td><td>Đọc số dư</td><td>✔ mặc định</td><td>—</td></tr>
+<tr><td><code>history</code></td><td>Đọc lịch sử</td><td>✔ mặc định</td><td>✔</td></tr>
+<tr><td><code>credit-notify</code></td><td>Định chế bật gửi webhook báo Có cho liên kết</td><td>✔ mặc định</td><td>—</td></tr>
+<tr><td><code>payment</code></td><td>Khởi tạo lệnh trả từ tài khoản nguồn</td><td>—</td><td>✔</td></tr>
+</table>
+<p><b>Định chế VALIDATE BẮT BUỘC tại bước khởi tạo liên kết — không tin <code>requested_scope</code> truyền sang:</b> liên kết nhận tiền chỉ nhận ⊆ {balance · history · credit-notify}; liên kết nguồn trả chỉ nhận ⊆ {payment · history}; xin ngoài tổ hợp → từ chối ngay (400, không cấp-rồi-cắt); token cấp đúng bộ đã duyệt. Triển khai bằng bảng cấu hình đánh phiên bản theo chuẩn — không hard-code (thêm scope = CR nâng phiên bản chuẩn + bộ vector mới).</p>
+</div>
+
+<h2>4 · Xác thực người dùng — HAI BẬC & hạn mức <small>— chốt BRH 20/08</small></h2>
+<div class="ok"><b>Hai bậc xác thực (chốt BRH 20/08) — áp dụng MỌI VAI</b> (một app, chọn vai ở CH-00; người bán cũng thanh toán được — giao dịch bán-với-bán): <b>bậc 1</b> — PIN của app Peye-Haiti luôn là bước đầu (PIN riêng, lưu băm, KHÔNG phải PIN ví/ngân hàng); <b>bậc 2</b> — món &gt; <b>5.000 HTG</b> (<code>PAY_SCA_THRESHOLD</code>, ngưỡng CHUẨN HÓA — định chế chặt hơn được, lỏng hơn không): định chế trả <code>sca_required</code> và TỰ nhắn <b>SMS OTP</b> tới chủ TK (SMS GW của định chế — Peye không gửi OTP thanh toán), người dùng nhập ngay trong app. Trần ngày <code>PAY_DAY_MAX</code> (25.000 HTG · ≤20 lệnh — giờ Haiti, đếm cả lệnh fail) CHỈ áp bậc-PIN; chống chẻ nhỏ lệnh: tổng CÙNG-ĐÍCH trong ngày vượt ngưỡng → lệnh sau bị đẩy lên bậc OTP (<code>sca_hint</code>); định chế được thách OTP ở MỌI mức tiền (chặt hơn). Trách nhiệm: bậc PIN thuộc Peye-Haiti · bậc OTP thuộc định chế — bằng chứng: bản ghi PIN + thẻ ký lệnh (lưu 5 năm).</div>
+
+<h2>5 · Ví dụ bản tin ĐẦY ĐỦ toàn luồng <small>— nhìn vào làm theo; JWT viết dạng giải mã, trên dây là 3 khúc base64url <code>header.payload.signature</code></small></h2>
+<div class="note"><b>Nhân vật xuyên suốt:</b> người mua <b>JEAN PIERRE</b> — tài khoản nguồn trả tại <b>UniBank</b> · người bán <b>MARIE DELVA</b> (mã <code>PIN-M-000241</code>) — tài khoản nhận tại <b>NatCash</b> (mã danh bạ <code>933201</code>) · món hàng <b>1.500 G = 150000 centime</b> (≤ NGƯỠNG OTP 5.000 HTG — bậc chỉ-PIN; món lớn hơn xem BƯỚC 5-OTP). Mọi kết nối đã nằm trong «ống» mTLS + VPN (K1 — hạ tầng, cấu hình một lần).</div>
+
+<div class="step"><h3>BƯỚC 1 — Liên kết tài khoản nguồn trả (làm MỘT lần)</h3>
+<span class="dir d-out">Peye-Haiti → UniBank</span> <code>POST /ob/v1/links</code>
+<pre>POST /ob/v1/links HTTP/1.1
+Host: ob.unibank.ht
+x-system-token: eyJ…                  <span class="c">← thẻ K2, giải mã:</span>
+  <span class="h">header</span>  { "alg": "ES256", "typ": "JWT" }
+  <span class="h">payload</span> { "iss": "Peye-Haiti", "sub": "Peye-Haiti", "aud": "UniBank",
+            "iat": 1760012340, "exp": 1760012640,
+            "body_sha256": "c81d9f2a…44e0" }   <span class="c">← hash của body bên dưới</span>
+Idempotency-Key: 7c9e6679-7425-40de-963d-1a8f30e7a9b4
+Content-Type: application/json; charset=utf-8
+
+{ "person_ref": "prn_9f2a71", "requested_scope": ["payment","history"],
+  "account_no": "50912340022", "msisdn": "+50937123456", "otp_channel": "sms" }</pre>
+<pre>HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+X-Trace-Id: tr-8812a4
+
+{ "link_id": "lnk_ub_01HX4Y", "status": "otp_sent",
+  "otp_expires_at": "2026-10-01T13:05:00Z", "msisdn_masked": "+509****3456" }</pre>
+<p class="note">UniBank tự nhắn OTP tới SĐT chủ tài khoản — sự ưng thuận nằm ở đây. (Người mua = KYC1, không gửi <code>kyc_evidence_ref</code>.)</p></div>
+
+<div class="step"><h3>BƯỚC 2 — Nộp OTP, nhận token liên kết K3</h3>
+<span class="dir d-out">Peye-Haiti → UniBank</span> <code>POST /ob/v1/links/{link_id}/confirm</code>
+<pre>POST /ob/v1/links/lnk_ub_01HX4Y/confirm HTTP/1.1
+Host: ob.unibank.ht
+x-system-token: eyJ…                  <span class="c">← thẻ K2 MỚI (body khác → hash khác)</span>
+Idempotency-Key: 913f0e6a-2b1c-47d1-8b0e-55c02f19a001
+Content-Type: application/json; charset=utf-8
+
+{ "otp": "482913" }</pre>
+<pre>HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{ "link_id": "lnk_ub_01HX4Y",
+  "token": { "access_token": "at_ub_7Kp93q…", "expires_at": "2026-12-30T13:05:00Z",
+             "refresh_token": "rt_ub_2Mn81c…", "refresh_expires_at": "2027-10-01T13:05:00Z",
+             "scope": ["payment","history"] },
+  "account_no_masked": "…0022", "holder_name": "JEAN PIERRE" }</pre>
+<p class="note"><code>access_token</code> cất Vault mã hóa — không bao giờ ghi log. Từ đây Peye-Haiti có «bằng chứng ưng thuận» để khởi tạo lệnh trả.</p></div>
+
+<div class="step"><h3>BƯỚC 2b — (minh họa GET) hỏi lịch sử: thẻ KHÔNG hash body, dùng lại ≤5′ · response được KÝ</h3>
+<span class="dir d-out">Peye-Haiti → UniBank</span> <code>GET /ob/v1/accounts/{link_id}/transactions</code>
+<pre>GET /ob/v1/accounts/lnk_ub_01HX4Y/transactions?from=2026-10-01T00:00:00Z&amp;to=2026-10-01T23:59:59Z HTTP/1.1
+Host: ob.unibank.ht
+x-system-token: eyJ…                  <span class="c">← payload: { "iss":"Peye-Haiti","sub":"Peye-Haiti","aud":"UniBank","iat":…,"exp":… }  (không body_sha256)</span>
+x-account-token: at_ub_7Kp93q…</pre>
+<pre>HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+x-jws-signature: eyJ…                 <span class="c">← THẺ RESPONSE của UniBank, giải mã:</span>
+  <span class="h">payload</span> { "iss": "UniBank", "sub": "UniBank", "aud": "Peye-Haiti",
+            "iat": 1760012400, "exp": 1760012700,
+            "body_sha256": "77b1a0…9c3e" }  <span class="c">← GET: chỉ hash body response — KHÔNG req_sha256; đối chiếu link_id trong body với path</span>
+
+{ "link_id": "lnk_ub_01HX4Y", "items": [ … ], "next_cursor": null }</pre></div>
+
+<div class="step"><h3>BƯỚC 3 — Người mua quét QR của MARIE DELVA, app tạo lệnh</h3>
+<span class="dir d-app">App người mua → BFF Peye-Haiti</span> <code>POST /v1/payments</code>
+<pre>POST /v1/payments HTTP/1.1
+Host: api.peye-haiti.ht
+Authorization: Bearer eyJ…            <span class="c">← JWT PHIÊN NGƯỜI DÙNG của Jean (BFF — khác thẻ K2)</span>
+X-Device-Id: 3d1f9a7e-…
+Content-Type: application/json; charset=utf-8
+
+{ "client_uuid": "b41c2f6a-9e10-4dd1-a5f7-6b2f0c4e71d3",
+  "funding_link_id": "lnk_ub_01HX4Y",
+  "target": { "operator": "933201", "account": "50912347709", "merchant_hint": "MARIE DELVA" },
+  "amount_ct": 150000, "currency": "HTG", "bill_code": "B-1007-17" }</pre>
+<pre>HTTP/1.1 201 Created
+
+{ "payment_id": "pay_ph_4Q8Z1M", "status": "created", "expires_at": "2026-10-01T13:19:00Z",
+  "merchant": { "merchant_id": "m01hx4y7q2k8w", "shop_name": "MARIE DELVA",
+                "mcc": "5411", "city": "Pétion-Ville", "verified": true } }</pre>
+<p class="note">App hiện: «Trả 1.500 G cho <b>MARIE DELVA</b> ✔ Đã xác thực» — người mua thấy TÊN rồi mới xác nhận (chống QR dán đè). Món &gt; 5.000 HTG: tạo lệnh bình thường — bậc OTP xử lý ở BƯỚC 5-OTP.</p></div>
+
+<div class="step"><h3>BƯỚC 4 — Xác nhận bằng PIN app — bậc 1 (mọi lệnh; món ≤ 5.000 G thì đây là bước duy nhất)</h3>
+<span class="dir d-app">App người mua → BFF Peye-Haiti</span> <code>POST /v1/payments/{id}/confirm</code>
+<pre>POST /v1/payments/pay_ph_4Q8Z1M/confirm HTTP/1.1
+Host: api.peye-haiti.ht
+Authorization: Bearer eyJ…            <span class="c">← JWT phiên người dùng</span>
+Content-Type: application/json; charset=utf-8
+
+{ "pin": "••••••" }                    <span class="c">← PIN của app Peye-Haiti (server so băm Argon2id — không log)</span></pre>
+<pre>HTTP/1.1 202 Accepted
+
+{ "status": "submitted" }</pre></div>
+
+<div class="step"><h3>BƯỚC 5 — Peye-Haiti khởi tạo lệnh trả tại UniBank</h3>
+<span class="dir d-out">Peye-Haiti → UniBank</span> <code>POST /ob/v1/payments</code>
+<pre>POST /ob/v1/payments HTTP/1.1
+Host: ob.unibank.ht
+x-system-token: eyJ…                  <span class="c">← thẻ K2 MỚI, giải mã:</span>
+  <span class="h">payload</span> { "iss": "Peye-Haiti", "sub": "Peye-Haiti", "aud": "UniBank",
+            "iat": 1760012501, "exp": 1760012801,
+            "body_sha256": "4fa2c9…b7d1" }   <span class="c">← chính thẻ này = bằng chứng chống chối bỏ (UniBank lưu 5 năm)</span>
+x-account-token: at_ub_7Kp93q…         <span class="c">← K3 scope "payment" — ưng thuận đã cấp ở BƯỚC 2</span>
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
+Content-Type: application/json; charset=utf-8
+
+{ "client_ref": "pay_ph_4Q8Z1M", "link_id": "lnk_ub_01HX4Y",
+  "target": { "operator": "933201", "account": "50912347709", "name_hint": "MARIE DELVA" },
+  "amount_ct": 150000, "currency": "HTG", "bill_code": "B-1007-17" }</pre>
+<pre>HTTP/1.1 202 Accepted
+x-jws-signature: eyJ…                 <span class="c">← thẻ response UniBank (body_sha256 của body dưới + req_sha256 = hash body request — POST)</span>
+
+{ "ext_payment_id": "pay_ub_889AZ", "status": "submitted" }</pre>
+<p class="note">Món 1.500 G ≤ ngưỡng 5.000 → UniBank KHÔNG hỏi Jean thêm gì — thực thi theo K3 + hạn mức tự áp. Tiền đi Switch/on-us như mọi lệnh chuyển thường.</p></div>
+
+<div class="step"><h3>BƯỚC 5-OTP — BIẾN THỂ món &gt; 5.000 HTG (chốt 20/08; ví dụ Jean trả nhà cung cấp 12.000 G)</h3>
+<span class="dir d-out">Peye-Haiti → UniBank</span> BƯỚC 3–5 y hệt, nhưng UniBank trả nhánh OTP:
+<pre>HTTP/1.1 202 Accepted
+x-jws-signature: eyJ…                 <span class="c">← thẻ response UniBank</span>
+
+{ "ext_payment_id": "pay_ub_912KX", "status": "sca_required",
+  "sca": { "challenge_id": "chl_7Y2Q", "otp_channel": "sms",
+           "msisdn_masked": "+509****3456",
+           "expires_at": "2026-10-01T13:07:00Z", "attempts_left": 3 } }</pre>
+<p class="note">UniBank ĐÃ tự nhắn OTP tới SĐT của Jean (SMS GW CỦA UNIBANK — Peye-Haiti không gửi gì). App chuyển màn kết quả sang trạng thái nhập OTP.</p>
+Jean gõ OTP trong app (E.16.6) → Peye-Haiti chuyển tiếp sang UniBank (C.9):
+<pre>POST /ob/v1/payments/pay_ub_912KX/sca HTTP/1.1
+Host: ob.unibank.ht
+x-system-token: eyJ…                  <span class="c">← thẻ K2 MỚI (body_sha256 của body dưới)</span>
+x-account-token: at_ub_7Kp93q…
+Idempotency-Key: 6ba7b810-9dad-41d1-80b4-00c04fd430c8
+Content-Type: application/json; charset=utf-8
+
+{ "challenge_id": "chl_7Y2Q", "otp": "735120" }</pre>
+<pre>HTTP/1.1 202 Accepted
+x-jws-signature: eyJ…
+
+{ "ext_payment_id": "pay_ub_912KX", "status": "submitted" }</pre>
+<p class="note">Từ đây giống BƯỚC 6 — kết quả cuối về qua webhook. OTP sai → <code>422 OB-422-OTP</code> kèm <code>attempts_left</code>; sai quá số lần hoặc quá hạn → định chế chốt <code>failed</code>/<code>sca_failed</code>.</p></div>
+
+<div class="step"><h3>BƯỚC 6 — UniBank báo kết quả cuối</h3>
+<span class="dir d-in">UniBank → Peye-Haiti</span> <code>POST /v1/payment-results</code>
+<pre>POST /v1/payment-results HTTP/1.1
+Host: partner.peye-haiti.ht
+x-system-token: eyJ…                  <span class="c">← thẻ K2 của UNIBANK, giải mã:</span>
+  <span class="h">payload</span> { "iss": "UniBank", "sub": "UniBank", "aud": "Peye-Haiti",
+            "iat": 1760012504, "exp": 1760012804, "body_sha256": "e01b77…2a9f" }
+Content-Type: application/json; charset=utf-8
+
+{ "event_id": "f7a1d2c9-3b60-4e2f-9d11-8c5a0b7e4f22",
+  "ext_payment_id": "pay_ub_889AZ", "client_ref": "pay_ph_4Q8Z1M",
+  "status": "succeeded", "failure_reason": null,
+  "ref_id": "PIN-2026-000123", "finished_at": "2026-10-01T13:04:07Z" }</pre>
+<pre>HTTP/1.1 200 OK
+
+{ "received": true }</pre>
+<p class="note">Thất bại thì <code>status:"failed"</code> + <code>failure_reason</code> (<code>insufficient_funds</code>/<code>declined</code>/<code>limit</code>/<code>other</code>) — là DỮ LIỆU, không phải lỗi HTTP. <code>event_id</code> = khóa khử trùng: bắn trùng không đổi trạng thái lần hai.</p></div>
+
+<div class="step"><h3>BƯỚC 7 — NatCash (định chế NHẬN của MARIE) báo Có — «ting ting»</h3>
+<span class="dir d-in">NatCash → Peye-Haiti</span> <code>POST /v1/credit-events</code>
+<pre>POST /v1/credit-events HTTP/1.1
+Host: partner.peye-haiti.ht
+x-system-token: eyJ…                  <span class="c">← thẻ K2 của NATCASH:</span>
+  <span class="h">payload</span> { "iss": "NatCash", "sub": "NatCash", "aud": "Peye-Haiti",
+            "iat": 1760012506, "exp": 1760012806, "body_sha256": "9f2a4c…e81d" }
+Content-Type: application/json; charset=utf-8
+
+{ "event_id": "9b2f0c4e-71d3-4a8e-b1aa-0f3c9d2e5a10",
+  "link_id": "lnk_nc_88213", "account_no_masked": "…7709",
+  "ref_id": "PIN-2026-000123", "amount_ct": 150000, "currency": "HTG",
+  "booked_at": "2026-10-01T13:04:07Z",
+  "payer": { "msisdn": "+50937123456", "holder_name": "J. PIERRE", "bank_code": "UNIB" },
+  "addenda": { "bill_id": "B-1007-17" } }</pre>
+<pre>HTTP/1.1 200 OK
+
+{ "status": "accepted", "event_id": "9b2f0c4e-71d3-4a8e-b1aa-0f3c9d2e5a10" }</pre>
+<p class="note">Hai phía độc lập gặp nhau tại <code>ref_id = PIN-2026-000123</code>; đơn B-1007-17 của Marie được gạch tự động, app người bán «ting ting».</p></div>
+
+<div class="step"><h3>BƯỚC 8 — App người mua lấy biên lai số</h3>
+<span class="dir d-app">App người mua → BFF Peye-Haiti</span> <code>GET /v1/payments/{id}</code>
+<pre>GET /v1/payments/pay_ph_4Q8Z1M HTTP/1.1
+Host: api.peye-haiti.ht
+Authorization: Bearer eyJ…            <span class="c">← JWT phiên người dùng</span></pre>
+<pre>HTTP/1.1 200 OK
+
+{ "payment_id": "pay_ph_4Q8Z1M", "status": "succeeded", "failure_reason": null,
+  "merchant": { "shop_name": "MARIE DELVA", "mcc": "5411" },
+  "amount_ct": 150000, "ref_id": "PIN-2026-000123",
+  "finished_at": "2026-10-01T13:04:07Z",
+  "receipt": { "no": "PIN-2026-000123", "issued_at": "2026-10-01T13:04:07Z" } }</pre></div>
+
+<h2>6 · Các ca lỗi hay gặp <small>— để dev test tay</small></h2>
+<div class="card"><table>
+<tr><th>Ca</th><th>Bên phát hiện</th><th>Trả về</th></tr>
+<tr><td>Body bị sửa 1 byte (hash lệch)</td><td>Bên nhận, bước verify ③</td><td><code>401 PIN-401-JWS</code> / <code>OB-401-AUTH</code> + <code>details.issue:"body-hash"</code> — KHÔNG parse body</td></tr>
+<tr><td>Thẻ quá 5 phút (retry bằng thẻ cũ)</td><td>Bên nhận, bước verify ②</td><td><code>401</code> + <code>details.issue:"expired"</code> — ký thẻ MỚI rồi gửi lại</td></tr>
+<tr><td>Thẻ của MonCash nhưng dữ liệu của liên kết NatCash</td><td>Tầng ứng dụng sau verify</td><td><code>404 PIN-404-NF</code> — «báo Có của liên kết nhà ai, chỉ nhà ấy được báo»</td></tr>
+<tr><td>Món 6.000 G (&gt; ngưỡng 5.000)</td><td>UniBank tại lệnh trả</td><td><code>202</code> + <code>status:"sca_required"</code> — KHÔNG phải lỗi: app chuyển trạng thái nhập OTP (BƯỚC 5-OTP)</td></tr>
+<tr><td>Nhập sai OTP định chế</td><td>UniBank tại C.9</td><td><code>422 OB-422-OTP</code> + <code>details.attempts_left</code>; sai quá số lần → <code>failed/sca_failed</code> qua webhook</td></tr>
+<tr><td>Lệnh bậc-PIN vượt trần ngày (<code>PAY_DAY_MAX</code>)</td><td>App chặn trước; server chặn lại</td><td><code>422 PIN-422-BIZ</code> + <code>details.issue:"daily_limit"</code></td></tr>
+<tr><td>Gửi thẻ K2 vào <code>Authorization</code> thay vì <code>x-system-token</code></td><td>Gateway route đối tác</td><td><code>401</code> + <code>details.issue:"header"</code> — chuyển thẻ sang <code>x-system-token</code></td></tr>
+<tr><td>Trùng <code>Idempotency-Key</code> + cùng body khi lệnh trước đang xử lý</td><td>Bên nhận, tầng idempotency</td><td><code>409</code> + <code>details.state:"processing"</code> + <code>Retry-After: 1</code> — GIỮ key, chờ rồi gửi lại</td></tr>
+<tr><td>Token K3 bị chủ tài khoản thu hồi giữa chừng</td><td>UniBank tại lệnh trả</td><td><code>401 OB-401-REVOKED</code> → app báo «liên kết lại nguồn trả»</td></tr>
+</table></div>
+
+<h2>7 · Kết nạp & chứng nhận <small>— nhất quán được ép bằng CHỨNG NHẬN, không bằng thiện chí</small></h2>
+<div class="card">
+<p><b>Hồ sơ trao MỘT lần (hai chiều):</b> ① TÊN tổ chức (giá trị iss/aud) + mã số 9332xx · ② URL JWKS · ③ chứng chỉ mTLS + dải IP · ④ URL webhook + URL API OB · ⑤ đầu mối vận hành + cửa sổ bảo trì · ⑥ năng lực SMS OTP tới chủ TK (đã dùng khi liên kết — tái dùng cho xác nhận lệnh &gt; 5.000 G; SMS GW là của định chế).</p>
+<p><b>Trình tự:</b> ký hồ sơ → sandbox chạy đạt <b>bộ vector auth</b> (thẻ đúng GET/POST · sai alg · sai chữ ký · sai aud · hết hạn · thiếu/lệch hash body · gửi nhầm thẻ vào Authorization trên route đối tác → 401 details.issue="header") + kịch bản tích hợp theo vai trò → cấp chứng nhận kết nối → mở production.</p>
+<p><b>Ma trận vai trò:</b> định chế chỉ NHẬN tiền = <b>8 API</b> (liên kết ×5 · truy vấn ×2 · webhook báo Có ×1); có chiều TRẢ = đủ <b>12 API</b> (+ lệnh trả ×4: khởi tạo · trạng thái · xác nhận OTP · webhook kết quả). Nên gọi thêm tra cứu xác minh QR (nền tảng cung cấp — chỉ gọi, không phải xây).</p>
+</div>
+
+</main>
+<footer>Peye-Haiti · Chuẩn kết nối Open Banking v3.7 — 24/08/2026 · Tài liệu tự chứa (trích từ: API Spec v3.7 mục A.1b/F.3/F.4/F.5 · TSD v4.6 · sơ đồ nhúng tại §1 của chính file này). Mã lỗi & đặc tả từng trường đầy đủ: PeyeHaiti_API_Spec.md. Sandbox + bộ vector: T7/2026, kênh vận hành D8.</footer>
+</body></html>

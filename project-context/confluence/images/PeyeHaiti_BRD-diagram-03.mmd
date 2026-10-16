@@ -1,0 +1,16 @@
+sequenceDiagram
+  autonumber
+  participant KH as Người mua (app bất kỳ)
+  participant DCT as Định chế trả
+  participant SW as PRONAP (chuyển mạch)
+  participant DCN as Định chế nhận
+  participant MMS as Nền tảng Peye-Haiti
+  participant NB as App người bán
+  Note over NB: Người bán trình QR (tĩnh số TK thật / động kèm số tiền, mã đơn)
+  KH->>DCT: Quét QR → lệnh chuyển khoản
+  DCT->>MMS: (khi có mạng) Tra cứu xác minh QR — nhận TÊN người bán + tham chiếu khớp lệnh
+  DCT->>SW: Lệnh chuyển
+  SW->>DCN: Ghi Có tài khoản nhận (RefID)
+  DCN-->>MMS: Webhook báo Có M4 (kèm thông tin người trả)
+  MMS->>MMS: Khử trùng (event_id + RefID) → gạch đơn 2 mức
+  MMS-->>NB: «Ting ting» + biên lai (SMS nếu app không phản hồi 60 giây)

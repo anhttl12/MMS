@@ -1,0 +1,30 @@
+flowchart LR
+  subgraph CP["Back-office · module Compliance"]
+    subgraph P_CASE["Module Khiếu nại"]
+      QAPI["API hồ sơ khiếu nại<br/>hàng đợi · đếm ngược thời hạn 24h/5 ngày"]
+      EVS["Chứng cứ hai phía<br/>lưu ngay trên hồ sơ (JSONB) · file ở MinIO"]
+      RFV["Xác minh hoàn tiền<br/>đọc lịch sử TK qua token (M3)<br/>khớp bút toán chuyển trả"]
+      DEC["Ra quyết định<br/>mọi quyết định bắt buộc ghi lý do"]
+    end
+    subgraph P_AML["Module Rửa tiền"]
+      AMLE["Bộ luật chống rửa tiền<br/>sàng lọc BRH (E2) · ngưỡng (C14)<br/>chống chia nhỏ · hậu kiểm hạn mức"]
+    end
+    subgraph P_REC["Module Đối soát"]
+      E3I["Nhận bảng kê cuối ngày (E3)<br/>lọc theo danh mục TK đã đăng ký"]
+      SRC["Đối soát theo phiên"]
+      DIM["Quản lý khoản lệch<br/>phân loại · thời hạn 2 ngày · vết xử lý"]
+    end
+    ADJ["Bút toán điều chỉnh — MỘT luồng duy nhất<br/>nháp → duyệt bốn mắt → ghi sổ"]
+    CDB3[("case (kèm chứng cứ) · aml_alert<br/>adjustment · recon_run · discrepancy")]
+  end
+  SW["Switch — bảng kê cuối ngày (E3)"] -.-> E3I --> SRC --> DIM
+  QAPI --> DEC
+  DEC --> ADJ
+  DIM -->|tạo nháp bút toán| ADJ
+  DIM -.->|"quét M3 lấp khoảng"| INX["Commerce — module Ingest"]
+  QAPI --> EVS -.-> MIO2[("MinIO")]
+  RFV -.->|đọc lịch sử qua token| MIX["Merchant & Identity"]
+  EVL2[["limit.breached"]] --> AMLE
+  DEC & AMLE & ADJ & DIM --> CDB3
+  DEC -->|phát| EV10[["case.*"]]
+  DIM -->|phát| EV11[["recon.discrepancy"]]

@@ -1,0 +1,19 @@
+sequenceDiagram
+  autonumber
+  participant BK as Bank nhận
+  participant IN as Commerce · module Ingest
+  participant CM as Commerce · module Khớp tiền
+  participant NT as Notification
+  participant NB as App người bán
+  BK->>IN: Báo có (M4): chữ ký, mã sự kiện, mã GD, tài khoản liên kết, người trả
+  IN->>IN: Chống trùng tầng 1: mã sự kiện là duy nhất
+  IN->>IN: Chống trùng tầng 2: mã giao dịch duy nhất (hợp nhất mọi nguồn)
+  IN-->>CM: Kafka: credit.received (đệm burst giữa hai module)
+  CM->>CM: ① tài khoản liên kết → người bán<br/>② tìm đơn: số tiền + cửa sổ thời gian<br/>③ không khớp được → chờ xác nhận tay
+  rect rgb(235, 245, 255)
+    Note over CM: MỘT TRANSACTION (khóa hàng SELECT … FOR UPDATE)
+    CM->>CM: Ghi kết quả khớp — ràng buộc DUY NHẤT trên mã khoản tiền<br/>+ đánh dấu đơn «đã thu» / gạch nợ + biên lai + cờ khớp-muộn
+  end
+  CM-->>NT: Kafka: match.completed
+  NT-->>NB: Đẩy «ting ting» — không nhận được trong 60 giây thì gửi SMS
+  CM->>CM: Hậu kiểm hạn mức: tổng tiền về trong ngày vượt ngưỡng → cảnh báo rửa tiền

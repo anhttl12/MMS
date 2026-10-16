@@ -1,0 +1,10 @@
+flowchart TD
+  DK["Đăng ký: SĐT → OTP → PIN<br/>(NB-01/02)"] --> CH00{"CH-00 · CHỌN VAI"}
+  CH00 -- "NGƯỜI MUA — KYC1, dùng ngay" --> MUA["Vai MUA<br/>NM-01 quét QR · NM-02 xác nhận tên & trả<br/>NM-03 kết quả/OTP · NM-04 lịch sử & khiếu nại<br/>NM-05 nguồn trả · nút «Trở thành người bán»"]
+  CH00 -- "NGƯỜI BÁN — đi tiếp eKYC" --> BAN["Vai BÁN (17 màn NB)<br/>eKYC NB-2A · liên kết TK NB-2B · trạng thái NB-1C<br/>QR thu tiền NB-04 · két tiền NB-05 · đơn NB-06..08<br/>sổ nợ NB-15 · báo cáo NB-10 · tài khoản NB-14"]
+  BAN -- "toàn bộ chức năng thanh toán của vai mua" --> MUA
+  MUA -- "«Trở thành người bán» — làm nốt eKYC · gian hàng · TK nhận<br/>(SAU PILOT; trong pilot đổi vai qua kênh hỗ trợ)" --> BAN
+  subgraph QUANTRI["Kênh quản trị"]
+    P["Portal BRH — 10 màn BRH-01..08, 11, 12"]
+    A["Console vận hành — AQ-00..04 (4 màn)"]
+  end

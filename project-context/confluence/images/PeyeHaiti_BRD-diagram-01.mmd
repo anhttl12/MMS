@@ -1,0 +1,17 @@
+flowchart LR
+  subgraph TIEN["ĐƯỜNG TIỀN — do BRH và các định chế vận hành"]
+    PAYER["App trả tiền<br/>(app Peye-Haiti qua định chế trả,<br/>hoặc app của chính định chế)"]
+    DCT["Định chế TRẢ<br/>(giữ tài khoản người mua)"]
+    PRONAP["PRONAP<br/>chuyển mạch thời gian thực"]
+    DCN["Định chế NHẬN<br/>(giữ tài khoản người bán)"]
+    ATS["ATS<br/>bù trừ & quyết toán ròng theo phiên"]
+    PAYER --> DCT -->|"lệnh chuyển"| PRONAP -->|"ghi Có"| DCN
+    PRONAP -. "vị thế ròng" .-> ATS
+    ATS -. "quyết toán qua tài khoản tại BRH" .-> DCN
+  end
+  subgraph TT["ĐƯỜNG THÔNG TIN — Peye-Haiti"]
+    MMS["Nền tảng Peye-Haiti<br/>(KHÔNG giữ tiền)"]
+  end
+  DCN -->|"webhook báo Có M4<br/>(nguồn «ting ting»)"| MMS
+  DCT -->|"tra cứu xác minh QR — nhận về<br/>tên người bán + tham chiếu"| MMS
+  PRONAP -->|"E3 · báo cáo đối soát cuối ngày"| MMS

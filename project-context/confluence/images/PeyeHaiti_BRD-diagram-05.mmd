@@ -1,0 +1,16 @@
+flowchart TD
+  S((Bắt đầu)) --> B1["1 · Nhập thông tin đăng ký (A)<br/>số điện thoại — nhận OTP qua SMS"]
+  B1 --> B2{"2 · Xác nhận mã OTP (V)"}
+  B2 -- "sai / hết hạn" --> B2a["2a · Yêu cầu cấp lại mã OTP (A)<br/>tối đa 5 mã/ngày/số"] --> B2
+  B2 -- "hợp lệ" --> B3["3 · Thiết lập mã PIN (A)<br/>PIN 6 số riêng của ứng dụng"]
+  B3 --> B4["4 · Chọn vai sử dụng (C)<br/>màn CH-00 — ghi vai lên hồ sơ"]
+  B4 -- "vai MUA — KYC1, dùng ngay" --> E((Kết thúc))
+  B4 -- "vai BÁN" --> B5["5 · Chụp giấy tờ định danh (A)<br/>CIN 2 mặt + chân dung — nộp eKYC"]
+  B5 --> B6{"6 · Xác nhận thông tin định danh (V)<br/>kết quả đối chiếu ONI"}
+  B6 -- "ảnh không đạt / không khớp" --> B6a["6a · Chụp lại giấy tờ (A)<br/>nghi ngờ → chuyển hậu kiểm portal"] --> B6
+  B6 -- "đạt" --> B7["7 · Khai thông tin gian hàng (A)<br/>tên · loại hình · chợ"]
+  B7 --> B8["8 · Liên kết tài khoản nhận tiền (A)<br/>định chế gửi OTP tới CHỦ tài khoản"]
+  B8 --> B9{"9 · Xác nhận OTP của định chế (V)"}
+  B9 -- "sai quá lượt" --> B9a["9a · Liên kết lại tài khoản (A)"] --> B8
+  B9 -- "hợp lệ — định chế cấp token" --> B10["10 · Hoàn tất kích hoạt gian hàng (C)<br/>ACTIVE NGAY «tạo là active» — sinh QR<br/>+ lệnh in standee + vào danh sách hậu kiểm BRH"]
+  B10 --> E2((Kết thúc))

@@ -1,0 +1,15 @@
+flowchart LR
+  subgraph IN["Commerce · module Ingest — cửa nhận tiền về"]
+    WHK["Nhận báo có từ bank (M4)<br/>xác thực chữ ký · lệch giờ ký ≤5 phút"]
+    DED["Chống trùng<br/>mã sự kiện duy nhất toàn cục<br/>+ mã giao dịch duy nhất"]
+    NOR["Chuẩn hóa<br/>mọi nguồn (webhook · quét M3) → một dạng"]
+    POL["Lưới đỡ: quét lịch sử tài khoản (M3-poll)<br/>khi webhook chết"]
+    CDB[("credit_event")]
+  end
+  OB2["Bank — webhook báo có (M4)"] -.-> WHK
+  WHK --> DED
+  POL --> DED
+  DED --> NOR
+  NOR --> CDB
+  NOR -->|phát| EV4[["credit.received"]]
+  AQ["Màn vận hành"] -.->|kích hoạt quét M3| POL

@@ -1,0 +1,15 @@
+sequenceDiagram
+  autonumber
+  participant KH as Người mua (app bank/ví)
+  participant SW as Switch BRH (ACI)
+  participant BK as Bank/ví NHẬN
+  participant OB as Open Banking
+  participant MMS as MMS Peye-Haiti
+  participant NB as App người bán
+  Note over NB: Người bán trình QR (tĩnh TK thật / động kèm số tiền)
+  KH->>SW: ① Quét QR → lệnh chuyển khoản
+  SW->>BK: ② Ghi Có tài khoản nhận (RefID)
+  BK-->>OB: ③ Webhook báo có M4 (kèm người trả)
+  OB-->>MMS: ④ credit_event (dedup event_id+RefID)
+  MMS->>MMS: ⑤ Gạch bill 2 mức (đích danh payment_ref → TK liên kết + cửa sổ → tay)
+  MMS-->>NB: ⑥ «Ting ting» + biên lai (I5 · SMS nếu offline)

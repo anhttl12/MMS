@@ -1,0 +1,12 @@
+stateDiagram-v2
+  [*] --> Received: credit.received (đã dedup)
+  Received --> MatchedLink: có addenda.bill_id hợp lệ HOẶC duy nhất 1 bill khớp tiền trong cửa sổ
+  Received --> PendingManual: tie-break thất bại / không khớp
+  PendingManual --> MatchedManual: merchant xác nhận (bill/nợ/vãng lai)
+  Received --> LedgerProposed: không bill + có nợ mở trùng tiền → đề xuất
+  LedgerProposed --> MatchedManual: merchant xác nhận gạch nợ
+  LedgerProposed --> PendingManual: từ chối/quá 24h
+  MatchedLink --> [*]
+  MatchedManual --> [*]
+  PendingManual --> Stray: quá STRAY_AFTER (72h)
+  Stray --> [*]

@@ -1,0 +1,10 @@
+stateDiagram-v2
+  [*] --> HoSo : đăng ký (hồ sơ dở dang)
+  HoSo --> Active : eKYC PASS + đủ hồ sơ + TK nhận\nKÍCH HOẠT NGAY ≤ 5 giây
+  Active : Active — nhận tiền được
+  Active --> Active : hậu kiểm BRH-03 ≤ 24h\n(cờ ưu tiên · mẫu 10% hồ sơ sạch)
+  Active --> Suspended : suspend một chạm (kèm lý do)
+  Suspended --> Active : bổ sung đạt / mở khóa kèm lý do
+  Suspended --> Closed : đóng vĩnh viễn (checklist + bốn mắt)
+  Active --> Closed : đóng vĩnh viễn (checklist + bốn mắt)
+  Closed --> [*]

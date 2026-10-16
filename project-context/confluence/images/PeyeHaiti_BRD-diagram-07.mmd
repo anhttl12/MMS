@@ -1,0 +1,15 @@
+flowchart TD
+  S((Bắt đầu)) --> B1["1 · Quét mã QR (S)<br/>camera / chọn ảnh — giải mã ngoại tuyến, kiểm CRC"]
+  B1 --> B2{"2 · Đối chiếu tên người bán (V)<br/>tên ĐÃ XÁC MINH từ nền tảng + số tiền"}
+  B2 -- "mã hỏng / người bán bị khóa / đơn đã trả" --> B2a["2a · Dừng thanh toán (D)"] --> E1((Kết thúc))
+  B2 -- "đúng người bán" --> B3["3 · Nhập số tiền (A)<br/>chỉ với QR tĩnh — QR động khóa cứng số tiền"]
+  B3 --> B4["4 · Chọn nguồn tiền (B)<br/>trong tối đa 02 nguồn đã liên kết"]
+  B4 --> B5{"5 · Nhập mã PIN (V)<br/>bậc 1 — mọi lệnh"}
+  B5 -- "sai — còn lượt: nhập lại" --> B5
+  B5 -- "sai quá 5 lần" --> B5a["5a · Hủy lệnh trả (D)<br/>khóa đăng nhập 60 phút"] --> E1
+  B5 -- "đúng — lệnh GỬI NGAY sang định chế · ≤ 5.000 HTG" --> B7
+  B5 -- "đúng — lệnh gửi sang định chế · > 5.000 HTG" --> B6{"6 · Nhập mã OTP của định chế (V)<br/>định chế ĐÃ nhận lệnh, gửi SMS OTP tới chủ tài khoản"}
+  B6 -- "sai / hết hạn — còn lượt: nhập lại" --> B6
+  B6 -- "sai quá lượt" --> B6a["6a · Hủy lệnh trả (D)<br/>lệnh chuyển «thất bại» kèm lý do"] --> E1
+  B6 -- "đúng — định chế thực thi" --> B7["7 · Hoàn tất lệnh trả (C)<br/>nhận kết quả cuối ≤ 3 giây P95 + biên lai số"]
+  B7 --> E((Kết thúc))

@@ -1,0 +1,38 @@
+flowchart LR
+  subgraph CM["Commerce"]
+    subgraph C_MA["Module Khớp tiền"]
+      CCO["Nghe sự kiện «có tiền về»"]
+      CAF["Tìm ứng viên khớp<br/>①tài khoản liên kết + khớp số tiền/cửa sổ<br/>(đơn còn mở ≤24h) → ②xác nhận tay"]
+      RUL["Bộ luật khớp<br/>dung sai 0 · phân xử ±15 phút<br/>không phân xử được → chờ tay"]
+      STR["Lịch quét tiền vãng lai<br/>treo quá 72h → đánh dấu vãng lai"]
+    end
+    subgraph C_BL["Module Đơn hàng & Sổ nợ"]
+      CAPI["API danh mục món (hậu kiểm — C9)"]
+      BAPI["API đơn tính tiền<br/>tạo · tick món · tiền mặt · hủy"]
+      BSM["Máy trạng thái đơn<br/>chờ thu→đã thu/tiền mặt/hủy/hết hạn/bán chịu"]
+      DBK["Sổ nợ khách quen<br/>ghi nợ · ghi trả · nhắc nợ"]
+    end
+    subgraph C_RB["Module Biên lai"]
+      RCP["Biên lai — ghi trên chính kết quả khớp<br/>tự khớp SĐT người trả · người bán gửi tay (SMS)"]
+      DSP["Tiếp nhận «báo sai giao dịch»"]
+    end
+    subgraph C_PAY["Module Payment (nguoi mua) - 15/08"]
+      PAY["Nhận lệnh trả (E.16) · resolve tên người bán<br/>gọi M-PAY định chế trả · nhận kết quả B.4/C.8"]
+    end
+    SMH["Hợp nhất dữ liệu đồng bộ<br/>thay đổi từ máy offline"]
+    CDB2[("match_result (kiêm biên lai) · product<br/>bill · bill_item · debtor<br/>ledger_entry · payment")]
+  end
+  EV5[["credit.received"]] --> CCO
+  CCO --> CAF --> RUL
+  RUL ==>|"MỘT TRANSACTION: ghi kết quả khớp<br/>+ đánh dấu đơn «đã thu» / gạch nợ<br/>+ biên lai + cờ khớp-muộn"| CDB2
+  STR --> CDB2
+  BAPI --> BSM --> CDB2
+  CAPI --> CDB2
+  DBK --> CDB2
+  SMH --> BSM & DBK
+  RCP --> CDB2
+  DSP -.->|REST nội bộ| CPX["Back-office"]
+  PAY --> CDB2
+  PAY -->|phát SAU khi commit| EVP[["payment.finished"]]
+  RUL -->|phát SAU khi commit| EV6[["match.completed"]]
+  RUL -->|hậu kiểm hạn mức| EVL[["limit.breached"]]

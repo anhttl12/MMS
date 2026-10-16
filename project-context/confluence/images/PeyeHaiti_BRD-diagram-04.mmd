@@ -1,0 +1,22 @@
+sequenceDiagram
+  autonumber
+  participant U as Người dùng (app Peye-Haiti)
+  participant MMS as Nền tảng Peye-Haiti
+  participant DCT as Định chế trả (M-PAY)
+  participant DCN as Định chế nhận
+  U->>MMS: Quét QR → app giải mã, tra cứu tên người bán XÁC MINH
+  U->>U: Nhập PIN ứng dụng (bậc 1 — mọi lệnh)
+  U->>MMS: Xác nhận trả
+  MMS->>DCT: Khởi tạo lệnh trả (kèm token liên kết scope «trả tiền»)
+  alt Số tiền ≤ 5.000 HTG
+    DCT->>DCT: Thực thi ngay theo token + hạn mức
+  else Số tiền > 5.000 HTG
+    DCT-->>U: SMS OTP (SMS GW của định chế, tới chủ tài khoản)
+    U->>MMS: Nhập OTP trong app
+    MMS->>DCT: Chuyển OTP xác nhận
+    DCT->>DCT: Kiểm OTP rồi thực thi
+  end
+  DCT->>DCN: Chuyển tiền qua PRONAP
+  DCT-->>MMS: Webhook kết quả cuối (thành công/thất bại + lý do)
+  MMS-->>U: Kết quả ≤ 3 giây (P95) + biên lai số
+  DCN-->>MMS: Báo Có M4 → người bán «ting ting», đơn gạch đích danh

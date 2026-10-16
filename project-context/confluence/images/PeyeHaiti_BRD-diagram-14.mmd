@@ -1,0 +1,16 @@
+stateDiagram-v2
+  [*] --> KhoiTao : người dùng xác nhận + PIN đúng
+  KhoiTao : Khởi tạo — gửi sang định chế trả
+  KhoiTao --> ChoOTP : số tiền > 5.000 HTG\n(định chế gửi SMS OTP)
+  KhoiTao --> DangXuLy : ≤ 5.000 HTG — thực thi ngay
+  ChoOTP --> DangXuLy : OTP đúng
+  ChoOTP --> ThatBai : OTP sai quá lượt / hết hạn
+  DangXuLy --> ThanhCong : định chế báo kết quả thành công
+  DangXuLy --> ThatBai : thiếu số dư / vượt hạn mức / từ chối
+  DangXuLy --> QuaHan : không có kết quả trong hạn — tra lại theo chu kỳ
+  QuaHan --> ThanhCong : tra lại có kết quả
+  QuaHan --> ThatBai : tra lại có kết quả
+  ThanhCong : Thành công — biên lai số, bất biến
+  ThatBai : Thất bại — lý do dễ hiểu, bất biến
+  ThanhCong --> [*]
+  ThatBai --> [*]

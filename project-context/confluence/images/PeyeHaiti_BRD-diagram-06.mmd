@@ -1,0 +1,11 @@
+flowchart TD
+  S((Bắt đầu)) --> B1["1 · Tạo đơn tính tiền (A)<br/>tick món · chỉnh số lượng · tổng tính máy<br/>(bỏ qua nếu thu theo QR tĩnh)"]
+  B1 --> B2["2 · Trình mã QR cho khách (B)<br/>QR động đúng tổng đơn / QR tĩnh standee"]
+  B2 --> B3["3 · Theo dõi khoản tiền về (B)<br/>két tiền thời gian thực — khớp thì đơn TỰ GẠCH,<br/>«ting ting» + biên lai"]
+  B3 --> B4{"4 · Xác nhận khoản chưa khớp (V)"}
+  B4 -- "gán vào đơn đúng" --> B4a["4a · Xác nhận khớp thủ công (C)<br/>mức ② — ghi vết người thao tác"]
+  B4 -- "khách trả tiền mặt / bỏ mua" --> B4b["4b · Chuyển thu tiền mặt / hủy đơn (C)<br/>đơn quá hạn 24h tự «hết hạn»"]
+  B4 -- "khớp tự động đủ" --> B5
+  B4a --> B5["5 · Gửi biên lai cho khách (C)<br/>qua SMS — khách không cần app"]
+  B4b --> B5
+  B5 --> E((Kết thúc))

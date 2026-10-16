@@ -1,0 +1,13 @@
+stateDiagram-v2
+  [*] --> ChoThu : tạo bill (tick món)
+  ChoThu : Chờ thu
+  ChoThu --> DaThu : tiền về khớp (tự động / xác nhận tay)
+  ChoThu --> TienMat : «đã thu TIỀN MẶT» — đánh dấu riêng
+  ChoThu --> BanChiu : chuyển sổ nợ khách quen
+  ChoThu --> Huy : hủy bill
+  ChoThu --> HetHan : quá 24 giờ — có nút tạo lại
+  BanChiu --> DaThu : khách trả nợ, gạch có xác nhận
+  DaThu --> [*]
+  TienMat --> [*]
+  Huy --> [*]
+  HetHan --> [*]

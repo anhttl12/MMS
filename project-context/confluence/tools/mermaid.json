@@ -1,0 +1,1 @@
+{ "theme": "default", "flowchart": { "htmlLabels": true, "useMaxWidth": true, "curve": "basis" }, "themeVariables": { "fontFamily": "Helvetica Neue, Helvetica, Arial, sans-serif", "fontSize": "15px" }, "sequence": { "useMaxWidth": true }, "er": { "useMaxWidth": true } }

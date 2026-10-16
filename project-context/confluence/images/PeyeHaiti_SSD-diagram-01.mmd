@@ -1,0 +1,33 @@
+flowchart TB
+  subgraph CLIENT["Lớp ứng dụng"]
+    NB["App Peye-Haiti — MỘT app 2 profile:<br/>Marchand (offline-first) · Client (quét & trả)"]
+    PB["Portal BRH / Console vận hành"]
+  end
+  subgraph MMS["Hệ thống quản lý điểm bán — VDS xây · NẰM NGOÀI đường tiền"]
+    GW["Cổng API (OAuth2 · WAF) + BFF gom API theo màn"]
+    subgraph CORE["4 dịch vụ"]
+      MI["1 · Merchant & Identity<br/>hồ sơ · định danh · liên kết TK · bảng QR"]
+      CM["2 · Commerce<br/>nhận báo có · chống trùng (module Ingest)<br/>khớp tiền · đơn hàng · sổ nợ · biên lai<br/>khởi tạo trả người mua (module Payment)"]
+      CP["3 · Back-office<br/>khiếu nại · rửa tiền · đối soát (Compliance)<br/>tham số · phân quyền · nhật ký · báo cáo (Admin)"]
+      NT["4 · Notification<br/>thông báo · SMS"]
+    end
+    BUS[("Event bus — Apache Kafka (KRaft)")]
+    DB[("PostgreSQL HA — mỗi dịch vụ một schema")]
+    RD[("Redis")]
+    OS[("Object Storage — MinIO")]
+  end
+  subgraph EXT["Đối tác ngoài"]
+    OBA["Open Banking bank/ví nhận<br/>M1 · M1a · M1b · M3 · M4"]
+    OBP["Open Banking định chế TRẢ<br/>M-PAY · M-PAY-hook"]
+    BRHS["BRH-System: định danh (E1) · rửa tiền (E2)"]
+    SW["Switch BRH (ACI): bảng kê cuối ngày (E3)"]
+    NAT["Natcom: SMS (N1)"]
+  end
+  CLIENT --> GW --> CORE
+  CORE <--> BUS
+  CORE --> DB & RD & OS
+  MI & CM <--> OBA
+  CM <--> OBP
+  MI & CP --> BRHS
+  SW -- "bảng kê cuối ngày (E3)" --> CP
+  NT --> NAT

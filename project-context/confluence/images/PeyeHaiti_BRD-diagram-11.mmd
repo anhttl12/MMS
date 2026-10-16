@@ -1,0 +1,8 @@
+flowchart TD
+  S((Bắt đầu)) --> B1["1 · Tiếp nhận hồ sơ kết nạp (A)<br/>bảng thông số trao MỘT lần: tên chuẩn hóa · URL bảng khóa công khai<br/>chứng chỉ kênh + dải IP · URL webhook · đầu mối · năng lực SMS OTP"]
+  B1 --> B2["2 · Cấu hình đầu nối sandbox (A)<br/>dữ liệu giả lập + bộ vector chứng nhận"]
+  B2 --> B3{"3 · Chạy bộ kiểm thử hợp chuẩn (V)<br/>vector QR · vector xác thực thẻ/chữ ký<br/>kịch bản theo vai trò: nhận 8 API · trả đủ 12"}
+  B3 -- "không đạt" --> B3a["3a · Khắc phục và chạy lại (A)<br/>vượt định mức hỗ trợ → quản lý thay đổi"] --> B3
+  B3 -- "đạt" --> B4["4 · Cấp chứng nhận kết nối (C)<br/>biên bản đạt + ghi nhận vai trò (chiều nhận/chiều trả)"]
+  B4 --> B5["5 · Kích hoạt đầu nối production (C)<br/>chứng chỉ + IP production riêng · giám sát SLA bắt đầu"]
+  B5 --> E((Kết thúc))

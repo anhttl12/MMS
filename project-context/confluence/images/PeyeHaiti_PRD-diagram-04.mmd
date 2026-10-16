@@ -1,0 +1,11 @@
+flowchart TD
+  A["Người dùng xác nhận trả<br/>(đã thấy TÊN người bán xác minh)"] --> PIN{"Nhập PIN app<br/>(bậc 1 — mọi lệnh)"}
+  PIN -- "sai quá 5 lần" --> LOCK["Khóa 60 phút"]
+  PIN -- "đúng" --> TH{"Số tiền > 5.000 HTG?<br/>(PAY_SCA_THRESHOLD — chuẩn hóa)"}
+  TH -- "KHÔNG" --> DAY{"Trong trần ngày bậc-PIN?<br/>PAY_DAY_MAX 25.000 HTG & ≤ 20 lệnh<br/>(chỉ đếm lệnh bậc-PIN)"}
+  DAY -- "vượt" --> BLOCK["App chặn kèm lý do<br/>(daily_limit)"]
+  DAY -- "trong trần — kiểm từ lúc TẠO lệnh, app chặn sớm" --> EXEC["Định chế trả thực thi<br/>theo token + hạn mức tự áp"]
+  TH -- "CÓ" --> OTP{"SMS OTP của ĐỊNH CHẾ<br/>(SMS GW định chế → chủ TK,<br/>nhập ngay trên màn kết quả NM-03)"}
+  OTP -- "sai quá lượt (sca_failed)" --> FAIL["Lệnh thất bại — lý do bản địa hóa"]
+  OTP -- "đúng" --> EXEC
+  EXEC --> KQ["Kết quả cuối ≤ 3 giây P95<br/>+ biên lai số · người bán vẫn nhận M4 «ting ting»"]

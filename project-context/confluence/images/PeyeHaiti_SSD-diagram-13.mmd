@@ -1,0 +1,50 @@
+flowchart TB
+  subgraph CL["NGƯỜI DÙNG"]
+    A1["App người bán — PWA, chạy offline"]
+    A3["Portal BRH · Console vận hành"]
+  end
+
+  subgraph EDGE["BIÊN — VÀO HỆ THỐNG"]
+    WAF["WAF + Load Balancer<br/>HAProxy · VRRP ×2"]
+    GW["API Gateway (Ingress)<br/>định tuyến · giới hạn tần suất · kiểm JWT"]
+    KC["Keycloak<br/>OIDC/OAuth2 · phát JWT · 5 vai trò"]
+  end
+
+  subgraph K8S["KUBERNETES — 4 DỊCH VỤ"]
+    BFF["BFF — gom API theo từng màn"]
+    S1["1 · Merchant & Identity"]
+    S2["2 · Commerce (gồm module Ingest)"]
+    S3["3 · Back-office (Compliance + Admin & Config)"]
+    S4["4 · Notification"]
+    CON["6 connector đầu nối<br/>ob-wallet2 · ob-bank2 · e1 · e2 · e3 · n1"]
+    VLT["Vault — kho khóa mã hóa token"]
+  end
+
+  subgraph PLAT["NỀN TẢNG DÙNG CHUNG — CÓ TRẠNG THÁI"]
+    PG[("PostgreSQL HA · Patroni<br/>5 schema · PgBouncer")]
+    KFK[("Apache Kafka — KRaft ×3<br/>xương sống sự kiện")]
+    RED[("Redis ×3<br/>phiên · rate-limit · khóa nhẹ")]
+    MIO[("MinIO<br/>ảnh eKYC · chứng cứ · sao lưu")]
+    OBS["Observability<br/>Prometheus · Loki · Grafana"]
+  end
+
+  subgraph EXT["ĐỐI TÁC NGOÀI — VPN + mTLS"]
+    OB["Open Banking bank/ví<br/>M1·M1a·M1b·M3 · webhook M4<br/>M-PAY·M-PAY-hook (chiều trả)"]
+    BRH["BRH-System — E1 · E2"]
+    SWX["Switch BRH — E3"]
+    NAT["Natcom — SMS N1"]
+  end
+
+  CL -->|HTTPS| WAF --> GW
+  GW -.->|kiểm token| KC
+  GW -->|JWT đã xác thực| BFF
+  BFF --> S1 & S2 & S3 & S4
+  S1 --> VLT
+  S1 & S2 & S3 & S4 --> PG
+  S1 & S2 & S3 & S4 -.->|phát và nhận sự kiện| KFK
+  BFF --> RED
+  S1 & S3 --> MIO
+  K8S -.-> OBS
+  CON -.->|mTLS| OB & BRH & SWX & NAT
+  OB -->|webhook M4 báo tiền về| WAF
+  SWX -->|bảng kê cuối ngày| WAF

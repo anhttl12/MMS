@@ -1,0 +1,32 @@
+PeyeHaiti_API_Spec
+  file: PeyeHaiti_API_Spec.storage.html
+  attachments: (không có)
+
+PeyeHaiti_BRD
+  file: PeyeHaiti_BRD.storage.html
+  attachments: PeyeHaiti_BRD-diagram-01.png, PeyeHaiti_BRD-diagram-02.png, PeyeHaiti_BRD-diagram-03.png, PeyeHaiti_BRD-diagram-04.png, PeyeHaiti_BRD-diagram-05.png, PeyeHaiti_BRD-diagram-06.png, PeyeHaiti_BRD-diagram-07.png, PeyeHaiti_BRD-diagram-08.png, PeyeHaiti_BRD-diagram-09.png, PeyeHaiti_BRD-diagram-10.png, PeyeHaiti_BRD-diagram-11.png, PeyeHaiti_BRD-diagram-12.png, PeyeHaiti_BRD-diagram-13.png, PeyeHaiti_BRD-diagram-14.png, PeyeHaiti_BRD-diagram-15.png, PeyeHaiti_BRD-diagram-16.png
+
+PeyeHaiti_DataDict
+  file: PeyeHaiti_DataDict.storage.html
+  attachments: (không có)
+
+PeyeHaiti_PRD
+  file: PeyeHaiti_PRD.storage.html
+  attachments: PeyeHaiti_PRD-diagram-01.png, PeyeHaiti_PRD-diagram-02.png, PeyeHaiti_PRD-diagram-03.png, PeyeHaiti_PRD-diagram-04.png, PeyeHaiti_PRD-diagram-05.png, PeyeHaiti_PRD-diagram-06.png, PeyeHaiti_PRD-diagram-07.png, PeyeHaiti_PRD-diagram-08.png
+
+PeyeHaiti_SSD
+  file: PeyeHaiti_SSD.storage.html
+  attachments: PeyeHaiti_SSD-diagram-01.png, PeyeHaiti_SSD-diagram-02.png, PeyeHaiti_SSD-diagram-03.png, PeyeHaiti_SSD-diagram-04.png, PeyeHaiti_SSD-diagram-05.png, PeyeHaiti_SSD-diagram-06.png, PeyeHaiti_SSD-diagram-07.png, PeyeHaiti_SSD-diagram-08.png, PeyeHaiti_SSD-diagram-09.png, PeyeHaiti_SSD-diagram-10.png, PeyeHaiti_SSD-diagram-11.png, PeyeHaiti_SSD-diagram-12.png, PeyeHaiti_SSD-diagram-13.png
+
+PeyeHaiti_Traceability
+  file: PeyeHaiti_Traceability.storage.html
+  attachments: (không có)
+
+PeyeHaiti_TSD
+  file: PeyeHaiti_TSD.storage.html
+  attachments: PeyeHaiti_TSD-diagram-01.png, PeyeHaiti_TSD-diagram-02.png
+
+README
+  file: README.storage.html
+  attachments: (không có)
+

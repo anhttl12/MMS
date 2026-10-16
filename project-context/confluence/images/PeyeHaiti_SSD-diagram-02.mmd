@@ -1,0 +1,15 @@
+flowchart LR
+  subgraph BFF["BFF & Cổng API"]
+    AUTHM["Chặn xác thực<br/>kiểm token · phiên · giới hạn tần suất"]
+    NBC["Gom API cho app<br/>theo từng màn người bán"]
+    PTC["Gom API cho portal<br/>màn BRH · màn vận hành"]
+    SYNC["Điểm đồng bộ offline<br/>thay đổi hai chiều · ma trận trạng thái"]
+  end
+  APP["📱 App người bán"] --> AUTHM
+  POR["🖥️ Portal"] --> AUTHM
+  AUTHM --> NBC
+  AUTHM --> PTC
+  AUTHM --> SYNC
+  NBC -.->|REST nội bộ| SVCS["4 dịch vụ phía sau"]
+  PTC -.-> SVCS
+  SYNC -.-> SVCS

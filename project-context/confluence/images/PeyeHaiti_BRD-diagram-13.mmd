@@ -1,0 +1,16 @@
+stateDiagram-v2
+  [*] --> Mo : tạo đơn (tick món)
+  Mo : Mở — chờ thu
+  Mo --> DaThu : tiền về khớp (tự động mức ① / tay mức ②)
+  Mo --> TienMat : người bán bấm «đã thu TIỀN MẶT»
+  Mo --> BanChiu : chuyển vào sổ nợ khách quen
+  Mo --> Huy : người bán hủy đơn
+  Mo --> HetHan : quá 24 giờ không thu
+  BanChiu --> DaThu : khách trả nợ (QR khớp / xác nhận)
+  DaThu : Đã thu — vào doanh số QR
+  TienMat : Tiền mặt — tách riêng, không vào đối soát định chế
+  HetHan : Hết hạn — tạo lại bằng 2 chạm
+  DaThu --> [*]
+  TienMat --> [*]
+  Huy --> [*]
+  HetHan --> [*]

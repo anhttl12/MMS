@@ -1,0 +1,12 @@
+stateDiagram-v2
+  [*] --> ChoThu: tạo bill (NB-07)
+  ChoThu --> DaThu: match.completed (QR)
+  ChoThu --> TienMat: merchant đóng «tiền mặt» (ngoài đối soát)
+  ChoThu --> Huy: hủy (ghi log)
+  ChoThu --> HetHan: quá 24h (giờ server)
+  ChoThu --> BanChiu: chuyển sổ nợ (NB-15)
+  DaThu --> [*]
+  TienMat --> [*]
+  Huy --> [*]
+  HetHan --> ChoThu: tạo lại
+  BanChiu --> [*]

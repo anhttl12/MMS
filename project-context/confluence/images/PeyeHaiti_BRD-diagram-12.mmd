@@ -1,0 +1,12 @@
+stateDiagram-v2
+  [*] --> DangKy : bắt đầu đăng ký
+  DangKy : Hồ sơ dở dang
+  DangKy --> Active : eKYC đạt + đủ hồ sơ + TK nhận\n(TẠO LÀ ACTIVE — không cổng duyệt)
+  Active : Active — nhận tiền được
+  Active --> Active : đóng hậu kiểm ≤ 24h\n(hồ sơ sạch / có cờ đã xử lý)
+  Active --> Suspended : BRH tạm khóa một chạm\n(kèm lý do bắt buộc)
+  Suspended : Suspended — chặn nghiệp vụ trên nền tảng (không sinh QR/đơn mới, cảnh báo trên trang xác minh)
+  Suspended --> Active : bổ sung hồ sơ đạt / mở khóa kèm lý do
+  Suspended --> Closed : đóng vĩnh viễn\n(checklist + bốn mắt)
+  Active --> Closed : đóng vĩnh viễn\n(checklist + bốn mắt, không còn case mở)
+  Closed --> [*]

@@ -1,0 +1,8 @@
+flowchart TD
+  S((Bắt đầu)) --> B1["1 · Tra cứu danh sách hậu kiểm (S)<br/>hồ sơ có CỜ ưu tiên xếp trên<br/>(điểm tin cậy thấp · sàng lọc bù có kết quả)"]
+  B1 --> B2["2 · Xem hồ sơ định danh (B)<br/>ảnh giấy tờ · kết quả eKYC · gian hàng · tài khoản (che số)"]
+  B2 --> B3{"3 · Đánh giá hồ sơ (V)"}
+  B3 -- "đạt" --> B4["4 · Xác nhận đóng hậu kiểm (C)<br/>gán mã ngành MCC nếu chưa có · ghi nhật ký"]
+  B3 -- "không đạt / nghi ngờ" --> B4a["4a · Tạm khóa và yêu cầu bổ sung (C)<br/>chuyển «suspended» kèm lý do bắt buộc<br/>người bán bổ sung qua ứng dụng"]
+  B4a --> B1
+  B4 --> E((Kết thúc))

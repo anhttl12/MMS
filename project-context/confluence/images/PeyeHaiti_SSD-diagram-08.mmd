@@ -1,0 +1,15 @@
+flowchart LR
+  subgraph AD["Back-office · module Admin & Config"]
+    PAPI["API tham số<br/>đề xuất → phê duyệt bốn mắt · hiệu lực theo ngày"]
+    MKT["Danh mục chợ · danh mục nhân viên hiện trường"]
+    RBACX["Phân quyền<br/>5 vai trò · không kiêm nhiệm duyệt"]
+    AUD["Ghi nhật ký<br/>chỉ thêm · chuỗi băm · kiểm hằng đêm"]
+    KPI["Tổng hợp chỉ số"]
+    REX["Xuất báo cáo<br/>CSV/PDF (on-demand)"]
+    ADB[("param · market · app_user<br/>audit_log · report")]
+  end
+  PAPI & MKT & RBACX & AUD & KPI --> ADB
+  KPI --> REX
+  EVA[["sự kiện CÓ người thao tác:<br/>khiếu nại · gian hàng · đổi tham số · thu hồi token"]] --> AUD
+  EVK[["khớp xong (match.completed) · có tiền về"]] -->|đếm chỉ số| KPI
+  PAPI -->|phát để xóa cache| EV12[["param.changed"]]

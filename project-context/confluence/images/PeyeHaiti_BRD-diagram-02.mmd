@@ -1,0 +1,24 @@
+flowchart TB
+  subgraph KENH["KÊNH NGƯỜI DÙNG"]
+    PH01["PH-01 · App di động Peye-Haiti<br/>MỘT app — chọn vai tại CH-00<br/>23 màn (17 bán + 5 trả + CH-00)"]
+    PH02["PH-02 · Portal BRH<br/>10 màn nghiệp vụ"]
+    PH03["PH-03 · Console vận hành VDS<br/>4 màn kỹ thuật"]
+  end
+  subgraph LOI["NỀN TẢNG"]
+    PH04["PH-04 · Nền tảng lõi<br/>4 dịch vụ · 12 module trên Kubernetes<br/>109 đầu mục API · 28 bảng dữ liệu"]
+    PH05["PH-05 · Cổng Open Banking & kết nạp<br/>bộ chuẩn 12 API + sandbox + chứng nhận"]
+  end
+  subgraph NGOAI["HỆ THỐNG NGOÀI"]
+    PH06A["Định chế nhận & trả<br/>(wallet2 + 1 ngân hàng pilot)"]
+    PH06B["BRH-System<br/>eKYC E1 · sàng lọc E2"]
+    PH06C["Switch PRONAP/ATS<br/>đối soát E3"]
+    PH06D["SMS Natcom N1<br/>brandname PEYE-HAITI"]
+  end
+  PH01 --> PH04
+  PH02 --> PH04
+  PH03 --> PH04
+  PH04 <--> PH05
+  PH05 <--> PH06A
+  PH04 --> PH06B
+  PH06C --> PH04
+  PH04 --> PH06D

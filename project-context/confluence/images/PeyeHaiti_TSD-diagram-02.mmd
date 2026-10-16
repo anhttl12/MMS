@@ -1,0 +1,55 @@
+flowchart TB
+  subgraph NET["Internet"]
+    U1["App người bán / người mua PWA — khoảng 3.500 DAU"]
+    U2["Portal BRH và Console vận hành"]
+  end
+
+  subgraph PROD["PRODUCTION — DC Natcom · 24 VM · 88 vCPU / 396 GB RAM / ~14,6 TB"]
+    LB["WAF + LB ×2 VRRP<br/>2 vCPU / 4 GB — thiết kế 300 rps TLS"]
+    subgraph K8S["Kubernetes: 3 control 2C/8G + 4 worker 8C/32G"]
+      GW["API Gateway — Ingress<br/>định tuyến · rate-limit · chặn xác thực"]
+      KC["Keycloak — OIDC/OAuth2<br/>xác thực người dùng · phát JWT"]
+      SVC["4 dịch vụ ×2 replica HPA<br/>Merchant-Identity · Commerce (gồm Ingest)<br/>Back-office · Notification<br/>+ BFF + Portal BE + 6 connector"]
+      VLT["Vault — kho khóa<br/>mã hóa token OB · xoay KEK"]
+    end
+    PG[("PostgreSQL HA ×2 — primary + sync standby<br/>8C/64G/1TB NVMe · Patroni + PgBouncer<br/>5 schema: 4 dịch vụ + shared")]
+    KFK[("Apache Kafka KRaft ×3 broker<br/>2C/8G/200GB SSD · RF3 · retention 7 ngày")]
+    RED[("Redis sentinel ×3<br/>2C/4G — cache · rate limit · khóa nhẹ")]
+    MIO[("MinIO erasure 4 ×4<br/>2C/8G/2TB — khoảng 4 TB usable")]
+    OBS["Observability ×2 — 4C/16G/1TB<br/>Prometheus · Loki · Tempo · Grafana"]
+    BAS["Bastion + CI runner ×1"]
+  end
+
+  subgraph UATE["UAT — 8 VM · 38 vCPU / 80 GB / ~1,9 TB — nghiệm thu BRH + kiểm thử tải"]
+    UK["K8s 1 control + 2 worker · PostgreSQL 1 · Kafka 1<br/>Redis 1 · MinIO 1 · LB+Observability gộp 1"]
+  end
+
+  subgraph PARTNER["Đối tác — VPN site-to-site + mTLS + IP allowlist"]
+    OBP["Open Banking — bank/ví nhận<br/>M4 webhook cam kết tối thiểu 50 TPS theo D2"]
+    BRHS["BRH-System<br/>E1 định danh · E2 rửa tiền"]
+    SWP["Switch BRH ACI<br/>E3 bảng kê cuối ngày · đăng ký danh mục TK"]
+    NATP["Natcom — N1 SMS"]
+  end
+
+  BKP[("Sao lưu — MinIO versioning<br/>ảnh chụp ngày + WAL liên tục")]
+
+  U1 --> LB
+  U2 --> LB
+  LB --> K8S
+  LB --> GW --> KC
+  GW --> SVC
+  SVC --> VLT
+  K8S --> PG
+  K8S --> KFK
+  K8S --> RED
+  K8S --> MIO
+  K8S -.-> OBS
+  BAS -.-> K8S
+  PG -- "ảnh chụp ngày + WAL liên tục" --> BKP
+  MIO -- "versioning" --> BKP
+  K8S -- "gọi ra JWT + mTLS" --> OBP
+  OBP -- "M4 webhook vào partner endpoint" --> LB
+  K8S --> BRHS
+  K8S --> NATP
+  SWP -- "E3 theo phiên" --> LB
+  UATE -.-> PARTNER

@@ -1,0 +1,11 @@
+sequenceDiagram
+  autonumber
+  participant NB as App người bán
+  participant TK as Merchant & Identity (kho token)
+  participant OB as Open Banking bank
+  NB->>TK: Đổi tài khoản nhận (OTP chủ TK mới — bank xác thực quyền sở hữu)
+  TK->>OB: ① Liên kết tài khoản mới, cấp token mới (M1)
+  TK->>NB: ② Sinh QR mới + lệnh in standee mới (BRH-04) + QR giấy A5 in tạm
+  Note over TK,OB: ③ TK CŨ giữ liên kết OLD_LINK_GRACE = 30 ngày — tiền quét QR cũ vẫn về, vẫn ting ting & gạch bill
+  NB->>TK: ④ Xác nhận «đã dán standee mới»
+  TK->>OB: ⑤ Hết 30 ngày + đã dán bảng mới → thu hồi token cũ (M1b), cập nhật danh mục TK với Switch

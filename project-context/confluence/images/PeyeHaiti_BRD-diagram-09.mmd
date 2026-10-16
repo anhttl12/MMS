@@ -1,0 +1,10 @@
+flowchart TD
+  S((Bắt đầu)) --> B1["1 · Tiếp nhận case khiếu nại (A)<br/>từ người mua qua app hoặc tạo mới — gắn đúng 1 giao dịch (RefID)"]
+  B1 --> B2["2 · Tra cứu chuỗi giao dịch (S)<br/>nhận — khớp — biên lai — thông báo"]
+  B2 --> B3["3 · Cập nhật diễn biến xử lý (A)<br/>SLA đếm ngược · quá hạn tự leo thang"]
+  B3 --> B4{"4 · Đánh giá kết luận (V)"}
+  B4 -- "hoàn tiền" --> B5a{"5a · Xác minh bút toán hoàn (V)<br/>dò sao kê định chế / đính chứng từ"}
+  B5a -- "thiếu xác minh" --> BLOCK["Hệ thống CHẶN chốt «Đã hoàn»"] --> B3
+  B5a -- "đủ căn cứ" --> B5["5 · Chốt kết luận và đóng case (C)<br/>thông báo hai bên · đồng bộ về ứng dụng"]
+  B4 -- "bác khiếu nại" --> B5b["5b · Bác khiếu nại (C)<br/>kèm lý do bắt buộc"] --> B5
+  B5 --> E((Kết thúc))

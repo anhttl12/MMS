@@ -1,0 +1,13 @@
+stateDiagram-v2
+  [*] --> ChoOTP : chọn định chế + nhập số TK
+  ChoOTP : Chờ OTP chủ tài khoản (định chế gửi)
+  ChoOTP --> Active : OTP đúng — định chế cấp token
+  ChoOTP --> Huy : OTP sai quá lượt — phiên khóa
+  Active : Active — nhận báo Có, token tự gia hạn trước 7 ngày
+  Active --> AnHan : đổi tài khoản chính (TK cũ vào ân hạn)
+  AnHan : Ân hạn ≥ 30 ngày — vẫn nhận tiền qua QR cũ
+  AnHan --> ThuHoi : hết ân hạn
+  Active --> ThuHoi : người bán thu hồi / định chế thu hồi / đóng gian hàng
+  ThuHoi : Thu hồi — định chế ngừng báo Có, token vô hiệu
+  Huy --> [*]
+  ThuHoi --> [*]

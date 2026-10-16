@@ -1,0 +1,9 @@
+flowchart TD
+  S((Bắt đầu)) --> B1["1 · Chọn phiên đối soát (S)<br/>phiên theo ngày nghiệp vụ — trạng thái bảng kê các bên"]
+  B1 --> B2["2 · Nạp bảng kê định chế (A)<br/>chỉ nạp sau khi kiểm chữ ký số + mã toàn vẹn"]
+  B2 --> B3{"3 · Chạy đối chiếu (V)"}
+  B3 -- "có chênh lệch" --> B4["4 · Phân loại chênh lệch (C)<br/>gán nguyên nhân từng khoản"]
+  B4 --> B4a["4a · Xử lý khoản chênh lệch (C)<br/>quét bù lịch sử định chế · bút toán điều chỉnh<br/>(nháp → duyệt bốn mắt → hạch toán) · mở case điều tra"]
+  B4a --> B5
+  B3 -- "khớp" --> B5["5 · Đóng phiên đối soát (C)<br/>báo cáo phiên · tồn chuyển hàng đợi"]
+  B5 --> E((Kết thúc))

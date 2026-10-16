@@ -1,0 +1,20 @@
+flowchart LR
+  subgraph APP["Ứng dụng (VDS xây)"]
+    NB["📱 App Peye-Haiti<br/>(một app — vai mua & vai bán)"]
+    PB["🏛️ Portal BRH + Vận hành"]
+  end
+  MMS["🟥 MMS Peye-Haiti<br/>dùng chung quốc gia<br/>(NGOÀI đường tiền)"]
+  OB["🔗 OPEN BANKING<br/>(cấu phần mới — bank nhận xây<br/>theo chuẩn BRH)"]
+  BANK["🏦 Bank/Ví NHẬN tiền<br/>wallet2 + 1 bank"]
+  SW["🔀 Switch BRH (ACI)"]
+  PAYER["📲 App bank/ví NGƯỜI MUA<br/>(hoặc app Peye-Haiti qua M-PAY)"]
+  BRHS["🏛️ BRH-System<br/>eKYC E1 · AML E2"]
+  NAT["📡 Natcom<br/>SMS N1"]
+  NB & PB --> MMS
+  MMS <-->|"token · lịch sử<br/>báo có realtime"| OB
+  OB --- BANK
+  MMS -->|"eKYC · AML"| BRHS
+  MMS -->|"OTP · báo có SMS"| NAT
+  PAYER -->|"① quét QR → lệnh chuyển tiền"| SW
+  SW -->|"② ghi Có tài khoản nhận"| BANK
+  SW -.->|"E3 báo cáo cuối ngày"| MMS

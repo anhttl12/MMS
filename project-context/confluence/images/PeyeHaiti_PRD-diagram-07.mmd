@@ -1,0 +1,12 @@
+stateDiagram-v2
+  [*] --> submitted : PIN đúng — lệnh gửi sang định chế (M-PAY)
+  submitted --> sca_required : lệnh > 5.000 HTG\n(định chế gửi SMS OTP)
+  sca_required --> submitted : OTP đúng (xác nhận qua M-PAY)
+  sca_required --> failed : sai OTP quá lượt (sca_failed)
+  submitted --> succeeded : webhook kết quả — thành công
+  submitted --> failed : thiếu số dư / hạn mức / từ chối
+  submitted --> timeout : quá hạn không kết quả — tra lại chu kỳ
+  timeout --> succeeded : tra lại có kết quả
+  timeout --> failed : tra lại có kết quả
+  succeeded --> [*]
+  failed --> [*]

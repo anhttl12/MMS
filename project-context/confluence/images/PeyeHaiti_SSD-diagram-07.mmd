@@ -1,0 +1,13 @@
+flowchart LR
+  subgraph NT["Notification"]
+    CONS["Nghe các sự kiện<br/>khớp xong · token · khiếu nại · đối soát"]
+    TPL["Bộ mẫu tin<br/>tiếng Pháp / Creole"]
+    RTR["Định tuyến kênh<br/>đẩy trong app → chờ 60 giây → SMS"]
+    RLM["Giới hạn tần suất<br/>5 SMS/giờ/người bán"]
+    TRK["Theo dõi trạng thái gửi"]
+    NDB[("notification")]
+  end
+  EV8[["các topic Kafka"]] --> CONS --> TPL --> RTR
+  RTR --> RLM -.->|"SMS (N1)"| SMSX["Natcom"]
+  RTR -.->|đẩy| PSH["Thông báo đẩy"]
+  RTR --> TRK --> NDB

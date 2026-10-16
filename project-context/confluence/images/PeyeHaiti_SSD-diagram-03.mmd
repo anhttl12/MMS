@@ -1,0 +1,35 @@
+flowchart LR
+  subgraph MI["Merchant & Identity"]
+    subgraph M_MER["Module Gian hàng"]
+      MAPI["API hồ sơ gian hàng"]
+      LCM["Quản lý vòng đời («v3.6»)<br/>nháp→HOẠT ĐỘNG NGAY→tạm khóa→đóng"]
+      STD["Quản lý bảng QR<br/>in theo đợt · nhắc thay khi đổi TK"]
+      FAG["Phiên hỗ trợ đăng ký hộ<br/>gắn mã nhân viên hiện trường (danh mục ở tham số)"]
+    end
+    subgraph M_ID["Module Định danh"]
+      AAPI["API xác thực<br/>đăng ký · đăng nhập · quên PIN"]
+      OTP["Quản lý OTP<br/>120 giây · 5 lần/ngày · khóa 60 phút"]
+      PINS["Mã PIN (băm Argon2id)"]
+      DEV["Khóa khẩn mất máy (hotline 8686)<br/>thu hồi mọi phiên ≤60 giây"]
+      EKO["Điều phối định danh<br/>tải ảnh → gọi BRH (E1) → chờ kết quả"]
+    end
+    subgraph M_TK["Module Tài khoản & Token"]
+      LOR["Điều phối liên kết<br/>liên kết TK có sẵn (M1)<br/>OTP bank (bank xác thực chủ TK)"]
+      TVA["Kho token<br/>mã hóa nhiều lớp · gia hạn trước 7 ngày (M1a)"]
+      CUT["Trình tự đổi tài khoản (S4)<br/>①liên kết TK mới →②QR mới + lệnh in<br/>→③giữ TK cũ 30 ngày →④xác nhận dán →⑤thu hồi (M1b)"]
+    end
+    MDB[("merchant · standee · person<br/>ekyc_result<br/>auth_session (fingerprint, is_agent_session)<br/>application · account_link · token")]
+  end
+  MAPI --> LCM
+  AAPI --> OTP & PINS & DEV & EKO
+  EKO -.->|ảnh| MIO[("MinIO")]
+  EKO -.->|REST| E1X["BRH — định danh (E1)"]
+  LOR -.->|REST + chứng thư 2 chiều| OB["Open Banking bank/ví"]
+  TVA -.->|khóa| VLT[("Kho khóa")]
+  CUT --> TVA
+  STD -.->|lấy TK đã liên kết| LOR
+  LCM & EKO & CUT --> MDB
+  LCM -->|phát| EV1[["merchant.*"]]
+  EKO -->|phát| EV2[["ekyc.completed"]]
+  CUT -->|phát| EV3[["token.*"]]
+  CSE[["case.concluded"]] -->|khóa/mở gian hàng| LCM

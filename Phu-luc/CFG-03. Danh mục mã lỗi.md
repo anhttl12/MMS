@@ -8,6 +8,7 @@ A – Tạo mới, M – Sửa đổi, D – Xóa bỏ
 |---|---|---|---|---|---|
 |Ngày thay đổi|Vị trí thay đổi|A, M, D|Nguồn gốc|Mô tả thay đổi|Phiên bản|
 |14/09/2026|Toàn bộ|A||Tạo mới tài liệu|1.0|
+|16/10/2026|2.5 · 2.6|M|Review chéo SRS 16/10/2026|- `PIN-422-OTPWRONG`: sai còn lượt **giữ mã**, hiện `{tries_left}`; thêm `PIN-422-OTPLOCKED` (hết lượt — hủy mã)<br>- `PIN-500-SYS` / `PIN-000-OFFLINE`: định nghĩa lại theo COMMON-01 Mục 4<br>- Thêm `PIN-422-LINKGRACE` (CN-08)|1.1|
 
 # 1. Quy tắc đặt mã lỗi
 

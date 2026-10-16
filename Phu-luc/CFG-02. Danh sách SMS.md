@@ -6,6 +6,7 @@ BẢNG GHI NHẬN THAY ĐỔI
 |---|---|---|---|---|---|
 |Ngày|Vị trí|A/M/D|Nguồn gốc|Mô tả thay đổi|Phiên bản|
 |08/09/2026|Toàn bộ|A||Tạo mới tài liệu|1.0|
+|16/10/2026|2|M|Review chéo SRS 16/10/2026|- Thêm mẫu tin `MS00009` · `LINK_REMOVED` (CN-08)|1.1|
 
 ## 1. QUY ƯỚC
 

@@ -9,6 +9,7 @@ A – Tạo mới, M – Sửa đổi, D – Xóa bỏ
 |---|---|---|---|---|---|---|
 |Ngày|Vị trí|A/M/D|Nguồn gốc|PB cũ|Mô tả thay đổi|PB mới|
 |08/09/2026|Toàn bộ|A||—|Tạo mới tài liệu|1.0|
+|16/10/2026|1 · 3.2.1 · 5|M|Review chéo SRS 16/10/2026|1.0|- Bỏ `purpose = emergency_lock`: khóa khẩn chỉ qua hotline 8686 và portal BRH<br>- Luồng 1 · Bước 4: ghi ngoại lệ duy nhất — CN-05 kiểm PIN hiện tại riêng tại NB-14B<br>- Mục 5: bổ sung CN-05, CN-06, CN-07, CN-08 — CN-07 và CN-08 chỉ cần PIN (Luồng 1)|1.1|
 
 ## 1. MÔ TẢ CHUNG
 

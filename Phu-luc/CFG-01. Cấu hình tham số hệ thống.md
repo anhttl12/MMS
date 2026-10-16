@@ -7,6 +7,7 @@
 |---|---|---|---|---|---|---|
 |Ngày|Vị trí|A/M/D|Nguồn gốc|PB cũ|Mô tả thay đổi|PB mới|
 |08/09/2026|Toàn bộ|A||—|Thêm mới|1.0|
+|16/10/2026|1.1 · 1.3 · 1.7|M|Review chéo SRS 16/10/2026|1.0|- `STEPUP_AMOUNT_THRESHOLD`: chỉ áp cho hành động có số tiền — đổi tài khoản nhận và hủy liên kết chỉ cần PIN<br>- `OTP_TTL`: không còn là mốc gửi lại mã — Resend đếm từ `OTP_RESEND_AFTER`<br>- Thêm tham số mới `LINK_MAX_PER_PERSON` (mặc định 5 — đề xuất, chờ chốt)|1.1|
 
 ---
 

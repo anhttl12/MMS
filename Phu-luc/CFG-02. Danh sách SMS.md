@@ -31,6 +31,7 @@ BẢNG GHI NHẬN THAY ĐỔI
 |#### MS00004|MERCHANT_STATUS|Báo gian hàng đã kích hoạt xong và bắt đầu nhận được tiền|shop_name|{shop_name} is ready to receive money on Peye-Haiti. Open the app to see your QR.|
 |#### MS00005|APP_REMINDER|Kéo người bán quay lại hoàn tất hồ sơ dở dang quá lâu — **phát một lần**, không lặp|steps_left|Your Peye-Haiti shop is almost ready — {steps_left} step left. Open the app to finish.|
 |#### MS00006|PIN_CHANGED|Báo chủ số biết PIN vừa bị đổi hoặc đặt lại|-|Your Peye-Haiti PIN has been successfully changed.|
+|#### MS00009 **(*) MỚI · 16/10**|LINK_REMOVED|Báo chủ số biết một tài khoản liên kết vừa bị gỡ khỏi hồ sơ Peye-Haiti _(CN-08)_. Không chờ kết quả gửi|`{bank}` · `{last4}`|Your {bank} account ending {last4} was removed from Peye-Haiti. If you did not do this, call 8686.|
 
 ## 3. TÍCH HỢP NATCOM (N1)
 

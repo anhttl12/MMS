@@ -172,7 +172,8 @@ Nhóm này hiện lỗi **ngay dưới đúng ô nhập**. App kiểm trước 
 |   |   |   |   |   |
 |---|---|---|---|---|
 ||Mã|Tình huống|Message _(EN — bản nguồn)_|Hành động tiếp theo|
-|`PIN-422-OTPWRONG`|**Nhập sai** mã OTP Peye-Haiti|_"Wrong code. This code no longer works — tap Resend code to get a new one."_|Mã bị **hủy ngay**. Xóa ô nhập, dừng đồng hồ, **bật ngay** **Resend code**. **Không** hiện số lượt còn lại|
+|`PIN-422-OTPWRONG`|**Nhập sai** mã OTP Peye-Haiti, **còn lượt** thử — mã được giữ|_"Wrong code — {tries_left} tries left."_|Xóa ô nhập, **giữ** đồng hồ Resend code, cho nhập lại ngay. `{tries_left}` lấy từ server. Hết `OTP_MAX_ATTEMPTS` → `PIN-422-OTPLOCKED`. Xem COMMON-01 · Luồng 3 · 7a|
+|`PIN-422-OTPLOCKED`|Nhập sai mã OTP Peye-Haiti **hết lượt** — mã bị hủy|_"Too many wrong tries. This code no longer works — tap Resend code to get a new one."_|Xóa và vô hiệu ô nhập, ẩn đồng hồ, **bật ngay** **Resend code**. Xem COMMON-01 · Luồng 3 · 7b|
 |`PIN-422-OTPEXPIRED`|Mã OTP Peye-Haiti **quá hạn**|_"That code has expired. Tap Resend code to get a new one."_|Cùng lối ra với 30 nhưng **khác câu**: người dùng cần biết mình gõ sai hay để quá lâu|
 |`PIN-422-OTPLIMIT`|Vượt hạn mức OTP trong ngày|_"You have asked for too many codes today. Try again tomorrow."_|Chặn gửi thêm trong ngày. Hạn mức đếm **chung cho cả bốn mục đích**|
 |`PIN-422-PINLOCKED`|Khóa đăng nhập do sai PIN quá số lần|_"Sign-in is locked for your safety. Try again in {countdown}, or reset your PIN with an SMS code."_|Hai lối ra: chờ hết giờ, hoặc đặt lại PIN bằng mã SMS. **Tài khoản vẫn hoạt động bình thường**|
@@ -190,6 +191,7 @@ Nhóm này hiện lỗi **ngay dưới đúng ô nhập**. App kiểm trước 
 |1|`PIN-422-EKYCFIRST`|Khai gian hàng hoặc liên kết tài khoản khi định danh chưa đạt|_"Confirm your identity first, then you can add your account."_|Về màn trạng thái hồ sơ. **Không** áp cho liên kết nguồn trả của vai MUA|
 |2|`PIN-422-PROFILE`|Gọi chức năng bán hàng khi hồ sơ còn dở dang|_"Finish setting up your shop to use this. {steps_left} step left."_|Nút **Continue** mở màn trạng thái hồ sơ. **Chức năng thanh toán vai MUA vẫn dùng được**|
 |3|`PIN-422-SHOPHOLD`|Gian hàng bị tạm khóa hoặc đã đóng|_"Your shop is on hold. You can still look around, but not take payments yet."_|**Vẫn cho đăng nhập**, vào app chế độ chỉ đọc|
+|4|`PIN-422-LINKGRACE` **(*) MỚI · 16/10**|Hủy một liên kết đang trong ân hạn (`grace`) sau khi đổi tài khoản nhận|_"This account still receives money from your old QR. It will be removed automatically after you put up the new standee and the grace period ends."_|`Confirmation` dạng Error, về NB-16A. **Không** cho hủy trực tiếp — liên kết `grace` chỉ chuyển `revoked` qua JOB của CN-07 khi hết `OLD_LINK_GRACE` **và** `standee_order.status = mounted`|
 
 ### Bán hàng, sổ nợ và portal
 
@@ -213,13 +215,13 @@ Nhóm này hiện lỗi **ngay dưới đúng ô nhập**. App kiểm trước 
 ||Mã|Tình huống|Message _(EN — bản nguồn)_|Hành động tiếp theo|
 |1|`PIN-429-OTPWAIT`|Bấm gửi lại mã khi mã còn sống|_"You can ask for a new code in {countdown}."_|Vô hiệu **Resend code**, chạy đồng hồ theo `Retry-After`. **Thông điệp phải trung tính**|
 |2|`PIN-429-RATE`|Vượt hạn mức tần suất chung|_"Too many tries. Wait a few minutes and try again."_|Chờ theo `Retry-After`|
-|3|`PIN-500-SYS`|Lỗi hệ thống phía MMS|_"System busy. Try again in a few minutes."_|**Chỉ hiện sau khi app đã tự thử lại đủ 3 lần.** Hồ sơ đang dở **không bị hủy**|
+|3|`PIN-500-SYS`|Lỗi hệ thống phía MMS (server trả lỗi), **hoặc** máy vẫn có mạng nhưng app đã gửi request mà **không nhận được phản hồi** trong thời gian chờ — trường hợp này do app tự gán|_"System busy. Try again in a few minutes."_|Có tự thử lại trước khi hiện hay không, và có cho thao tác lại ngay hay không: theo **COMMON-01 Mục 4.1** và SRS của từng luồng. Hồ sơ đang dở **không bị hủy**|
 |4|`PIN-503-OTPSEND`|Không gửi được mã OTP|_"We could not send the code right now. Try Resend."_|**Không** tiêu thêm lượt gửi trong ngày cho lần thất bại này|
 |5|`PIN-503-EKYC`|Dịch vụ đối chiếu định danh không sẵn sàng|_"We could not check your identity right now. Try again in a few minutes."_|**Người dùng tự bấm thử lại.** Ảnh giữ nguyên, **không** tiêu vòng chụp lại nào|
 |6|`PIN-503-BANK`|Định chế bận hoặc bảo trì|_"Your provider is busy right now. Try again in a few minutes."_|Hồ sơ giữ nguyên trạng thái dở dang|
 |7|`PIN-503-DEP`|**Mã dự phòng** — phụ thuộc khác không sẵn sàng|_"This is not available right now. Try again in a few minutes."_|–|
 |8|`PIN-000-UNKNOWN`|**Không phải mã server trả về** — app tự dùng khi gặp mã lạ|_"Something did not work. Try again, or call 8686 if it keeps happening."_|**Luôn ghi log cảnh báo kèm `trace_id`.** Xuất hiện trong thống kê nghĩa là có mã chưa khai báo|
-|9|`PIN-000-OFFLINE`|**Không phải mã server trả về** — app tự dùng khi không nhận được phản hồi (mất mạng, quá thời gian chờ)|_"No connection — please try again."_|**Giữ nguyên** phiên, token và dữ liệu trên máy; người dùng thử lại khi có mạng|
+|9|`PIN-000-OFFLINE`|**Không phải mã server trả về** — app tự dùng khi **phát hiện thiết bị không có kết nối mạng** (trước khi gửi, hoặc mất mạng ngay trong lúc chờ). **Không** dùng cho trường hợp máy vẫn có mạng mà không nhận được phản hồi — trường hợp đó là `PIN-500-SYS`. Xem COMMON-01 Mục 4.2|_"No connection — please try again."_|**Giữ nguyên** phiên, token và dữ liệu trên máy; người dùng thử lại khi có mạng|
 
 ## 2.7 · Đối chiếu định danh
 

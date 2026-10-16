@@ -20,7 +20,7 @@ A – Tạo mới, M – Sửa đổi, D – Xóa bỏ
 |**Đối tượng sử dụng**|Người bán / tiểu thương (vai BÁN) · Người mua (vai MUA) — theo hành động cụ thể|
 |**Kênh**|App Peye-Haiti|
 |**Đường dẫn**|_(Bất kỳ màn nghiệp vụ)_ → hành động cần PIN → **NB-0F** _(lớp phủ nhập PIN)_ → _(nếu cần OTP)_ **NB-0G** _(lớp phủ nhập OTP)_ → **quay lại đúng chỗ đang làm**|
-|**Precondition**|1) Luồng 1 (PIN): người dùng đang có phiên đăng nhập hợp lệ  <br>2) Luồng 2, 3 (OTP): tùy `purpose` — có phiên hoặc chưa đăng nhập (đăng ký, quên PIN, khóa khẩn)  <br>3) Có kết nối mạng tới BFF|
+|**Precondition**|1) Luồng 1 (PIN): người dùng đang có phiên đăng nhập hợp lệ  <br>2) Luồng 2, 3 (OTP): tùy `purpose` — có phiên hoặc chưa đăng nhập (đăng ký, quên PIN, đăng nhập máy mới)  <br>3) Có kết nối mạng tới BFF|
 |**Post-condition**|**PIN đúng:** bộ đếm sai reset về 0, hành động nghiệp vụ được thực hiện **trong cùng request.**<br><br>**PIN sai hết lượt  **`PIN_MAX_ATTEMPTS`**:** tạo `login_lock` với `PIN_LOCK_DURATION`, gửi SMS `MS00002`, hành động bị hủy<br><br>**OTP đúng:** cấp `verify_token` theo `purpose` (hiệu lực STEPUP_TTL, dùng một lần) dùng 1 lần, hành động nghiệp vụ được gọi kèm `verify_token` để hoàn tất hành động, `verify_token` bị đánh dấu đã dùng.<br><br>**OTP sai hết lượt:** mã bị hủy, người dùng phải gửi lại mã  <br><br>**Hủy giữa luồng:** không cấp `verify_token`; hành động nghiệp vụ **không** được thực hiện; người dùng quay lại **đúng trạng thái trước đó, không mất dữ liệu đang nhập**.|
 
 ### 1.1. Bảng thuật ngữ
@@ -31,7 +31,7 @@ A – Tạo mới, M – Sửa đổi, D – Xóa bỏ
 |**PIN**|Mã 6 số của app Peye-Haiti, tách biệt PIN ví/ngân hàng. Lưu băm tại `person.pin_hash`|
 |**OTP Peye-Haiti**|Mã 6 số do Merchant Identity Service sinh, gửi SMS qua Natcom N1|
 |**OTP định chế**|Mã do định chế tài chính sinh và gửi qua SMS gateway của chính định chế (liên kết tài khoản, thanh toán > ngưỡng). MMS chỉ chuyển tiếp, không kiểm. Dùng lại NB-0G|
-|`**purpose**`|Mục đích của một OTP: `register` · `login_new_device` · `pin_reset` · `emergency_lock`...|
+|`**purpose**`|Mục đích của một OTP: `register` · `login_new_device` · `pin_reset`. **Không** có `purpose` cho khóa khẩn — khóa khẩn chỉ thực hiện qua hotline 8686 và thao tác trên portal BRH|
 |**`verify_token`**|Phiếu cấp sau khi OTP đúng: gắn `purpose`, **dùng một lần**, hiệu lực theo tham số `STEPUP_TTL`|
 |**`auth_time`**|Claim chuẩn OIDC — mốc người dùng nhập PIN hoặc OTP thành công lần cuối. Step-up thành công **làm mới** mốc này|
 
@@ -125,7 +125,7 @@ A – Tạo mới, M – Sửa đổi, D – Xóa bỏ
 |1|**Người dùng**|**Bấm hành động cần xác thực PIN**  <br>Tại màn nghiệp vụ của chức năng gọi  <br>**Sang bước tiếp theo**||Chức năng gọi quy định hành động nào cần PIN|
 |2|**App**|**Mở bottom sheet NB-0F**  <br>Bottom sheet trượt lên trên màn nghiệp vụ, ô PIN trống  <br>**Sang bước tiếp theo**|||
 |3|**Người dùng**|**Nhập mã PIN**  <br>Nhập đủ 6 số, app tự gửi<br><br>- Bấm nút đóng X → **sang bước 3a**<br>- Bấm _Forgot PIN?_ → **sang bước 3b**<br>- Nhập đủ 6 số → **sang bước tiếp theo**|||
-|4|**App**|**Kiểm kết nối mạng và gọi API nghiệp vụ của chức năng gọi**  <br>• Không có mạng → không gọi API, `PIN-000-OFFLINE`, **sang bước 4a**  <br>• Có mạng → gọi API. Body có trường `pin`, `Idempotency-Key` **cho mỗi lần nhập PIN**; thử lại do mất mạng của cùng lần nhập thì giữ key. **Sang bước tiếp theo**||Không có API kiểm PIN riêng cho app|
+|4|**App**|**Kiểm kết nối mạng và gọi API nghiệp vụ của chức năng gọi**  <br>• Không có mạng → không gọi API, `PIN-000-OFFLINE`, **sang bước 4a**  <br>• Có mạng → gọi API. Body có trường `pin`, `Idempotency-Key` **cho mỗi lần nhập PIN**; thử lại do mất mạng của cùng lần nhập thì giữ key. **Sang bước tiếp theo**||Không có API kiểm PIN riêng cho app. **Ngoại lệ duy nhất: CN-05 Đổi PIN** — kiểm PIN hiện tại riêng tại NB-14B trước khi nhập PIN mới|
 |5|**Merchant Identity Service**|**Kiểm khóa đăng nhập**  <br>• Đang khóa do sai PIN → trả `PIN-422-PINLOCKED` kèm thời gian còn lại  `details.locked_until`, **sang bước 11**  <br>• Không khóa → **sang bước tiếp theo**|login_lock||
 |6|**Merchant Identity Service**|**Kiểm tra trạng thái tài khoản**<br><br>• `` Locked/`Terminated` `` → **sang Bước 11**  <br>• `Active` → **sang bước tiếp theo**|person||
 |7|**Merchant Identity Service**|**Kiểm tra PIN**  <br>So khớp với `person.pin_hash`  <br>• Đúng → **sang bước 9**  <br>• Sai → **sang bước tiếp theo**|person|API nghiệp vụ thuộc dịch vụ khác gọi hàm kiểm PIN qua API nội bộ của Merchant Identity Service|
@@ -249,5 +249,8 @@ A – Tạo mới, M – Sửa đổi, D – Xóa bỏ
 |1|App|**CN-01** Đăng ký|Luồng 2, 3 với `purpose = register` — NB-0G dạng màn đầy đủ; API nhận: E.1.4|
 |2|App|**CN-02** Đăng nhập|Luồng 2, 3 với `purpose = login_new_device`; dùng chung `pin_hash`, bộ đếm sai PIN, khóa đăng nhập|
 |3|App|**CN-03** Quên PIN|Luồng 2, 3 với `purpose = pin_reset`; nút _Forgot PIN?_ trên NB-0F dẫn sang|
-|5|App|Thanh toán|Luồng 1 tại E.16.2; lệnh > 5.000 HTG dùng NB-0G với OTP định chế (C.9)|
-|6|App|Đổi Tài khoản nhận|Đổi tài khoản nhận chính dùng Luồng 1; liên kết tài khoản dùng NB-0G với OTP định chế (C.2)|
+|3b|App|**CN-05** Đổi PIN|**Ngoại lệ Luồng 1:** kiểm PIN hiện tại riêng tại NB-14B, cấp `verify_token` `purpose = pin_change`. Dùng chung bộ đếm sai PIN, `login_lock` và thu hồi phiên khi khóa|
+|4|App|**CN-06** Liên kết tài khoản|Xác nhận liên kết dùng NB-0G với **OTP định chế** (C.2) — ẩn dòng Resend code, số lượt do định chế trả về|
+|5|App|**CN-07** Đổi tài khoản nhận tiền|Luồng 1 tại `E.3.5` — **chỉ cần PIN**, PIN gửi trong body của lệnh đổi|
+|6|App|**CN-08** Hủy tài khoản liên kết|Luồng 1 tại lệnh hủy liên kết — **chỉ cần PIN**|
+|7|App|Thanh toán|Luồng 1 tại E.16.2; lệnh > 5.000 HTG dùng NB-0G với OTP định chế (C.9)|

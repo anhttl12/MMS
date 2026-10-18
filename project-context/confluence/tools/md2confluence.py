@@ -120,6 +120,7 @@ def code_macro(body, lang='', title='', collapse=False):
 
 FENCE = re.compile(r'^(\s*)(`{3,}|~{3,})\s*([A-Za-z0-9_+-]*)\s*$')
 HEADING = re.compile(r'^(#{1,6})\s+(.*?)\s*#*\s*$')
+TOC_ANCHOR = re.compile(r'^<a id="muc-[^"]*"></a>$')
 HR = re.compile(r'^\s{0,3}(?:-\s*-\s*-[-\s]*|\*\s*\*\s*\*[*\s]*|_\s*_\s*_[_\s]*)$')
 TABLE_DELIM = re.compile(r'^\s*\|?\s*:?-{1,}:?\s*(\|\s*:?-{1,}:?\s*)*\|?\s*$')
 BULLET = re.compile(r'^(\s*)([-*+])\s+(.*)$')
@@ -176,7 +177,9 @@ class Converter:
     # -- main loop -------------------------------------------------
     def convert(self, text):
         text = text.replace('\r\n', '\n').replace('\r', '\n').replace('\t', '    ')
-        lines = text.split('\n')
+        # bỏ mục lục Markdown và thẻ neo <a id="muc-..."></a> — Confluence dùng --toc
+        text = re.sub(r'<!-- TOC -->.*?<!-- /TOC -->\n?', '', text, flags=re.S)
+        lines = [l for l in text.split('\n') if not TOC_ANCHOR.match(l)]
         out, i = [], 0
         while i < len(lines):
             line = lines[i]

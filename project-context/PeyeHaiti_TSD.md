@@ -1,5 +1,42 @@
 # TSD — Đặc tả kỹ thuật · Giải pháp Merchant Peye-Haiti (code-ready)
 
+<!-- TOC -->
+<a id="muc-luc"></a>
+
+**Mục lục**
+
+- [1. Chuẩn chung API](#muc-1-chuan-chung-api)
+- [2. API Open Banking (bank/ví nhận cung cấp — hợp đồng D2)](#muc-2-api-open-banking-bank-vi-nhan-cung-cap-hop-dong-d2)
+- [2b. Contract các đối tác còn lại (đủ cho 6 connector §13.5)](#muc-2b-contract-cac-doi-tac-con-lai-du-cho-6-connector-13-5)
+- [2c. API surface BFF (app + portal) — danh mục endpoint theo màn](#muc-2c-api-surface-bff-app-portal-danh-muc-endpoint-theo-man)
+- [3. Webhook M4 — contract chi tiết (đường găng)](#muc-3-webhook-m4-contract-chi-tiet-duong-gang)
+- [4. Event bus (Apache Kafka — chế độ KRaft)](#muc-4-event-bus-apache-kafka-che-do-kraft)
+- [5. Mô hình dữ liệu vật lý (PostgreSQL 15)](#muc-5-mo-hinh-du-lieu-vat-ly-postgresql-15)
+- [6. Khớp tiền (module Matching — trong service **Commerce**) — thuật toán & state machine](#muc-6-khop-tien-module-matching-trong-service-commerce-thuat-toa)
+  - [6b. State machine `payment` (module Payment — «Peye-Haiti 15/08», đối xứng §6)](#muc-6b-state-machine-payment-module-payment-peye-haiti-15-08-doi)
+- [7. Giao thức đồng bộ offline (app người bán)](#muc-7-giao-thuc-dong-bo-offline-app-nguoi-ban)
+- [8. Bảo mật chi tiết](#muc-8-bao-mat-chi-tiet)
+- [8b. Chuẩn triển khai xác thực phía dịch vụ («v3.7» — chốt theo Q&A dev 24/08)](#muc-8b-chuan-trien-khai-xac-thuc-phia-dich-vu-v3-7-chot-theo-q-a)
+- [9. Hạ tầng & SIZING (quy mô mục tiêu **5.000 merchant** · DC Natcom · **chỉ UAT + PROD**)](#muc-9-ha-tang-sizing-quy-mo-muc-tieu-5-000-merchant-dc-natcom-ch)
+  - [9.0. Sơ đồ topology hạ tầng](#muc-9-0-so-do-topology-ha-tang)
+  - [9.0.1. Thành phần nền tảng dùng chung — vai trò & vị trí](#muc-9-0-1-thanh-phan-nen-tang-dung-chung-vai-tro-vi-tri)
+  - [9.1. Mô hình tải — 5.000 merchant](#muc-9-1-mo-hinh-tai-5-000-merchant)
+  - [9.2. PRODUCTION](#muc-9-2-production)
+  - [9.3. UAT](#muc-9-3-uat)
+  - [9.4. Sao lưu & khôi phục (thay cho trung tâm dữ liệu dự phòng)](#muc-9-4-sao-luu-khoi-phuc-thay-cho-trung-tam-du-lieu-du-phong)
+  - [9.5. Lộ trình vượt 5.000 merchant (kiến trúc KHÔNG đổi)](#muc-9-5-lo-trinh-vuot-5-000-merchant-kien-truc-khong-doi)
+- [10. Observability & vận hành](#muc-10-observability-van-hanh)
+- [11. Notification](#muc-11-notification)
+- [12. Kiểm thử & nghiệm thu kỹ thuật](#muc-12-kiem-thu-nghiem-thu-ky-thuat)
+- [13. Phụ lục](#muc-13-phu-luc)
+  - [13.1. Mã lỗi nghiệp vụ (`biz_code` chính)](#muc-13-1-ma-loi-nghiep-vu-bizcode-chinh)
+  - [13.2. Sự kiện instrument KPI (BRH-08)](#muc-13-2-su-kien-instrument-kpi-brh-08)
+  - [13.3. Tham số cấu hình (bảng `param` · quản trị qua E.13.2–E.13.4 bởi vận hành Natcom, 4 mắt — màn portal BRH-09 đã bỏ 04/08)](#muc-13-3-tham-so-cau-hinh-bang-param-quan-tri-qua-e-13-2e-13-4-b)
+  - [13.4. Payload QR theo chuẩn HTQR 1.0 (D1 — quy chuẩn quốc gia, dự thảo v0.9.1 trình G3 15/08) «CR-3 15/08»](#muc-13-4-payload-qr-theo-chuan-htqr-1-0-d1-quy-chuan-quoc-gia-du)
+  - [13.5. Cấu trúc repo đề xuất](#muc-13-5-cau-truc-repo-de-xuat)
+
+<!-- /TOC -->
+
 | Trường | Nội dung |
 |---|---|
 | Mã | Peye-Haiti-TSD-001 · **v4.6 (Markdown)** — 24/08/2026 · **v4.6 (đồng bộ API Spec v3.7 — chốt 5 câu hỏi tích hợp của dev):** thẻ hệ thống chuyển sang header riêng `x-system-token` (JWT trần; `Authorization` chỉ còn của phiên người dùng BFF; route đối tác từ chối `Authorization`) · F.3 bỏ `req_sha256` với GET (đối chiếu định danh trong body thay thế; C.6 +echo `link_id`) · idempotency ca đang-xử-lý = 409 `details.state="processing"` (retryable, giữ key) · thống nhất thuật ngữ receiving/funding + nhãn quyền `user` · +§8b chuẩn triển khai xác thực (3 SecurityWebFilterChain + phân vùng gateway) · **v4.5b (tối 20/08 — đồng bộ API Spec v3.6):** CH-00 TRƯỚC eKYC (vai mua không chạy E1/E2) · TẠO LÀ ACTIVE (§2c C10: kích hoạt ngay khi hoàn tất — không cổng duyệt; `AUTO_ACTIVATE_SCORE` = ngưỡng GẮN CỜ hậu kiểm; cờ ≤24h, mẫu 10%) — không đổi DDL/số đếm · **v4.5 (họp BRH 20/08 — đồng bộ API Spec v3.5):** ① MỘT app CHỌN VAI (CH-00; người bán thanh toán được — E.16 mọi vai; nút «Trở thành người bán» = onboarding merchant hiện có, không endpoint mới; 42 màn); ② HAI BẬC XÁC THỰC: `PAY_SCA_THRESHOLD` 5.000 HTG thay trần cứng — ≤ ngưỡng PIN app, > ngưỡng +SMS OTP ĐỊNH CHẾ (khôi phục C.9/E.16.6/sca_*: DDL payment +4 cột sca, enum +`sca_required`, §6b +3 transition + sweeper); `PAY_DAY_MAX` chỉ đếm lệnh bậc-PIN; ③ OTP thanh toán đi SMS GW CỦA ĐỊNH CHẾ (F.4 điều 6) — N1 giữ nguyên vai (OTP đăng ký/khóa khẩn/biên lai); tổng 109 mục/110 HTTP (C 9 · E 89) · **v4.4 (bản chốt AuthOB — đồng bộ API Spec v3.4):** ① thẻ hệ thống KIÊM con dấu nội dung — claim `body_sha256` = **hash body** cho mọi request có body (GET: thẻ ≤5′ dùng lại); BỎ `kid`/`jti`; request KHÔNG còn `x-jws-signature` (header này chỉ còn cho THẺ RESPONSE tài chính); ② `iss`/`sub`/`aud` = **TÊN tổ chức** («Peye-Haiti» · «NatCash» · «UniBank»… — ánh xạ 1–1 mã 9332xx); ③ **PIN-only ≤5.000 HTG/GD** (`PAY_MAX_PILOT` + hạn mức ngày `PAY_DAY_MAX` — §13.3, 25 param): BỎ C.9/E.16.6/sca_* (DDL payment gỡ 4 cột sca_*, enum gỡ `sca_required`, §6b gỡ 3 transition SCA + sweeper); tổng 107 mục/108 HTTP (C 8 · E 88) · bộ chuẩn OB 11 API · **v4.3 cùng ngày (đồng bộ API Spec v3.3):** thẻ hệ thống đặt `Authorization: Bearer` MỌI chiều B/C/D (gateway hai phía xác thực tập trung) — token liên kết sang header `x-account-token` (C.5/C.6/C.7/C.9); +SCA SMS OTP cho lệnh trả: C.9 + E.16.6, trạng thái payment +`sca_required`, `failure_reason` +`sca_failed` (§6b + bảng payment); tổng 109 mục/110 HTTP (C 9 · E 89) · **19/08 (an ninh đối tác — đồng bộ API Spec v3.2):** JWT hệ thống đối tác chốt mô hình TỰ KÝ private_key_jwt (không token endpoint — API Spec A.1b: iss=sub=client_id theo mã định chế BRH, aud bên nhận, exp≤5′, jti chống replay, JWT mới từng request, verify 5 bước qua JWKS dùng CHUNG khóa với JWS); C.7 (khởi tạo lệnh trả) bắt buộc ký JWS detached trên request; §1/§8 cập nhật tương ứng · **16/08:** §6 +nhánh khớp ĐÍCH DANH theo `payment_ref` từ **B.5 /qr-inquiry** (API Spec v3.1 — app định chế tra cứu VÀO Peye-Haiti trước khi trả; Redis `qrinq:{ref}` TTL 15′, không bảng mới, không tham số mới, offline-first giữ nguyên) · **15/08 (Peye-Haiti — app chung, mô hình BiMPay):** đổi tên PINASSI→HaitiPay (prefix kỹ thuật `PIN-` giữ); +module NGƯỜI MUA: DDL bảng `commerce.payment` + account_link mở cho person + kyc_level + public_phone (§5) · tích hợp mới **M-PAY** khởi tạo trả + webhook kết quả (không dùng lại mã M2/M6 theo ràng buộc cũ) · §13.3 +`PAY_CONFIRM_SLA`/`PAY_TIMEOUT` · app hợp nhất 2 profile (§13.5) · §12 +test idempotent payment · **15/08 (CR BRH)**: §13.4 payload QR đồng bộ **HTQR 1.0** (GUID `ht.brh.htqr` · định chế 9332xx · tag 52 MCC — hết «mock chờ D1», CR-3) · §13.3 +`MCC_DEFAULT` (CR-1) · §12.1 test vectors sinh lại theo 4 VD chuẩn HTQR · ghi chú D2/M4 +2 trường optional (CR-7) — theo `BRH/PeyeHaiti_CR_BRH_LuuTru_NhatKy.md` (đối chiếu văn bản BRH 12/08) · **04/08**: bỏ màn BRH-09 «Cấu hình» — màn 37→36 (BRH 10), tham số chuyển vận hành Natcom qua E.13.x (4 mắt) · **02/08**: áp CANON2 — 8 rút gọn pilot (bỏ M7/M4b/qr_intent/report_schedule/buyer_profile, gộp device→auth_session, matching 2 mức [bỏ HIST], hoãn app người mua NM); bảng 31→27 · tích hợp 15→12 · nhóm E 91→83 · màn 43→37 · **25/07**: bỏ API M5 (đối chiếu tên — bank tự xác thực qua OTP) + gộp còn 1 bậc KYC · sắp xếp mục C theo luồng onboarding · tích hợp 17→15, mã lỗi 48→44 · đồng bộ tên ví Natcash→wallet2 (NatTransfer), mã ví dụ NATC→NTRF · **4 dịch vụ · 4+1 schema · event bus Apache Kafka (KRaft) · quy mô 5.000 merchant · chỉ UAT + PROD** (nền v1.2: 91 mục / 93 HTTP endpoint nhóm E) |
@@ -7,6 +44,7 @@
 | Mục tiêu | **Đủ chi tiết để bắt đầu code**: contract API, DDL, state machine, tham số, sizing, test |
 | Quy ước | Mọi giá trị `IN_CAPS` là tham số cấu hình (bảng §13.3); tiền tệ minor unit = **centime (1 G = 100 ct)**, lưu `BIGINT amount_ct` |
 
+<a id="muc-1-chuan-chung-api"></a>
 ## 1. Chuẩn chung API
 
 - **Base URL**: `https://api.peye-haiti.ht/v1` (BFF cho app/portal) · `https://partner.peye-haiti.ht/v1` (đối tác gọi vào: webhook M4 `/credit-events`, kết quả trả `/payment-results` (B.4), tra cứu QR `/qr-inquiry` (B.5), E3 push, SMS DLR `/sms-dlr`) · đối tác expose cho MMS gọi ra theo chuẩn OB BRH.
@@ -20,6 +58,7 @@
 - **Mã lỗi chung**: `PIN-400-VAL` (validate) · `PIN-401-AUTH` · `PIN-403-SCOPE` · `PIN-404-NF` · `PIN-409-IDEM` (idempotency conflict) · `PIN-409-STATE` (sai trạng thái) · `PIN-422-BIZ` (nghiệp vụ, kèm `biz_code`) · `PIN-429-RATE` · `PIN-5xx-SYS` (retryable=true; **không bao giờ tự hoàn tiền theo lỗi 5xx**).
 - **Phân trang**: `?page_size≤100&cursor=`; **thời gian**: RFC3339 UTC; **retry client**: exponential backoff 1s→2s→4s (max 3) chỉ với `retryable=true`.
 
+<a id="muc-2-api-open-banking-bank-vi-nhan-cung-cap-hop-dong-d2"></a>
 ## 2. API Open Banking (bank/ví nhận cung cấp — hợp đồng D2)
 
 > Đây là contract MMS yêu cầu bank nhận expose (sandbox bắt buộc T7/2026; mTLS + thẻ kèm hash body «v3.4»; response tài chính ký thẻ response). **Đặc tả chi tiết từng trường request/response và bảng mã lỗi chuẩn hóa nằm tại `PeyeHaiti_API_Spec.md` mục C (C.0–C.9)** — TSD không lặp lại, bảng dưới chỉ tóm tắt vai trò từng API trong luồng nghiệp vụ.
@@ -34,6 +73,7 @@
 
 > Mã M2, M6, M6b, N2 để trống — không sử dụng.
 
+<a id="muc-2b-contract-cac-doi-tac-con-lai-du-cho-6-connector-13-5"></a>
 ## 2b. Contract các đối tác còn lại (đủ cho 6 connector §13.5)
 
 | # | API | Contract (req → res) | SLA/Lỗi chính |
@@ -44,6 +84,7 @@
 | E3-reg | `PUT switch/v1/account-registry` | `{accounts:[{bank_code, account_no}]}` (qua BRH) — đăng ký danh mục TK NHẬN để Switch lọc EOD (S6) | cập nhật khi liên kết mới/đổi TK/thu hồi (S4) |
 | N1 | `POST natcom/sms/v1/send` | `{msisdn, template_id, params, brand:"Peye-Haiti"}` → `{sms_id}`; DLR webhook `POST partner.peye-haiti.ht/v1/sms-dlr {sms_id, status}` | p95 gửi ≤10s · retry 3 lần · template đăng ký trước (D6) |
 
+<a id="muc-2c-api-surface-bff-app-portal-danh-muc-endpoint-theo-man"></a>
 ## 2c. API surface BFF (app + portal) — danh mục endpoint theo màn
 
 > Chuẩn REST `/v1/...`, auth JWT (trừ nhóm auth); OpenAPI YAML đầy đủ là DELIVERABLE BẮT BUỘC sprint 1 tại `/docs/openapi/bff.yaml` — bảng này là danh mục chốt scope, đủ để chia việc và dựng skeleton.
@@ -70,6 +111,7 @@ Quy tắc kích hoạt (C10 «v3.6» — TẠO LÀ ACTIVE): eKYC PASS (`ekyc.mat
 
 Danh mục endpoint ĐẦY ĐỦ & chốt scope = `PeyeHaiti_API_Spec.md` mục E: **89 mục đánh số** (+E.16 thanh toán mọi vai «v3.5»). Tổng toàn bộ API_Spec: **B 5 · C 9 · D 5 · E 89 · P 1 = 109 mục / 110 HTTP endpoint**. Bảng trên là tóm tắt theo màn.
 
+<a id="muc-3-webhook-m4-contract-chi-tiet-duong-gang"></a>
 ## 3. Webhook M4 — contract chi tiết (đường găng)
 
 `POST https://partner.peye-haiti.ht/v1/credit-events` (bank NHẬN → MMS, mTLS + thẻ hệ thống kèm hash body «v3.4»). Lưu ý: M4 thuộc trách nhiệm BANK NHẬN (sổ cái ghi Có của họ) — KHÔNG phải ACI/Switch; ACI chỉ liên quan RefID + E3 EOD:
@@ -93,6 +135,7 @@ Danh mục endpoint ĐẦY ĐỦ & chốt scope = `PeyeHaiti_API_Spec.md` mục 
 - **Dedup phía MMS** (module **Ingest** trong Commerce): tầng 1 unique `event_id`; tầng 2 unique `ref_id` xuyên nguồn (M4/M3-poll) — bản ghi poll không có event_id sinh `event_id = "poll:"+ref_id`.
 - **Chống replay**: dedup theo `event_id` (tầng 1) là cơ chế chính; thẻ hệ thống sống ≤5′ («v3.4» — thời điểm KÝ, không phải `booked_at`, nên không đá chính sách retry 24h; retry phải ký thẻ MỚI); verify theo JWKS bank (cache 1h; không `kid` — giao thời thay khóa thì thử lần lượt 2 khóa).
 
+<a id="muc-4-event-bus-apache-kafka-che-do-kraft"></a>
 ## 4. Event bus (Apache Kafka — chế độ KRaft)
 
 > **3 broker KRaft** (không Zookeeper). Chuẩn chung mọi topic: **partition key = `merchant_id`** (đảm bảo thứ tự theo merchant) · **6 partition/topic** (đề xuất — dư địa scale consumer tới 6 instance/service) · **replication factor 3**, `min.insync.replicas=2`, `acks=all` · **retention 7 ngày** · **1 consumer group per service** (`cg-<service>-<topic>`) · giao **at-least-once**, bên nhận **idempotent theo `event_id`** (khóa duy nhất trên bảng đích) · producer ghi DB → phát sự kiện bằng **mẫu outbox** (transactional outbox + relay: ghi bảng `outbox` trong CÙNG transaction nghiệp vụ, tiến trình relay đọc outbox → publish Kafka SAU COMMIT) · **DLQ = topic `<tên>.dlq`**.
@@ -119,6 +162,7 @@ Danh mục endpoint ĐẦY ĐỦ & chốt scope = `PeyeHaiti_API_Spec.md` mục 
 - **Idempotency**: mọi consumer ghi DB đều `INSERT ... ON CONFLICT DO NOTHING` theo khóa duy nhất dẫn xuất từ `event_id` — xử lý lại cùng một message không sinh hiệu ứng phụ (at-least-once an toàn).
 - **Producer**: `enable.idempotence=true`, `compression.type=lz4`. Sự kiện của cùng một merchant luôn về cùng partition → giữ thứ tự nhân-quả (`credit.received` trước `match.completed`).
 
+<a id="muc-5-mo-hinh-du-lieu-vat-ly-postgresql-15"></a>
 ## 5. Mô hình dữ liệu vật lý (PostgreSQL 15)
 
 > Chuẩn chung: PK `id UUID default gen_random_uuid()`; `created_at/updated_at timestamptz`; soft-delete chỉ dùng cho product; tất cả bảng tiền dùng `amount_ct BIGINT`; múi giờ lưu UTC.
@@ -276,6 +320,7 @@ CREATE INDEX pay_person_ix ON commerce.payment(person_id, created_at DESC);
 - **Partition**: chưa cần ở quy mô 5.000 merchant (<2 triệu dòng `credit_event`/tháng ở đỉnh thiết kế); thiết kế sẵn partition RANGE theo tháng cho `commerce.credit_event`, `backoffice.audit_log`, `notification.notification` khi vượt 5.000 merchant.
 - **Triển khai vật lý**: 4 schema + `shared` nằm trên **CÙNG một cụm PostgreSQL HA** (§9.2) ở quy mô 5.000 merchant. Ranh giới schema + role riêng cho phép **tách cụm DB mà không sửa code** khi vượt 20.000 merchant (§9.5).
 
+<a id="muc-6-khop-tien-module-matching-trong-service-commerce-thuat-toa"></a>
 ## 6. Khớp tiền (module Matching — trong service **Commerce**) — thuật toán & state machine
 
 > **Bổ sung 16/08 — tham chiếu B.5 (`payment_ref`):** app định chế trả (NatCash/MonCash/bank) có mạng sẽ tra cứu QR qua **B.5 /qr-inquiry** và đem `payment_ref` theo lệnh chuyển; M4 tới mang `addenda.payment_ref` → Ingest tra Redis `qrinq:{ref}` (khóa `qi_`+ULID, giá trị `{merchant_id, bill_id|null, amount_ct|null}`, TTL 15 phút — hằng nội bộ) và gắn ĐÍCH DANH merchant/bill trước khi phát `credit.received` — nhánh khớp tự động ① hết lệ thuộc thuần số tiền + cửa sổ. Hết TTL / mất Redis / app offline → rơi tự nhiên về khớp như cũ (A9 offline-first giữ nguyên). Không bảng mới · không tham số hệ thống mới · không đổi state machine.
@@ -374,10 +419,12 @@ ngay trong transaction khớp (bước 6c2) — không cần vòng sự kiện.
 - Xác nhận tay (mức ② · `POST /credit-events/{id}/confirm-match`) và xác nhận gạch nợ (S7) chạy **cùng khối transaction bước 6** trong Commerce, chỉ khác là `matched_by` = person_id của người bán và `level='MANUAL'`.
 
 
+<a id="muc-6b-state-machine-payment-module-payment-peye-haiti-15-08-doi"></a>
 ### 6b. State machine `payment` (module Payment — «Peye-Haiti 15/08», đối xứng §6)
 
 `created → submitted` (E.16.2 xác nhận PIN + C.7 trả 202 — lệnh ≤ `PAY_SCA_THRESHOLD`) · **`created → sca_required`** («v3.5» — C.7 trả nhánh OTP: lệnh > ngưỡng, định chế đã gửi SMS OTP cho chủ TK) · **`sca_required → submitted`** (E.16.6 + C.9 trả 202) · **`sca_required → failed('sca_failed')`** (sai OTP quá lần — OB-423-LOCK, hoặc quá `expires_at` định chế tự chốt qua B.4; PHÒNG B.4 thất lạc: sweeper hỏi C.8 khi quá `expires_at` + 5 phút) · **`sca_required → succeeded|failed(*)`** (B.4/C.8 về trước khi MMS kịp ghi C.9 — race, kết quả cuối thắng) · **`created → succeeded|failed`** (B.4 về TRƯỚC khi C.7 kịp trả lời — race, coi như submit ngầm; B.4 tra `client_ref` trước là vì vậy) · `created → failed('expired')` (job `payment-sweeper` quá `PAY_CREATE_TTL` — failure_reason là DỮ LIỆU, không thêm giá trị enum) · `submitted → succeeded|failed` (B.4, hoặc C.8) · `submitted → timeout` (job quá `PAY_TIMEOUT`) · **`timeout → succeeded|failed`** (B.4 muộn/C.8 — `timeout` là trạng thái TẠM) · **`succeeded`/`failed` = CUỐI, bất biến** — kết quả mâu thuẫn tới sau → giữ nguyên + mở `discrepancy`. B.4 tra theo `client_ref` trước, `ext_payment_id` sau; **khử trùng B.4 «v3.4»:** Redis `payres:{event_id}` TTL 48h — gặp lại `event_id` → trả 200 không xử lý lần hai (tầng bọc ngoài quy tắc trạng-thái-cuối-bất-biến). **Chống trả-đúp:** E.16.1/E.16.2 trả `PIN-409-STATE` (kèm `details.pending_payment_id`) khi cùng person còn lệnh `submitted`/`sca_required`/`timeout` chưa chốt tới CÙNG (target_operator, account_no_hmac, amount_ct); app chỉ cho trả lại sau khi C.8 chốt `failed`. Test: §12.7b.
 
+<a id="muc-7-giao-thuc-dong-bo-offline-app-nguoi-ban"></a>
 ## 7. Giao thức đồng bộ offline (app người bán)
 
 - `POST /v1/sync/batch` — envelope: `{device_id, entries:[{entity:"bill|bill_item|ledger_entry|debtor|product", op:"upsert|delete", client_uuid, version, payload, client_ts}]}` → response từng entry: `applied | conflict{server_state} | rejected{reason}`.
@@ -394,6 +441,7 @@ ngay trong transaction khớp (bước 6c2) — không cần vòng sự kiện.
 
 `ledger_entry`: client tạo `debt/repay(origin=manual)`; server tạo `repay(origin=auto)`; không sửa entry đã có (chỉ thêm bút ghi đảo).
 
+<a id="muc-8-bao-mat-chi-tiet"></a>
 ## 8. Bảo mật chi tiết
 
 | Hạng mục | Đặc tả |
@@ -410,6 +458,7 @@ ngay trong transaction khớp (bước 6c2) — không cần vòng sự kiện.
 | SIM-swap | Đổi tài khoản nhận yêu cầu OTP chủ TK mới (bank xác thực quyền sở hữu); mất máy → khóa khẩn hotline 8686 (thu hồi phiên ≤60s) |
 | Pentest | phạm vi: BFF + partner endpoint + portal; chuẩn OWASP ASVS L2; trước UAT |
 
+<a id="muc-8b-chuan-trien-khai-xac-thuc-phia-dich-vu-v3-7-chot-theo-q-a"></a>
 ## 8b. Chuẩn triển khai xác thực phía dịch vụ («v3.7» — chốt theo Q&A dev 24/08)
 
 **Phân vùng route tại API Gateway (policy-as-code — đội hạ tầng sở hữu, ATTT review; KHÔNG bypass theo từng service):**
@@ -433,12 +482,14 @@ Gateway không custom được policy verify thẻ → phương án dự phòng:
 
 `x-account-token` (token liên kết) KHÔNG BAO GIỜ là authentication của chain — tầng ứng dụng phía định chế tra token do CHÍNH MÌNH cấp (opaque theo C.2) trong kho của mình rồi kiểm scope theo A.1b.4; phía MMS chỉ là credential gửi đi. Ba miền tin cậy (thẻ đối tác · M2M nội bộ · phiên người dùng) tách tuyệt đối — bug một miền không lây miền khác.
 
+<a id="muc-9-ha-tang-sizing-quy-mo-muc-tieu-5-000-merchant-dc-natcom-ch"></a>
 ## 9. Hạ tầng & SIZING (quy mô mục tiêu **5.000 merchant** · DC Natcom · **chỉ UAT + PROD**)
 
 > Sandbox định chế = PHÂN VÙNG trên cụm UAT + 1 VM bổ sung (8 vCPU/16 GB/200 GB, cách ly dữ liệu) theo MOU A.5.3 — tổng bộ 3 môi trường = 33 VM; §9 này đặc tả phần UAT + PROD.
 
 > Thiết kế công suất cho **5.000 merchant**. **Hai môi trường duy nhất: UAT và PRODUCTION.** Không có trung tâm dữ liệu dự phòng và không có môi trường phát triển/tích hợp riêng trên hạ tầng (đội dev chạy docker-compose cục bộ, tích hợp với sandbox đối tác ngay trên UAT). An toàn dữ liệu bảo đảm bằng **chính sách sao lưu & khôi phục** (§9.4), không bằng site thứ hai.
 
+<a id="muc-9-0-so-do-topology-ha-tang"></a>
 ### 9.0. Sơ đồ topology hạ tầng
 
 ```mermaid
@@ -499,6 +550,7 @@ flowchart TB
   UATE -.-> PARTNER
 ```
 
+<a id="muc-9-0-1-thanh-phan-nen-tang-dung-chung-vai-tro-vi-tri"></a>
 ### 9.0.1. Thành phần nền tảng dùng chung — vai trò & vị trí
 
 Không phải mọi thứ đều là một VM riêng. API Gateway, Keycloak và Vault chạy dưới dạng workload bên trong Kubernetes (nhiều bản sao, không tốn thêm VM ở quy mô 5.000 merchant); Kafka, PostgreSQL, Redis, MinIO chạy trên VM riêng vì có trạng thái.
@@ -514,6 +566,7 @@ Không phải mọi thứ đều là một VM riêng. API Gateway, Keycloak và 
 | **MinIO** | Kho tệp: ảnh định danh, chứng cứ khiếu nại, bảng kê cuối ngày, và bản sao lưu | 4 VM (chống mất dữ liệu bằng mã sửa lỗi) | Tệp lớn không nên nhét vào cơ sở dữ liệu |
 | **Observability** | Thu số đo, log, vết truy vấn; cảnh báo khi ngưỡng vượt | 2 VM | Nhìn được sức khỏe hệ thống và truy vết sự cố |
 
+<a id="muc-9-1-mo-hinh-tai-5-000-merchant"></a>
 ### 9.1. Mô hình tải — 5.000 merchant
 
 | Thông số | Giá trị | Căn cứ |
@@ -532,6 +585,7 @@ Không phải mọi thứ đều là một VM riêng. API Gateway, Keycloak và 
 | E3 EOD | ~12 MB/phiên × 3 phiên/ngày | 60K dòng/ngày |
 | Kafka | ~60K–200K message/ngày (10 nhóm/14 topic — «Peye-Haiti 15/08»: +`payment.finished`) · retention 7 ngày ≈ **<50 GB/broker** | 500 GB/broker dư rất nhiều — chỗ để tăng retention khi cần điều tra |
 
+<a id="muc-9-2-production"></a>
 ### 9.2. PRODUCTION
 
 | Vai trò | Số VM | vCPU / RAM / Disk mỗi VM | Tổng (vCPU · RAM · Disk) |
@@ -553,6 +607,7 @@ Không phải mọi thứ đều là một VM riêng. API Gateway, Keycloak và 
 
 **4 worker chứa gì** (4 dịch vụ × 2 replica = 8 pod + BFF + Portal BE + 6 connector + Ingress): tổng request ~24 vCPU / ~90 GB trên **32 vCPU / 128 GB** worker → **dư ~25–30%** cho burst, HPA và rolling update. Phân bổ ở đỉnh thiết kế 50 TPS (đã là 2,5× đỉnh burst dự phóng): BFF ~6 vCPU (2–6 replica HPA) · Commerce ~7 vCPU (dịch vụ nặng nhất — nhận webhook + khớp tiền + bill + sổ nợ + biên lai) · Merchant & Identity ~3 vCPU · Back-office ~3 vCPU · Notification ~1,5 vCPU · 6 connector + Portal BE + Ingress ~3,5 vCPU. Cần chuẩn N+1 chặt hơn về sau → thêm worker thứ 5, không đổi kiến trúc.
 
+<a id="muc-9-3-uat"></a>
 ### 9.3. UAT
 
 | Vai trò | Số VM | vCPU / RAM / Disk mỗi VM | Tổng (vCPU · RAM · Disk) |
@@ -572,6 +627,7 @@ UAT dùng sandbox của bank/BRH/Natcom/Switch, chạy tự động 9 luồng S1
 
 **Tổng hai môi trường: 32 VM · 126 vCPU · 476 GB RAM · ~16,4 TB raw.**
 
+<a id="muc-9-4-sao-luu-khoi-phuc-thay-cho-trung-tam-du-lieu-du-phong"></a>
 ### 9.4. Sao lưu & khôi phục (thay cho trung tâm dữ liệu dự phòng)
 
 | Hạng mục | Chính sách |
@@ -586,6 +642,7 @@ UAT dùng sandbox của bank/BRH/Natcom/Switch, chạy tự động 9 luồng S1
 
 > **Chưa có trung tâm dữ liệu dự phòng — nếu BRH yêu cầu, bổ sung site thứ hai sau.** Việc bổ sung không đổi kiến trúc: PostgreSQL bật thêm standby dòng chảy (streaming) sang site mới, MinIO bật sao chép giữa site, K8s dựng lại từ cùng bộ mã hạ tầng. Chi phí và mốc thời gian sẽ báo giá riêng khi có yêu cầu chính thức.
 
+<a id="muc-9-5-lo-trinh-vuot-5-000-merchant-kien-truc-khong-doi"></a>
 ### 9.5. Lộ trình vượt 5.000 merchant (kiến trúc KHÔNG đổi)
 
 | Bước | Khi nào | Làm gì |
@@ -600,6 +657,7 @@ UAT dùng sandbox của bank/BRH/Natcom/Switch, chạy tự động 9 luồng S1
 2. **BRH: quota eKYC (E1) ≥ 500 lượt/ngày** cho các đợt chiến dịch onboarding — nếu không, phễu đăng ký bị nghẽn ở bước định danh, không phải ở hạ tầng.
 3. **Chi phí SMS (N1)**: ≤12.000 SMS/ngày ở kịch bản 20% fallback. Đây là **khoản chi vận hành lớn nhất và tăng tuyến tính theo số giao dịch** — phải chốt đơn giá theo lô với Natcom và theo dõi tỷ lệ fallback như một chỉ số vận hành (ưu tiên push để kéo tỷ lệ này xuống).
 
+<a id="muc-10-observability-van-hanh"></a>
 ## 10. Observability & vận hành
 
 | Metric | Ngưỡng cảnh báo (C12) | Hành động |
@@ -615,10 +673,12 @@ UAT dùng sandbox của bank/BRH/Natcom/Switch, chạy tự động 9 luồng S1
 - Trace: OpenTelemetry, `trace_id` gắn `ref_id/event_id` xuyên service; log JSON tập trung Loki.
 - Circuit breaker per đối tác: mở khi 50% lỗi/20 request; half-open 30s. Runbook degrade: E1↓→hàng đợi hồ sơ+duyệt tay ảnh; N1↓→OTP thoại (thủ tục Natcom), báo có chỉ push; M4↓→M3-poll 5'/lần; E3 trễ→đối soát dời phiên, cảnh báo BRH.
 
+<a id="muc-11-notification"></a>
 ## 11. Notification
 
 - Notification ưu tiên: push (FCM/WebPush) → chờ ack 60s → SMS N1; template FR/Creole trong `/i18n/notif/*.po`; brandname «PEYE-HAITI» (đổi từ PINASSI — cần đăng ký lại template với Natcom) (D6); rate limit 5 SMS/merchant/giờ (trừ OTP).
 
+<a id="muc-12-kiem-thu-nghiem-thu-ky-thuat"></a>
 ## 12. Kiểm thử & nghiệm thu kỹ thuật
 
 1. **Contract test** (SIT): toàn bộ M-series/E/N chạy trên sandbox; bộ **test vectors QR** cho D9 sinh theo HTQR 1.0 (§13.4 — CRC 4/4 khớp quy chuẩn): (a) tĩnh TK thật, (b) động + số tiền, (c) động + addenda bill_id, (d) sai chuẩn/thiếu trường/thiếu tag 52; kèm bộ **vector AUTH A.1b.6** tại `/docs/auth-vectors/` (thẻ đúng GET/POST · sai alg · sai chữ ký · sai aud · hết hạn · thiếu/lệch hash body + thẻ response mẫu) — điều kiện chứng nhận kết nối D2 (API Spec F.4) — ví bên trả phải pass (a)–(c), từ chối (d).
@@ -630,16 +690,20 @@ UAT dùng sandbox của bank/BRH/Natcom/Switch, chạy tự động 9 luồng S1
 7b. **Test idempotent thanh toán (module Payment)**: bắn cùng `client_uuid` 10 lần song song → đúng **1** `payment` + đúng **1** lệnh M-PAY.1; webhook kết quả bắn trùng 5 lần → trạng thái chỉ đổi **1** lần; định chế trả im lặng quá `PAY_TIMEOUT` → `timeout`, job hỏi M-PAY.2 chốt trạng thái, KHÔNG bao giờ tự tạo lệnh mới; người dùng quét lại CÙNG đích + số tiền khi lệnh cũ `submitted`/`sca_required`/`timeout` → `PIN-409-STATE` (chống trả-đúp §6b); B.4 tới sau `timeout` → chốt trạng thái cuối đúng 1 lần. «v3.5» nhánh OTP: lệnh > ngưỡng → C.7 trả `sca_required` → nộp OTP đúng (C.9) → `submitted`; OTP sai quá lần → `failed('sca_failed')`; quá `expires_at` mà B.4 thất lạc → sweeper hỏi C.8 chốt đúng 1 lần; E.16.3 resume trả object `sca` khi còn hạn.
 7. **Test invariant khớp tiền** (bắt buộc — §6): bắn **cùng một `event_id` 10 lần song song** → đúng **1** `match_result`, đúng **1** `bill` chuyển `paid`, đúng **1** biên lai (trên chính hàng `match_result`); bắn **2 credit_event khác nhau cùng số tiền vào 1 bill mở** → 1 cái khớp, 1 cái rơi `PENDING` (không bao giờ 2 khoản cùng gạch 1 bill).
 
+<a id="muc-13-phu-luc"></a>
 ## 13. Phụ lục
 
+<a id="muc-13-1-ma-loi-nghiep-vu-bizcode-chinh"></a>
 ### 13.1. Mã lỗi nghiệp vụ (`biz_code` chính)
 `BIZ-TOKEN-REVOKED` · `BIZ-BILL-STATE` bill không ở trạng thái hợp lệ · `BIZ-DUP-CLIENT-UUID`. *(Giám sát hạn mức ngày nay là hậu kiểm AML `AML_DAY_FLAG` — `POST /bills` KHÔNG trả 422 theo hạn mức, chỉ cảnh báo mềm `limit_warning` trong response 201.)*
 
 Danh mục mã lỗi CHÍNH THỨC & ĐÓNG = `PeyeHaiti_API_Spec.md` mục F.1 (**41 mã**: 11 PIN + 14 OB + 16 BIZ); mã `OB-xxx` mở rộng (nếu phát sinh) đưa vào phụ lục hợp đồng D2.
 
+<a id="muc-13-2-su-kien-instrument-kpi-brh-08"></a>
 ### 13.2. Sự kiện instrument KPI (BRH-08)
 `onb.step{step,ms}` từng bước NB-01→2B · `onb.submit→activate` (thời gian tạo→active — «v3.6» kích hoạt tức thời, đo funnel) · `notify.t0t1_ms` · `match.level` · `case.sla`.
 
+<a id="muc-13-3-tham-so-cau-hinh-bang-param-quan-tri-qua-e-13-2e-13-4-b"></a>
 ### 13.3. Tham số cấu hình (bảng `param` · quản trị qua E.13.2–E.13.4 bởi vận hành Natcom, 4 mắt — màn portal BRH-09 đã bỏ 04/08)
 | Key | Mặc định | Kiểu · khoảng hợp lệ | Nguồn |
 |---|---|---|---|
@@ -667,6 +731,7 @@ Danh mục mã lỗi CHÍNH THỨC & ĐÓNG = `PeyeHaiti_API_Spec.md` mục F.1 
 | `AML_SMURF` | ≥5 GD ∈ [80–100%] ngưỡng GD trong 24h | object `{count: int 3–10, band: 0.50–1.00}` | C14 (chống chia nhỏ) |
 | `AUTO_ACTIVATE_SCORE` «v3.6: đổi vai trò» | 0.85 · hậu kiểm mẫu 10% | number · 0.70–0.95 (mẫu: int % · 5–20) | C10 — KHÔNG còn chặn kích hoạt: dưới ngưỡng = GẮN CỜ hậu kiểm ưu tiên (vẫn active) |
 
+<a id="muc-13-4-payload-qr-theo-chuan-htqr-1-0-d1-quy-chuan-quoc-gia-du"></a>
 ### 13.4. Payload QR theo chuẩn HTQR 1.0 (D1 — quy chuẩn quốc gia, dự thảo v0.9.1 trình G3 15/08) «CR-3 15/08»
 
 QR merchant Peye-Haiti = **HTQRPAY** (thanh toán merchant) theo quy chuẩn `HTQR 1.0` (Napas/Haiti — cùng bộ tài liệu dự án). EMVCo MPM, CRC-16/CCITT-FALSE:
@@ -691,6 +756,7 @@ QR merchant Peye-Haiti = **HTQRPAY** (thanh toán merchant) theo quy chuẩn `HT
 - Test vectors §12.1 sinh lại theo 4 ví dụ của quy chuẩn (CRC `4319` · `9EBB` · `B60A` · `6135`); app render offline (A9) không đổi kiến trúc.
 - Hợp đồng D2/M4: bổ sung 2 trường **optional** `payer.person_id` · `payer.operator` (CR-7 — xem API Spec B.1); không phá tương thích.
 
+<a id="muc-13-5-cau-truc-repo-de-xuat"></a>
 ### 13.5. Cấu trúc repo đề xuất
 
 **4 dịch vụ** (mỗi dịch vụ = 1 kho mã, 1 container, 1 schema PostgreSQL — §5):

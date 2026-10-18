@@ -1,5 +1,26 @@
 # Ma trận truy vết — Giải pháp Merchant Peye-Haiti (footprint go-live 01/10/2026)
 
+<!-- TOC -->
+<a id="muc-luc"></a>
+
+**Mục lục**
+
+- [§1. Ma trận CHÍNH — theo user story (41 hàng)](#muc-1-ma-tran-chinh-theo-user-story-41-hang)
+- [§2. Ma trận NGƯỢC — theo màn hình (42 màn — đã gồm CH-00 «v3.6»)](#muc-2-ma-tran-nguoc-theo-man-hinh-42-man-da-gom-ch-00-v3-6)
+  - [§2.1. App người bán — NB (17 màn)](#muc-2-1-app-nguoi-ban-nb-17-man)
+  - [§2.3. Portal BRH (10 màn)](#muc-2-3-portal-brh-10-man)
+  - [§2.4. Console vận hành VDS — AQ (4 màn)](#muc-2-4-console-van-hanh-vds-aq-4-man)
+  - [§2.5. Ví bên trả — VI (5 màn · tham chiếu, ngoài phạm vi xây)](#muc-2-5-vi-ben-tra-vi-5-man-tham-chieu-ngoai-pham-vi-xay)
+- [§3. Ma trận NGƯỢC — theo bảng dữ liệu (28 bảng)](#muc-3-ma-tran-nguoc-theo-bang-du-lieu-28-bang)
+- [§4. Ma trận TÍCH HỢP (12 giao diện ngoài)](#muc-4-ma-tran-tich-hop-12-giao-dien-ngoai)
+- [§5. Ma trận KIỂM THỬ — theo acceptance criteria (45 hàng, cơ sở kịch bản UAT)](#muc-5-ma-tran-kiem-thu-theo-acceptance-criteria-45-hang-co-so-ki)
+- [§6. Ma trận NFR & tham số](#muc-6-ma-tran-nfr-tham-so)
+- [§7. Bảng phụ thuộc & rủi ro chặn (D1–D11)](#muc-7-bang-phu-thuoc-rui-ro-chan-d1d11)
+- [§8. Điểm hở (gap register)](#muc-8-diem-ho-gap-register)
+- [§9. Chỉ mục nhanh — hỏi gì, tra ở đâu](#muc-9-chi-muc-nhanh-hoi-gi-tra-o-dau)
+
+<!-- /TOC -->
+
 | Trường | Nội dung |
 |---|---|
 | Mã tài liệu | **Peye-Haiti-TRC-001 · v4.2** — 20/08/2026 tối · **«v3.6»:** CH-00 trước eKYC · TẠO LÀ ACTIVE (US-07/AC-1.4/BRH-03/US-26 đổi ngữ nghĩa hậu kiểm — không đổi mã/số đếm) · **20/08 (v3.5):** một app CHỌN VAI (+US-46/AC-1.8 — 42 US·46 AC; +màn CH-00 — 42 màn); hai bậc xác thực (khôi phục C.9/E.16.6 → 109 mục/110 HTTP · OB 12 API); PAY_SCA_THRESHOLD thay PAY_MAX_PILOT · nền v4.0 — 15/08/2026 · **15/08 (Peye-Haiti — app chung, mô hình BiMPay):** đổi tên PINASSI→HaitiPay (file `PeyeHaiti_*.md`; prefix `PIN-` giữ); +EP-11 người mua US-41..45 · AC-11.1..11.5; +bảng `payment` (28); +M-PAY/M-PAY-hook (tích hợp 14); +E.16 (5) · P.1 · C.7/C.8 · B.4 → 106 mục/107 HTTP; +5 màn NM (wireframes đợt sau) → 41 màn; +luồng S9 · **15/08 (CR BRH)**: áp CR-1/2/3/4/5/6/7/8/12 (`BRH/PeyeHaiti_CR_BRH_LuuTru_NhatKy.md`) — merchant +mcc/alias/national_merchant_id · person +nif_no/rni_person_id · credit_event +payer_person_id/payer_operator · QR theo HTQR 1.0 · KYC=KYC2; số bảng/màn/US/AC/endpoint KHÔNG đổi · **04/08**: hoán đúng vai AQ-00 (đầu nối/kho token) ↔ AQ-01 (tổng quan sức khỏe/trực ban) theo wireframes + thân API Spec; sửa số mục C của M1a/M1b/M3 (C.3/C.4/C.6); bỏ màn BRH-09 «Cấu hình» — màn 37→36 (BRH 10), tham số chuyển vận hành Natcom qua E.13.x · **02/08 (CANON2)**: 8 rút gọn — bỏ M7/M4b/qr_intent/report_schedule/buyer_profile, hoãn app người mua NM + danh bạ V1, gộp device→auth_session, matching 2 mức; US 40→36 · AC 44→39 · màn 43→37 · bảng 31→27 · tích hợp 15→12 · mã lỗi 44→41 · **25/07**: bỏ API M5 (đối chiếu tên — bank tự xác thực qua OTP) + gộp còn 1 bậc KYC · sắp xếp mục C theo luồng onboarding · tích hợp 17→15, mã lỗi 48→44 · đồng bộ tên ví Natcash→wallet2 (NatTransfer), mã ví dụ NATC→NTRF (đồng bộ quyết định chốt: **4 dịch vụ** · event bus **Apache Kafka** · sizing **5.000 merchant** UAT+PROD; nền v1.1: vá 3 điểm hở AC + 1 lệch mapping màn + 6 mâu thuẫn số liệu — xem §8) |
@@ -16,6 +37,7 @@
 
 ---
 
+<a id="muc-1-ma-tran-chinh-theo-user-story-41-hang"></a>
 ## §1. Ma trận CHÍNH — theo user story (41 hàng)
 
 | US | Epic | Tên rút gọn | Luồng | Màn | Service (SSD §4) | API chính (API_Spec) | Bảng dữ liệu chính | AC | Ưu tiên |
@@ -67,12 +89,14 @@
 
 ---
 
+<a id="muc-2-ma-tran-nguoc-theo-man-hinh-42-man-da-gom-ch-00-v3-6"></a>
 ## §2. Ma trận NGƯỢC — theo màn hình (42 màn — đã gồm CH-00 «v3.6»)
 
 > «v3.5»: +**CH-00 Chọn vai** (sau OTP+PIN, trước eKYC; nâng cấp SAU pilot) → `E.10.4 GET /me` + E.2.x — đã có wireframe; NM đã có wireframe. NM-01 Quét & nhập tiền → `E.16.1` · NM-02 Xác nhận tên+nguồn → `E.16.2` · NM-03 Kết quả & biên lai → `E.16.3` · NM-04 Lịch sử & khiếu nại → `E.16.4`/`E.16.5` · NM-05 Liên kết TK trả → `E.3.x (holder=person)`. Bảng dưới liệt kê 36 màn NB/BRH/AQ/VI — CH-00 và NM tra ở ghi chú này.
 
 Nguồn: API_Spec F.2 (endpoint × màn) · SSD §14 (màn → dịch vụ → tích hợp) · PRD §7 (US → màn).
 
+<a id="muc-2-1-app-nguoi-ban-nb-17-man"></a>
 ### §2.1. App người bán — NB (17 màn)
 
 | Màn | Nội dung | US | Endpoint (API_Spec) | Service · Tích hợp |
@@ -96,6 +120,7 @@ Nguồn: API_Spec F.2 (endpoint × màn) · SSD §14 (màn → dịch vụ → t
 | NB-15 | Sổ nợ (offline-first) | US-18 · US-19 · US-20 · US-21 | `E.6.1` · `E.6.2` · `E.6.3` · `E.6.4` · `E.6.5` | Commerce · N1 |
 | (mọi màn NB) | Đồng bộ offline · upload ảnh · hồ sơ | US-21 · US-13 | `E.9.1` · `E.9.2` · `E.10.4` · `E.10.5` | tầng BFF → Commerce (đồng bộ) · Merchant & Identity (hồ sơ) |
 
+<a id="muc-2-3-portal-brh-10-man"></a>
 ### §2.3. Portal BRH (10 màn)
 
 | Màn | Nội dung | US | Endpoint | Service · Tích hợp |
@@ -112,6 +137,7 @@ Nguồn: API_Spec F.2 (endpoint × màn) · SSD §14 (màn → dịch vụ → t
 | BRH-11 | Audit log bất biến | US-31 | `E.13.5` | Back-office (Admin) |
 | BRH-12 | Người dùng & phân quyền (RBAC 5 vai trò) | US-31 | `E.13.6` · `E.13.7` · `E.13.8` | Back-office (Admin) |
 
+<a id="muc-2-4-console-van-hanh-vds-aq-4-man"></a>
 ### §2.4. Console vận hành VDS — AQ (4 màn)
 
 | Màn | Nội dung | US | Endpoint | Service · Tích hợp |
@@ -121,6 +147,7 @@ Nguồn: API_Spec F.2 (endpoint × màn) · SSD §14 (màn → dịch vụ → t
 | AQ-03 | Phiên đối soát E3 | US-36 | `E.14.5` | Back-office (Compliance) · **E3** · E3-reg |
 | AQ-04 | Hàng đợi chênh lệch & xử lý | US-36 | `E.14.6` · `E.14.7` | Back-office (Compliance) · M3-poll |
 
+<a id="muc-2-5-vi-ben-tra-vi-5-man-tham-chieu-ngoai-pham-vi-xay"></a>
 ### §2.5. Ví bên trả — VI (5 màn · tham chiếu, ngoài phạm vi xây)
 
 | Màn | Nội dung | US | Endpoint | Ghi chú |
@@ -133,6 +160,7 @@ Nguồn: API_Spec F.2 (endpoint × màn) · SSD §14 (màn → dịch vụ → t
 
 ---
 
+<a id="muc-3-ma-tran-nguoc-theo-bang-du-lieu-28-bang"></a>
 ## §3. Ma trận NGƯỢC — theo bảng dữ liệu (28 bảng)
 
 Quy tắc SSD §4 (4 dịch vụ) / DataDict §2 (5 schema PostgreSQL): **dịch vụ sở hữu là nơi DUY NHẤT ghi bảng của schema mình**; dịch vụ khác đọc qua REST nội bộ `/internal/*` hoặc sự kiện **Kafka**. Khớp tiền (`match_result` ↔ `bill` ↔ `ledger_entry` ↔ `match_result` (biên lai)) nay **cùng schema `commerce`** → một transaction nội bộ, **không còn lệnh ghi xuyên dịch vụ**.
@@ -170,6 +198,7 @@ Quy tắc SSD §4 (4 dịch vụ) / DataDict §2 (5 schema PostgreSQL): **dịch
 
 ---
 
+<a id="muc-4-ma-tran-tich-hop-12-giao-dien-ngoai"></a>
 ## §4. Ma trận TÍCH HỢP (12 giao diện ngoài)
 
 Nhóm **M** = bank/ví NHẬN cung cấp · **E** = BRH/Switch · **N** = Natcom. (I2/I5 = năng lực nội bộ MMS, không phải giao diện ngoài. M2/M6/M6b/N2 = **không sử dụng** — TSD §2.)
@@ -192,6 +221,7 @@ Nhóm **M** = bank/ví NHẬN cung cấp · **E** = BRH/Switch · **N** = Natcom
 
 ---
 
+<a id="muc-5-ma-tran-kiem-thu-theo-acceptance-criteria-45-hang-co-so-ki"></a>
 ## §5. Ma trận KIỂM THỬ — theo acceptance criteria (45 hàng, cơ sở kịch bản UAT)
 
 Loại test: **U** unit · **CT** contract (sandbox đối tác) · **SIT** tích hợp · **UAT** BRH nghiệm thu · **PERF** tải/soak · **DR** diễn tập sự cố.
@@ -249,6 +279,7 @@ Loại test: **U** unit · **CT** contract (sandbox đối tác) · **SIT** tíc
 
 ---
 
+<a id="muc-6-ma-tran-nfr-tham-so"></a>
 ## §6. Ma trận NFR & tham số
 
 | NFR (PRD §9) | Cơ chế (SSD §10 · TSD §10) | Ngưỡng đo | Param liên quan (TSD §13.3) |
@@ -275,6 +306,7 @@ Loại test: **U** unit · **CT** contract (sandbox đối tác) · **SIT** tíc
 
 ---
 
+<a id="muc-7-bang-phu-thuoc-rui-ro-chan-d1d11"></a>
 ## §7. Bảng phụ thuộc & rủi ro chặn (D1–D11)
 
 | # | Phụ thuộc | Hạn · Chủ trì | Ảnh hưởng tới US / luồng | Hệ quả nếu TRỄ | Phương án degrade |
@@ -293,6 +325,7 @@ Loại test: **U** unit · **CT** contract (sandbox đối tác) · **SIT** tíc
 
 ---
 
+<a id="muc-8-diem-ho-gap-register"></a>
 ## §8. Điểm hở (gap register)
 
 Phát hiện khi lập ma trận: **6 điểm hở + 6 mâu thuẫn số liệu**. Bản v1.1 này **đã VÁ**: G2/G3 (bổ sung 2 AC — AC-5.4, AC-10.1 — vào PRD §7) · G6 (sửa preamble API_Spec F.2) · X1–X6 (chốt số liệu ở cả 5 tài liệu). **Còn lại 2 điểm hở — cả hai đều CÓ CHỦ Ý, chấp nhận được**, không có điểm hở nghiêm trọng (mọi US đều có AC + API + bảng; mọi bảng đều có người ghi).
@@ -327,6 +360,7 @@ Phát hiện khi lập ma trận: **6 điểm hở + 6 mâu thuẫn số liệu*
 
 ---
 
+<a id="muc-9-chi-muc-nhanh-hoi-gi-tra-o-dau"></a>
 ## §9. Chỉ mục nhanh — hỏi gì, tra ở đâu
 
 | Câu hỏi | Tài liệu · Mục |

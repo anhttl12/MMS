@@ -1,5 +1,46 @@
 # PRD — Tài liệu Yêu cầu Sản phẩm · Giải pháp Merchant Peye-Haiti (footprint 10/2026)
 
+<!-- TOC -->
+<a id="muc-luc"></a>
+
+**Mục lục**
+
+- [1. Tóm tắt điều hành](#muc-1-tom-tat-dieu-hanh)
+  - [1.1. Cách đọc tài liệu — quy ước mã (đọc mục này trước)](#muc-1-1-cach-doc-tai-lieu-quy-uoc-ma-doc-muc-nay-truoc)
+- [2. Bối cảnh & vấn đề](#muc-2-boi-canh-van-de)
+- [3. Mục tiêu & KPI](#muc-3-muc-tieu-kpi)
+- [4. Phạm vi](#muc-4-pham-vi)
+  - [4.1. Trong phạm vi](#muc-4-1-trong-pham-vi)
+  - [4.2. Ngoài phạm vi (sau 10/2026)](#muc-4-2-ngoai-pham-vi-sau-10-2026)
+  - [4.3. Quyết định đã chốt (Q1–Q9)](#muc-4-3-quyet-dinh-da-chot-q1q9)
+- [5. Người dùng](#muc-5-nguoi-dung)
+- [6. Luồng nghiệp vụ chính (F1–F9)](#muc-6-luong-nghiep-vu-chinh-f1f9)
+- [7. Yêu cầu chức năng chi tiết — Epic · User story · Bước chức năng · UI/UX · Tiêu chí nghiệm thu](#muc-7-yeu-cau-chuc-nang-chi-tiet-epic-user-story-buoc-chuc-nang)
+  - [7.0. Nguyên tắc UI/UX chung (áp cho mọi màn app di động)](#muc-7-0-nguyen-tac-ui-ux-chung-ap-cho-moi-man-app-di-dong)
+  - [EP-1 · Đăng ký & mở quyền nhận tiền (F1 — màn NB-00→NB-1C, CH-00, BRH-03)](#muc-ep-1-dang-ky-mo-quyen-nhan-tien-f1-man-nb-00nb-1c-ch-00-brh)
+  - [EP-2 · Nhận tiền bằng QR & báo có (F2 — NB-03/04/05, VI-01→04)](#muc-ep-2-nhan-tien-bang-qr-bao-co-f2-nb-03-04-05-vi-0104)
+  - [EP-3 · Đơn tính tiền & danh mục món (F3 — NB-06/07/08)](#muc-ep-3-don-tinh-tien-danh-muc-mon-f3-nb-06-07-08)
+  - [EP-4 · Sổ nợ & khách quen (F5 — NB-15)](#muc-ep-4-so-no-khach-quen-f5-nb-15)
+  - [EP-5 · Biên lai qua SMS (F6 — NB-05/09)](#muc-ep-5-bien-lai-qua-sms-f6-nb-05-09)
+  - [EP-6 · Portal BRH — hậu kiểm, giám sát (BRH-01→05, 08, 11, 12) + tham số qua API E.13.x (không màn)](#muc-ep-6-portal-brh-hau-kiem-giam-sat-brh-0105-08-11-12-tham-so)
+  - [EP-7 · Khiếu nại & hoàn tiền (F7 — BRH-06, NB-09)](#muc-ep-7-khieu-nai-hoan-tien-f7-brh-06-nb-09)
+  - [EP-8 · AML & hạn mức (BRH-07)](#muc-ep-8-aml-han-muc-brh-07)
+  - [EP-9 · Vận hành & đối soát (F8 — AQ-00→04)](#muc-ep-9-van-hanh-doi-soat-f8-aq-0004)
+  - [EP-10 · An toàn tài khoản (F9 — NB-00)](#muc-ep-10-an-toan-tai-khoan-f9-nb-00)
+  - [EP-11 · Thanh toán trong app — MỌI VAI (mô hình BiMPay · luồng S9 — màn NM-01→05)](#muc-ep-11-thanh-toan-trong-app-moi-vai-mo-hinh-bimpay-luong-s9-m)
+- [8. Yêu cầu tích hợp (14 mục · 12 giao diện ngoài + 2 nội bộ)](#muc-8-yeu-cau-tich-hop-14-muc-12-giao-dien-ngoai-2-noi-bo)
+- [9. Yêu cầu phi chức năng](#muc-9-yeu-cau-phi-chuc-nang)
+- [10. Phụ thuộc (D1–D11)](#muc-10-phu-thuoc-d1d11)
+- [11. Rủi ro chính](#muc-11-rui-ro-chinh)
+- [12. Lộ trình](#muc-12-lo-trinh)
+- [13. Nghiệm thu & Go-live gate](#muc-13-nghiem-thu-go-live-gate)
+- [14. Sau footprint (định hướng)](#muc-14-sau-footprint-dinh-huong)
+- [15. Thuật ngữ](#muc-15-thuat-ngu)
+- [16. Điểm cần chốt — KÈM ĐỀ XUẤT CHỐT THEO THAM CHIẾU THỊ TRƯỜNG VN](#muc-16-diem-can-chot-kem-de-xuat-chot-theo-tham-chieu-thi-truong)
+- [BẢNG GHI NHẬN THAY ĐỔI](#muc-bang-ghi-nhan-thay-doi)
+
+<!-- /TOC -->
+
 | Trường | Nội dung |
 |---|---|
 | Mã tài liệu | Peye-Haiti-PRD-001 |
@@ -10,6 +51,7 @@
 
 ---
 
+<a id="muc-1-tom-tat-dieu-hanh"></a>
 ## 1. Tóm tắt điều hành
 
 Peye-Haiti là nền tảng thanh toán số quốc gia do **BRH** chủ trì, **Natcom** làm đầu mối triển khai, **VDS** xây dựng. Tài liệu này đặc tả yêu cầu sản phẩm cho **Giải pháp Merchant — footprint go-live 10/2026**: đưa **601 tiểu thương chợ tại 3 thành phố** lên nền tảng, nhận tiền bằng **QR chuyển khoản theo chuẩn quốc gia** (kế thừa bộ chuẩn Napas/EMVCo), kèm công cụ bán hàng: **sổ nợ, đơn tính tiền, danh mục sản phẩm, báo cáo**.
@@ -43,6 +85,7 @@ flowchart LR
 
 > **Ngoài phạm vi footprint**: QR Pay theo đơn hàng qua Switch, tồn kho, web người bán — thuộc giai đoạn sau 10/2026.
 
+<a id="muc-1-1-cach-doc-tai-lieu-quy-uoc-ma-doc-muc-nay-truoc"></a>
 ### 1.1. Cách đọc tài liệu — quy ước mã (đọc mục này trước)
 
 Tài liệu dùng 4 loại mã. Gặp mã ở bất kỳ đâu, tra ngược về bảng này:
@@ -62,6 +105,7 @@ Tài liệu dùng 4 loại mã. Gặp mã ở bất kỳ đâu, tra ngược v�
 
 **Khung KYC hài hòa quốc gia (văn bản BRH 12/08, Phần III.1):** KYC merchant của Peye-Haiti = **KYC2**; vai người mua = **KYC1** (chỉ OTP số điện thoại, KHÔNG eKYC/CIN) trong khung 3 bậc BRH: danh tính pháp lý + ảnh giấy tờ + selfie do E1 đối chiếu OCR/ONI · OTP gắn số điện thoại · kiểm tra tại định chế khi liên kết tài khoản (M1/OTP bank) · NIF bổ sung song song CIN · PersonID quốc gia là cột chờ `rni_person_id`, điền khi RNI vận hành. Người mua KYC1 **miễn sàng lọc E2 ở pilot** theo đúng khung KYC1 BRH (giao dịch nhỏ); kiểm soát thay thế = ngưỡng OTP `PAY_SCA_THRESHOLD` (bậc 2 của định chế) + trần ngày bậc-PIN `PAY_DAY_MAX` + hạn mức định chế theo KYC + AML hậu kiểm cả phía trả (theo người — `AML_DAY_FLAG`) lẫn phía nhận (theo merchant).
 
+<a id="muc-2-boi-canh-van-de"></a>
 ## 2. Bối cảnh & vấn đề
 
 - Haiti là nền kinh tế tiền mặt: ~2/3 người trưởng thành chưa có tài khoản; tiểu thương (đặc biệt **Madan Sara**) thu chi hoàn toàn tiền mặt, không công cụ quản lý, rủi ro an ninh cao.
@@ -69,6 +113,7 @@ Tài liệu dùng 4 loại mã. Gặp mã ở bất kỳ đâu, tra ngược v�
 - BRH đề nghị Viettel/Natcom/VDS xây phân hệ ứng dụng + quản trị và tư vấn **chuẩn QR quốc gia kế thừa bộ chuẩn Napas** đã kiểm chứng tại Việt Nam.
 - Ràng buộc sản phẩm: không máy tính, Android giá rẻ/điện thoại thường, mạng 2G, tiếng Pháp/Creole — sản phẩm phải có **lý do dùng hằng ngày** (sổ nợ, tính tiền), không chỉ là mã QR.
 
+<a id="muc-3-muc-tieu-kpi"></a>
 ## 3. Mục tiêu & KPI
 
 | Chỉ số | Mục tiêu pilot | Đo tại |
@@ -84,8 +129,10 @@ Tài liệu dùng 4 loại mã. Gặp mã ở bất kỳ đâu, tra ngược v�
 
 > Chính sách pilot: **phí giao dịch merchant = 0 G đến 31/12/2026** (phê tại D5, cấu hình qua API tham số E.13.x — vận hành Natcom, bốn mắt). Mục tiêu sau pilot (không cam kết): 5.000 merchant/12 tháng → 100.000 toàn quốc.
 
+<a id="muc-4-pham-vi"></a>
 ## 4. Phạm vi
 
+<a id="muc-4-1-trong-pham-vi"></a>
 ### 4.1. Trong phạm vi
 
 | Cấu phần | Nội dung | Số màn |
@@ -114,10 +161,12 @@ flowchart TD
 
 Kèm: **gạch bill 2 mức đã chốt làm** (① TK liên kết + khớp số tiền/cửa sổ — ưu tiên khớp ĐÍCH DANH theo `payment_ref` từ tra cứu B.5 → ② xác nhận tay); **standee in số TK thật đã liên kết (chuẩn VietQR)**; prototype tương tác 4 ngôn ngữ (VN/FR/EN/HT).
 
+<a id="muc-4-2-ngoai-pham-vi-sau-10-2026"></a>
 ### 4.2. Ngoài phạm vi (sau 10/2026)
 
 QR Pay qua Switch · tồn kho · web người bán · thu ngân đa người dùng · loyalty nâng cao · đặt hàng & đánh giá app người mua · Open Banking MonCash · hoàn tiền tự động qua Switch · trả theo số điện thoại/alias không quét QR (chờ HTQR v1.1 alias/RNI).
 
+<a id="muc-4-3-quyet-dinh-da-chot-q1q9"></a>
 ### 4.3. Quyết định đã chốt (Q1–Q9)
 
 | # | Quyết định | Hệ quả |
@@ -140,6 +189,7 @@ QR Pay qua Switch · tồn kho · web người bán · thu ngân đa người d�
 - TK có thể dùng chung với chi tiêu cá nhân → app có nút **«không phải doanh thu»** (US-40) loại khoản không bán hàng khỏi doanh số; số TK công khai tại quầy là thông lệ đại trà đã được thị trường VN kiểm chứng.
 - Standee in **theo đợt kích hoạt**; app tự in QR giấy A5 dùng tạm trong lúc chờ standee.
 
+<a id="muc-5-nguoi-dung"></a>
 ## 5. Người dùng
 
 | Persona | Đặc điểm & nhu cầu | Cấu phần |
@@ -154,6 +204,7 @@ QR Pay qua Switch · tồn kho · web người bán · thu ngân đa người d�
 | Nhân viên field Natcom | Đăng ký hộ tại chợ, standee, đào tạo | Chế độ hỗ trợ + quy trình |
 | Bank/ví NHẬN tiền (wallet2 + 1 bank) | Cung cấp Open Banking M1/M1a/M1b/M3/M4 theo SLA D2; giữ tài khoản nhận | Đầu nối OB (AQ-00) |
 
+<a id="muc-6-luong-nghiep-vu-chinh-f1f9"></a>
 ## 6. Luồng nghiệp vụ chính (F1–F9)
 
 ```mermaid
@@ -200,10 +251,12 @@ flowchart TD
   EXEC --> KQ["Kết quả cuối ≤ 3 giây P95<br/>+ biên lai số · người bán vẫn nhận M4 «ting ting»"]
 ```
 
+<a id="muc-7-yeu-cau-chuc-nang-chi-tiet-epic-user-story-buoc-chuc-nang"></a>
 ## 7. Yêu cầu chức năng chi tiết — Epic · User story · Bước chức năng · UI/UX · Tiêu chí nghiệm thu
 
 > Wireframe từng màn (bố cục, dữ liệu vào/ra, quy tắc màn hình) nằm trong **prototype tương tác** `PeyeHaiti_Wireframes.html` — bấm được như app thật, 4 ngôn ngữ (VN/FR/EN/HT). Mục này bổ sung tầng SẢN PHẨM: ai cần gì, làm theo bước nào, trải nghiệm ra sao, nghiệm thu bằng tiêu chí gì. **11 Epic · 42 user story · 46 acceptance criteria** (AC-1.1…AC-11.6 — EP-1: 6 · EP-2: 8 · EP-3: 5 · EP-4: 4 · EP-5: 1 · EP-6: 5 · EP-7: 3 · EP-8: 3 · EP-9: 3 · EP-10: 2 · EP-11: 6). Định dạng tiêu chí: **Cho** (bối cảnh) / **Khi** (hành động) / **Thì** (kết quả đo được).
 
+<a id="muc-7-0-nguyen-tac-ui-ux-chung-ap-cho-moi-man-app-di-dong"></a>
 ### 7.0. Nguyên tắc UI/UX chung (áp cho mọi màn app di động)
 
 | # | Nguyên tắc | Chi tiết bắt buộc |
@@ -216,6 +269,7 @@ flowchart TD
 | UX-6 | Sai thì nói cách sửa | Mọi thông báo lỗi = lời thường + việc cần làm tiếp («Ảnh mờ — chụp lại ở chỗ sáng hơn»), không hiện mã lỗi kỹ thuật cho người bán |
 | UX-7 | Điều hướng cố định | Menu đáy 4 tab (Trang chủ · Nhận tiền · Sổ nợ · Tôi); header có nút quay lại; luồng đăng ký không cho nhảy cóc |
 
+<a id="muc-ep-1-dang-ky-mo-quyen-nhan-tien-f1-man-nb-00nb-1c-ch-00-brh"></a>
 ### EP-1 · Đăng ký & mở quyền nhận tiền (F1 — màn NB-00→NB-1C, CH-00, BRH-03)
 
 | US | User story | Màn | Ưu tiên |
@@ -240,6 +294,7 @@ flowchart TD
 - **AC-1.5** Cho phiên đăng ký hộ bởi nhân viên NAT-014; Khi hồ sơ kích hoạt; Thì hồ sơ gắn mã NAT-014 và phiên trên máy nhân viên được đánh dấu riêng (`is_agent_session`) để truy vết, tách bạch với phiên của chính merchant.
 - **AC-1.8** «NGHIỆM THU SAU PILOT (nút nâng cấp hoãn)» Cho người dùng vai người mua; Khi bấm «Trở thành người bán» và hoàn tất phần vai bán còn thiếu (eKYC bậc 2 nếu chưa có + gian hàng + TK nhận — kích hoạt tức thời, C10); Thì app chuyển giao diện vai người bán ≤5 giây sau khi merchant `active`, KHÔNG đăng ký/đăng nhập lại; toàn bộ chức năng thanh toán (EP-11) giữ nguyên.
 
+<a id="muc-ep-2-nhan-tien-bang-qr-bao-co-f2-nb-03-04-05-vi-0104"></a>
 ### EP-2 · Nhận tiền bằng QR & báo có (F2 — NB-03/04/05, VI-01→04)
 
 | US | User story | Màn | Ưu tiên |
@@ -273,6 +328,7 @@ flowchart TD
 - **AC-2.7** Cho khoản tiền về không phải bán hàng; Khi merchant bấm «không phải doanh thu» trên biên lai; Thì khoản này loại khỏi doanh số & báo cáo NB-10/BRH-08 nhưng VẪN tính trong giám sát AML.
 - **AC-2.8** Cho máy mất mạng hoàn toàn; Khi merchant tạo QR động (nhập tiền hoặc từ bill); Thì QR vẫn hiển thị được ngay và khách quét trả bình thường — tiền về vẫn có thông báo (app online lại/SMS).
 
+<a id="muc-ep-3-don-tinh-tien-danh-muc-mon-f3-nb-06-07-08"></a>
 ### EP-3 · Đơn tính tiền & danh mục món (F3 — NB-06/07/08)
 
 | US | User story | Màn | Ưu tiên |
@@ -310,6 +366,7 @@ stateDiagram-v2
 - **AC-3.4** Cho khách trả tiền mặt; Khi merchant bấm «đã thu TIỀN MẶT»; Thì bill đóng, được đánh dấu riêng, KHÔNG lẫn vào dòng tiền QR/đối soát bank.
 - **AC-3.5** Cho máy offline; Khi tạo bill/danh mục; Thì thao tác hoàn tất ngay trên máy và tự đồng bộ khi có mạng (không mất dữ liệu khi tắt app).
 
+<a id="muc-ep-4-so-no-khach-quen-f5-nb-15"></a>
 ### EP-4 · Sổ nợ & khách quen (F5 — NB-15)
 
 | US | User story | Màn | Ưu tiên |
@@ -325,6 +382,7 @@ stateDiagram-v2
 - **AC-4.3** Cho merchant đã gạch tay khoản nợ lúc offline; Khi báo có tự động về sau; Thì hệ thống KHÔNG trừ nợ lần hai (đối chiếu uuid).
 - **AC-4.4** Cho nút nhắc nợ; Khi bấm; Thì SMS mẫu (Creole/FR) tới khách trong ≤10 giây, tối đa 1 tin/khách/ngày.
 
+<a id="muc-ep-5-bien-lai-qua-sms-f6-nb-05-09"></a>
 ### EP-5 · Biên lai qua SMS (F6 — NB-05/09)
 
 | US | User story | Màn | Ưu tiên |
@@ -334,6 +392,7 @@ stateDiagram-v2
 **Tiêu chí nghiệm thu:**
 - **AC-5.4** Cho merchant bấm «gửi biên lai cho khách» trên một giao dịch đã có tiền về; Khi nhập số điện thoại người mua; Thì SMS biên lai (mã giao dịch, số tiền, tên gian hàng, giờ) tới trong ≤30 giây, tối đa 5 SMS/giờ/merchant (`SMS_RATE_LIMIT`), và KHÔNG gửi lại trùng cho cùng một `credit_event`.
 
+<a id="muc-ep-6-portal-brh-hau-kiem-giam-sat-brh-0105-08-11-12-tham-so"></a>
 ### EP-6 · Portal BRH — hậu kiểm, giám sát (BRH-01→05, 08, 11, 12) + tham số qua API E.13.x (không màn)
 
 | US | User story | Màn | Ưu tiên |
@@ -367,6 +426,7 @@ stateDiagram-v2
 - **AC-6.4** Cho báo cáo tuần; Khi cán bộ bấm xuất; Thì tải được CSV/PDF với số liệu CHỐT theo ngày đối soát (không lệch với BRH-02 quá số giao dịch chưa chốt).
 - **AC-6.5** Cho mọi bản ghi audit; Khi kiểm chuỗi hash hằng đêm; Thì không phát hiện đứt gãy (job tự động báo cáo).
 
+<a id="muc-ep-7-khieu-nai-hoan-tien-f7-brh-06-nb-09"></a>
 ### EP-7 · Khiếu nại & hoàn tiền (F7 — BRH-06, NB-09)
 
 | US | User story | Màn | Ưu tiên |
@@ -380,6 +440,7 @@ stateDiagram-v2
 - **AC-7.2** Cho case quá SLA; Khi tới hạn; Thì case nổi đỏ trên BRH-02 và email nhắc người phụ trách.
 - **AC-7.3** Cho case «Đã hoàn»; Khi xem NB-09 của merchant; Thì giao dịch gốc hiện trạng thái hoàn + doanh số ngày đã trừ đúng.
 
+<a id="muc-ep-8-aml-han-muc-brh-07"></a>
 ### EP-8 · AML & hạn mức (BRH-07)
 
 | US | User story | Màn | Ưu tiên |
@@ -392,6 +453,7 @@ stateDiagram-v2
 - **AC-8.2** Cho ≥5 giao dịch nằm trong dải 80–100% ngưỡng `AML_TX_FLAG` trong 24h; Khi luật chống chia nhỏ chạy; Thì sinh cảnh báo «nghi chia nhỏ» đúng ca này.
 - **AC-8.3** Cho quyết định «bỏ qua» thiếu lý do; Khi lưu; Thì hệ thống từ chối.
 
+<a id="muc-ep-9-van-hanh-doi-soat-f8-aq-0004"></a>
 ### EP-9 · Vận hành & đối soát (F8 — AQ-00→04)
 
 | US | User story | Màn | Ưu tiên |
@@ -405,6 +467,7 @@ stateDiagram-v2
 - **AC-9.2** Cho 1 khoản lệch «Switch có – hệ thống không thấy»; Khi xử lý xong; Thì khoản lệch đóng ≤2 ngày làm việc và có vết đầy đủ (nguyên nhân → hành động).
 - **AC-9.3** Cho dịch vụ eKYC (E1) lỗi >5%/15 phút; Khi ngưỡng chạm; Thì trực ban nhận cảnh báo ≤5 phút và luồng đăng ký tự chuyển chế độ «chờ đối chiếu tay».
 
+<a id="muc-ep-10-an-toan-tai-khoan-f9-nb-00"></a>
 ### EP-10 · An toàn tài khoản (F9 — NB-00)
 
 | US | User story | Màn | Ưu tiên |
@@ -416,6 +479,7 @@ stateDiagram-v2
 - **AC-10.1** Cho lệnh khóa khẩn qua hotline 8686 (xác thực OTP gửi về SIM đăng ký); Khi thực hiện; Thì mọi phiên đăng nhập bị thu hồi ≤60 giây, QR vẫn nhận tiền, SMS xác nhận gửi về.
 - **AC-10.2** Cho người dùng quên PIN; Khi yêu cầu đặt lại PIN; Thì bắt buộc OTP gửi về SIM đăng ký; đặt lại PIN xong, mọi phiên đăng nhập cũ bị thu hồi.
 
+<a id="muc-ep-11-thanh-toan-trong-app-moi-vai-mo-hinh-bimpay-luong-s9-m"></a>
 ### EP-11 · Thanh toán trong app — MỌI VAI (mô hình BiMPay · luồng S9 — màn NM-01→05)
 
 Nguồn: yêu cầu «Application client» BRH + họp BRH 20/08 (người bán cũng thanh toán — EP này áp dụng MỌI người dùng; hai bậc xác thực). Tiền KHÔNG chạm Peye-Haiti: lệnh trả đi qua định chế TRẢ (M-PAY); bên nhận vẫn nhận M4 + khớp bill như cũ. Thời điểm bật vai người mua đại trà = quyết định lộ trình BRH.
@@ -455,6 +519,7 @@ stateDiagram-v2
 
 > **Truy vết:** mọi US map về màn hình trong prototype và luồng F; kiểm thử UAT chạy theo đúng danh sách AC ở trên (mục 13). Các màn thuần hiển thị/quản trị phụ (BRH-01 đăng nhập & quản lý người dùng portal, NB-10 báo cáo bán hàng) đặc tả trực tiếp bằng wireframe + nguyên tắc UX-1..7, không lập US riêng.
 
+<a id="muc-8-yeu-cau-tich-hop-14-muc-12-giao-dien-ngoai-2-noi-bo"></a>
 ## 8. Yêu cầu tích hợp (14 mục · 12 giao diện ngoài + 2 nội bộ)
 
 | Mã | Tên | Bên cung cấp | Ghi chú |
@@ -472,6 +537,7 @@ stateDiagram-v2
 
 > **Kiểm đếm:** 14 mục = **2 nội bộ** (I2 · I5) + **12 giao diện ngoài** (M1 · M1a · M1b · M3 · M4 · M-PAY · M-PAY-hook · E1 · E2 · E3 · E3-reg · N1). **M2 KHÔNG tính** — là ngữ cảnh đường tiền, không phải API tích hợp. Đặc tả từng trường + mã lỗi: `PeyeHaiti_API_Spec.md` v3.7 (109 mục / 110 HTTP endpoint · bộ chuẩn OB 12 API · 41 mã lỗi).
 
+<a id="muc-9-yeu-cau-phi-chuc-nang"></a>
 ## 9. Yêu cầu phi chức năng
 
 | Nhóm | Yêu cầu |
@@ -483,6 +549,7 @@ stateDiagram-v2
 | Riêng tư | Thông tin người trả trong M4 quy định trong chuẩn OB do BRH ban hành; sổ nợ thuộc merchant (consent khi chấm điểm) |
 | Ngôn ngữ | App: FR + Creole; tài liệu: VI/FR/EN |
 
+<a id="muc-10-phu-thuoc-d1d11"></a>
 ## 10. Phụ thuộc (D1–D11)
 
 | # | Phụ thuộc | Hạn | Chủ trì |
@@ -499,6 +566,7 @@ stateDiagram-v2
 | D10 | Đặc tả + lịch báo cáo EOD từ Switch (E3) | T8/2026 | BRH/ACI |
 | D11 | Chốt danh sách chợ & phân bổ 601 merchant | T8/2026 | BRH·Natcom |
 
+<a id="muc-11-rui-ro-chinh"></a>
 ## 11. Rủi ro chính
 
 | Rủi ro | Mức | Giảm thiểu |
@@ -510,6 +578,7 @@ stateDiagram-v2
 | Merchant bỏ cuộc | Cao | Assisted onboarding; sổ nợ/tính tiền là giá trị hằng ngày; hotline |
 | Số liệu lệch | TB | Chốt theo ngày đối soát; hàng đợi lệch 2 ngày |
 
+<a id="muc-12-lo-trinh"></a>
 ## 12. Lộ trình
 
 ```mermaid
@@ -543,6 +612,7 @@ gantt
 | **01/10/2026** | **GO-LIVE 601 merchant · 3 thành phố**; hypercare 4 tuần |
 | T11–12/2026 | Vận hành ổn định; báo cáo KPI; khuyến nghị mở rộng |
 
+<a id="muc-13-nghiem-thu-go-live-gate"></a>
 ## 13. Nghiệm thu & Go-live gate
 
 - 100% F1–F9 pass UAT (sandbox E1/OB/N1/E3); biên bản BRH ký.
@@ -553,14 +623,17 @@ gantt
 - Trực ban 3 bên + hotline hoạt động; ≥90% standee đã dán.
 - **Go/No-Go trước 25/9/2026 — điều kiện: D1–D11 hoàn thành.**
 
+<a id="muc-14-sau-footprint-dinh-huong"></a>
 ## 14. Sau footprint (định hướng)
 
 QR Pay qua Switch · tồn kho & web người bán · thu ngân · loyalty · mở OB thêm bank/ví (MonCash) · chấm điểm tín dụng từ sổ nợ (consent) · nút «Trở thành người bán» tự phục vụ · 5.000 → 100.000 merchant.
 
+<a id="muc-15-thuat-ngu"></a>
 ## 15. Thuật ngữ
 
 MMS = hệ thống quản lý điểm bán dùng chung · wallet2 = ví điện tử do NatTransfer vận hành (đóng cả vai ví NHẬN của merchant — cấp Open Banking, lẫn vai ví bên TRẢ của người mua) · Switch BRH = chuyển mạch quốc gia (ACI, vai như Napas; gồm PRONAP xử lý thời gian thực + ATS bù trừ ròng theo phiên) · Open Banking = API bank mở có consent · Token = mã quyền truy cập sau liên kết · Báo có/«ting ting» = thông báo tiền vào · Gạch bill = khớp tiền về với đơn/nợ · Standee = bảng QR tại quầy, in số TK thật đã liên kết · RefID = mã tham chiếu do Switch sinh · eKYC/E1 = đối chiếu CIN+selfie với ONI · CIN/ONI = căn cước/cơ quan định danh Haiti · Napas = chuyển mạch quốc gia VN (nguồn chuẩn) · QR Transfer vs QR Pay = chuyển tới tài khoản (footprint) vs thanh toán đơn hàng qua Switch (sau) · MoSCoW = Bắt buộc/Nên có/Có thể/Sau · Hypercare = trực tăng cường sau go-live.
 
+<a id="muc-16-diem-can-chot-kem-de-xuat-chot-theo-tham-chieu-thi-truong"></a>
 ## 16. Điểm cần chốt — KÈM ĐỀ XUẤT CHỐT THEO THAM CHIẾU THỊ TRƯỜNG VN
 
 > Nguyên tắc: mỗi điểm mở đều có **giá trị đề xuất lấy từ thực tiễn VN/Napas** — BRH chỉ cần PHÊ DUYỆT hoặc điều chỉnh, không phải quyết từ số 0. Cột «Đề xuất chốt» là giá trị mặc định đưa vào thiết kế nếu BRH không có ý kiến khác trước hạn.
@@ -593,6 +666,7 @@ MMS = hệ thống quản lý điểm bán dùng chung · wallet2 = ví điện 
 
 ---
 
+<a id="muc-bang-ghi-nhan-thay-doi"></a>
 ## BẢNG GHI NHẬN THAY ĐỔI
 
 | Ngày | Phiên bản | Nội dung chính |

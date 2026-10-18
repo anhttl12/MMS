@@ -1,5 +1,86 @@
 # BRD — Tài liệu Yêu cầu Nghiệp vụ · Hệ thống thanh toán QR quốc gia Peye-Haiti
 
+<!-- TOC -->
+<a id="muc-luc"></a>
+
+**Mục lục**
+
+- [1. GIỚI THIỆU](#muc-1-gioi-thieu)
+  - [1.1. Mục đích tài liệu](#muc-1-1-muc-dich-tai-lieu)
+  - [1.2. Phạm vi tài liệu](#muc-1-2-pham-vi-tai-lieu)
+  - [1.3. Định nghĩa thuật ngữ và các từ viết tắt](#muc-1-3-dinh-nghia-thuat-ngu-va-cac-tu-viet-tat)
+  - [1.4. Tài liệu tham khảo](#muc-1-4-tai-lieu-tham-khao)
+  - [1.5. Mô tả tài liệu](#muc-1-5-mo-ta-tai-lieu)
+- [2. BỐI CẢNH NGHIỆP VỤ & PHÁT BIỂU BÀI TOÁN](#muc-2-boi-canh-nghiep-vu-phat-bieu-bai-toan)
+  - [2.1. Tổng quan bài toán](#muc-2-1-tong-quan-bai-toan)
+  - [2.2. Hiện trạng quy trình nghiệp vụ](#muc-2-2-hien-trang-quy-trinh-nghiep-vu)
+  - [2.3. Hiện trạng hạ tầng dữ liệu](#muc-2-3-hien-trang-ha-tang-du-lieu)
+  - [2.4. Bức tranh hệ sinh thái — đường TIỀN tách khỏi đường THÔNG TIN](#muc-2-4-buc-tranh-he-sinh-thai-duong-tien-tach-khoi-duong-thong)
+- [3. MỤC TIÊU NGHIỆP VỤ & CHỈ SỐ THÀNH CÔNG](#muc-3-muc-tieu-nghiep-vu-chi-so-thanh-cong)
+  - [3.1. Mục tiêu hệ thống](#muc-3-1-muc-tieu-he-thong)
+  - [3.2. Chỉ số thành công (KPI pilot)](#muc-3-2-chi-so-thanh-cong-kpi-pilot)
+- [4. PHẠM VI](#muc-4-pham-vi)
+  - [4.1. Trong phạm vi — 6 phân hệ](#muc-4-1-trong-pham-vi-6-phan-he)
+  - [4.2. Ngoài phạm vi (sau 10/2026)](#muc-4-2-ngoai-pham-vi-sau-10-2026)
+  - [4.3. Các quyết định nghiệp vụ đã chốt](#muc-4-3-cac-quyet-dinh-nghiep-vu-da-chot)
+- [5. CÁC BÊN LIÊN QUAN & NHÓM NGƯỜI SỬ DỤNG](#muc-5-cac-ben-lien-quan-nhom-nguoi-su-dung)
+  - [5.1. Các bên liên quan](#muc-5-1-cac-ben-lien-quan)
+  - [5.2. Nhóm người sử dụng hệ thống](#muc-5-2-nhom-nguoi-su-dung-he-thong)
+- [6. LUỒNG NGHIỆP VỤ ĐẦU-CUỐI](#muc-6-luong-nghiep-vu-dau-cuoi)
+  - [6.1. Nhận tiền bằng QR — «ting ting» trong 5 giây](#muc-6-1-nhan-tien-bang-qr-ting-ting-trong-5-giay)
+  - [6.2. Thanh toán trong app — hai bậc xác thực](#muc-6-2-thanh-toan-trong-app-hai-bac-xac-thuc)
+- [7. QUY TRÌNH NGHIỆP VỤ (QT-01 → QT-07)](#muc-7-quy-trinh-nghiep-vu-qt-01-qt-07)
+  - [7.1. QT-01 — Đăng ký và mở quyền nhận tiền («tạo là active»)](#muc-7-1-qt-01-dang-ky-va-mo-quyen-nhan-tien-tao-la-active)
+  - [7.2. QT-02 — Thu tiền bằng QR và đơn tính tiền](#muc-7-2-qt-02-thu-tien-bang-qr-va-don-tinh-tien)
+  - [7.3. QT-03 — Thanh toán quét QR trong ứng dụng (hai bậc xác thực)](#muc-7-3-qt-03-thanh-toan-quet-qr-trong-ung-dung-hai-bac-xac-thuc)
+  - [7.4. QT-04 — Hậu kiểm gian hàng (portal BRH)](#muc-7-4-qt-04-hau-kiem-gian-hang-portal-brh)
+  - [7.5. QT-05 — Xử lý khiếu nại và hoàn tiền (portal BRH)](#muc-7-5-qt-05-xu-ly-khieu-nai-va-hoan-tien-portal-brh)
+  - [7.6. QT-06 — Đối soát cuối ngày và xử lý chênh lệch (console vận hành)](#muc-7-6-qt-06-doi-soat-cuoi-ngay-va-xu-ly-chenh-lech-console-van)
+  - [7.7. QT-07 — Kết nạp định chế mới](#muc-7-7-qt-07-ket-nap-dinh-che-moi)
+- [8. YÊU CẦU CHỨC NĂNG THEO PHÂN HỆ](#muc-8-yeu-cau-chuc-nang-theo-phan-he)
+  - [8.1. PH-01 · Ứng dụng di động Peye-Haiti (người mua & người bán)](#muc-8-1-ph-01-ung-dung-di-dong-peye-haiti-nguoi-mua-nguoi-ban)
+    - [CN-01 · Đăng ký, chọn vai & định danh](#muc-cn-01-dang-ky-chon-vai-dinh-danh)
+    - [CN-03 · Liên kết tài khoản nhận tiền](#muc-cn-03-lien-ket-tai-khoan-nhan-tien)
+    - [CN-06 · Đơn tính tiền & danh mục món](#muc-cn-06-don-tinh-tien-danh-muc-mon)
+    - [CN-08 · Thanh toán trong app — hai bậc xác thực](#muc-cn-08-thanh-toan-trong-app-hai-bac-xac-thuc)
+  - [8.2. PH-02 · Portal giám sát BRH](#muc-8-2-ph-02-portal-giam-sat-brh)
+    - [CN-17 · Hậu kiểm & quản lý người bán](#muc-cn-17-hau-kiem-quan-ly-nguoi-ban)
+  - [8.3. PH-03 · Console vận hành (VDS)](#muc-8-3-ph-03-console-van-hanh-vds)
+  - [8.4. PH-04 · Nền tảng lõi (backend)](#muc-8-4-ph-04-nen-tang-loi-backend)
+  - [8.5. PH-05 · Cổng Open Banking & kết nạp định chế](#muc-8-5-ph-05-cong-open-banking-ket-nap-dinh-che)
+  - [8.6. PH-06 · Tích hợp hệ thống ngoài](#muc-8-6-ph-06-tich-hop-he-thong-ngoai)
+- [9. LUẬT NGHIỆP VỤ & VÒNG ĐỜI TRẠNG THÁI](#muc-9-luat-nghiep-vu-vong-doi-trang-thai)
+  - [9.1. Bảng luật nghiệp vụ chính](#muc-9-1-bang-luat-nghiep-vu-chinh)
+  - [9.2. Vòng đời gian hàng](#muc-9-2-vong-doi-gian-hang)
+  - [9.3. Vòng đời đơn tính tiền](#muc-9-3-vong-doi-don-tinh-tien)
+  - [9.4. Vòng đời lệnh trả (thanh toán trong app)](#muc-9-4-vong-doi-lenh-tra-thanh-toan-trong-app)
+  - [9.5. Vòng đời liên kết tài khoản](#muc-9-5-vong-doi-lien-ket-tai-khoan)
+- [10. CÁC YÊU CẦU PHI CHỨC NĂNG](#muc-10-cac-yeu-cau-phi-chuc-nang)
+  - [10.1. Yêu cầu bảo mật hệ thống — ATTT](#muc-10-1-yeu-cau-bao-mat-he-thong-attt)
+  - [10.2. Yêu cầu sao lưu](#muc-10-2-yeu-cau-sao-luu)
+  - [10.3. Yêu cầu về tính ổn định](#muc-10-3-yeu-cau-ve-tinh-on-dinh)
+  - [10.4. Yêu cầu về hiệu năng](#muc-10-4-yeu-cau-ve-hieu-nang)
+  - [10.5. Yêu cầu về giao tiếp](#muc-10-5-yeu-cau-ve-giao-tiep)
+  - [10.6. Yêu cầu về tính hỗ trợ](#muc-10-6-yeu-cau-ve-tinh-ho-tro)
+  - [10.7. Yêu cầu về công nghệ và các ràng buộc](#muc-10-7-yeu-cau-ve-cong-nghe-va-cac-rang-buoc)
+  - [10.8. Các yêu cầu tài liệu người dùng và hỗ trợ trực tuyến](#muc-10-8-cac-yeu-cau-tai-lieu-nguoi-dung-va-ho-tro-truc-tuyen)
+  - [10.9. Các thành phần mua ngoài](#muc-10-9-cac-thanh-phan-mua-ngoai)
+  - [10.10. Yêu cầu về vận hành khai thác](#muc-10-10-yeu-cau-ve-van-hanh-khai-thac)
+  - [10.11. Yêu cầu về giải pháp hạ tầng](#muc-10-11-yeu-cau-ve-giai-phap-ha-tang)
+  - [10.12. Yêu cầu về tính ghi log](#muc-10-12-yeu-cau-ve-tinh-ghi-log)
+  - [10.13. Yêu cầu tuân thủ tiêu chuẩn Quản trị dữ liệu](#muc-10-13-yeu-cau-tuan-thu-tieu-chuan-quan-tri-du-lieu)
+- [11. TIÊU CHUẨN NGHIỆM THU HỆ THỐNG](#muc-11-tieu-chuan-nghiem-thu-he-thong)
+- [12. RỦI RO, PHỤ THUỘC & GIẢ ĐỊNH](#muc-12-rui-ro-phu-thuoc-gia-dinh)
+  - [12.1. Rủi ro chính](#muc-12-1-rui-ro-chinh)
+  - [12.2. Phụ thuộc (D1 → D11)](#muc-12-2-phu-thuoc-d1-d11)
+  - [12.3. Giả định](#muc-12-3-gia-dinh)
+  - [12.4. Điểm chưa có thông tin (cần chốt)](#muc-12-4-diem-chua-co-thong-tin-can-chot)
+- [13. LỘ TRÌNH](#muc-13-lo-trinh)
+- [PHỤ LỤC A. Ánh xạ chức năng ↔ tài liệu sản phẩm/kỹ thuật](#muc-phu-luc-a-anh-xa-chuc-nang-tai-lieu-san-pham-ky-thuat)
+- [BẢNG GHI NHẬN THAY ĐỔI](#muc-bang-ghi-nhan-thay-doi)
+
+<!-- /TOC -->
+
 | Trường | Nội dung |
 |---|---|
 | Mã tài liệu | PEYE-HT-2026-BRD-01 |
@@ -13,14 +94,17 @@
 
 ---
 
+<a id="muc-1-gioi-thieu"></a>
 ## 1. GIỚI THIỆU
 
+<a id="muc-1-1-muc-dich-tai-lieu"></a>
 ### 1.1. Mục đích tài liệu
 
 Tài liệu trình bày **yêu cầu nghiệp vụ** (business requirements) của Hệ thống thanh toán QR quốc gia Peye-Haiti trên **toàn bộ các phân hệ**: ứng dụng di động (người mua và người bán trong một ứng dụng), portal giám sát BRH, console vận hành, nền tảng lõi, cổng chuẩn Open Banking — kết nạp định chế, và các tích hợp ngoài.
 
 Đối tượng sử dụng: **BRH** (chủ đầu tư) và **Natcom** (đầu mối) dùng để thống nhất phạm vi và làm căn cứ nghiệm thu; **đội phát triển VDS** dùng làm đầu vào cho phân tích thiết kế chi tiết; **đội kiểm thử** dùng để xây kịch bản kiểm thử. Tài liệu là cơ sở thống nhất phạm vi và nghiệm thu giữa khách hàng và đơn vị phát triển, đầu vào cho giai đoạn phân tích thiết kế.
 
+<a id="muc-1-2-pham-vi-tai-lieu"></a>
 ### 1.2. Phạm vi tài liệu
 
 **Trong phạm vi:** yêu cầu nghiệp vụ và chức năng của 6 phân hệ (PH-01 → PH-06), luật nghiệp vụ, yêu cầu phi chức năng và tiêu chuẩn nghiệm thu cho giai đoạn **footprint/pilot 10/2026** (601 người bán, 3 thành phố).
@@ -32,6 +116,7 @@ Tài liệu trình bày **yêu cầu nghiệp vụ** (business requirements) c�
 - Trung tâm dữ liệu dự phòng địa lý; kênh USSD của các định chế; hệ thống AML/CFT đầy đủ (hệ thống chỉ cung cấp **cảnh báo theo ngưỡng** và gọi dịch vụ sàng lọc sẵn có của BRH-System).
 - Chương trình khuyến mại, chính sách phí sau pilot, nội dung đào tạo hiện trường (thuộc tài liệu kế hoạch triển khai).
 
+<a id="muc-1-3-dinh-nghia-thuat-ngu-va-cac-tu-viet-tat"></a>
 ### 1.3. Định nghĩa thuật ngữ và các từ viết tắt
 
 | Thuật ngữ | Giải nghĩa |
@@ -55,6 +140,7 @@ Tài liệu trình bày **yêu cầu nghiệp vụ** (business requirements) c�
 | PWA | Progressive Web App — ứng dụng cài từ web, chạy như app, hoạt động ngoại tuyến |
 | Bốn mắt (4-eyes) | Cơ chế một người đề xuất — một người khác phê duyệt cho thao tác nhạy cảm |
 
+<a id="muc-1-4-tai-lieu-tham-khao"></a>
 ### 1.4. Tài liệu tham khảo
 
 | Tài liệu | Phiên bản | Ghi chú |
@@ -67,14 +153,17 @@ Tài liệu trình bày **yêu cầu nghiệp vụ** (business requirements) c�
 | PeyeHaiti_Wireframes.html — Wireframe tương tác | bản 20/08 | 42 màn, 4 ngôn ngữ |
 | Circulaire BRH-IF-2026-129 | 02/2026 | Căn cứ yêu cầu giám sát AML theo ngưỡng |
 
+<a id="muc-1-5-mo-ta-tai-lieu"></a>
 ### 1.5. Mô tả tài liệu
 
 Tài liệu gồm: Phần 2–3 bối cảnh, bài toán và mục tiêu; Phần 4–5 phạm vi và các bên liên quan; Phần 6 luồng nghiệp vụ đầu-cuối; Phần 7 bảy quy trình nghiệp vụ QT-01 → QT-07 (sơ đồ + bảng bước); Phần 8 yêu cầu chức năng 42 chức năng CN-01 → CN-42 theo 6 phân hệ; Phần 9 luật nghiệp vụ và vòng đời trạng thái; Phần 10 yêu cầu phi chức năng; Phần 11 tiêu chuẩn nghiệm thu; Phần 12 rủi ro — phụ thuộc — giả định; Phần 13 lộ trình.
 
 ---
 
+<a id="muc-2-boi-canh-nghiep-vu-phat-bieu-bai-toan"></a>
 ## 2. BỐI CẢNH NGHIỆP VỤ & PHÁT BIỂU BÀI TOÁN
 
+<a id="muc-2-1-tong-quan-bai-toan"></a>
 ### 2.1. Tổng quan bài toán
 
 Haiti là nền kinh tế tiền mặt: tiểu thương tại các chợ thu tiền mặt, không có công cụ ghi nhận doanh thu, đối chiếu và bán chịu; các ví điện tử hiện hữu (NatCash của Natcom, MonCash của Digicel) và các ngân hàng vận hành **rời rạc, không liên thông** — người mua dùng ví A không trả được cho người bán dùng ví B. BRH chủ trì xây dựng hệ thống thanh toán QR quốc gia với ba trụ:
@@ -85,6 +174,7 @@ Haiti là nền kinh tế tiền mặt: tiểu thương tại các chợ thu ti�
 
 Bài toán cần giải: (i) cho tiểu thương một công cụ **nhận tiền tức thời** («ting ting»), tính tiền, sổ nợ hoạt động trên điện thoại phổ thông và vùng sóng 2G; (ii) cho người mua một ứng dụng **quét-và-trả an toàn** với tên người bán đã xác minh; (iii) cho BRH một **bộ máy giám sát thời gian thực**; (iv) **chuẩn hóa kết nối** để định chế mới tự tích hợp.
 
+<a id="muc-2-2-hien-trang-quy-trinh-nghiep-vu"></a>
 ### 2.2. Hiện trạng quy trình nghiệp vụ
 
 - Thu tiền tại chợ: hoàn toàn tiền mặt; ghi sổ tay hoặc không ghi; bán chịu theo trí nhớ; không có biên lai.
@@ -92,10 +182,12 @@ Bài toán cần giải: (i) cho tiểu thương một công cụ **nhận tiề
 - Đăng ký điểm bán: các ví tự phát triển mạng lưới đại lý riêng, không có sổ đăng ký người bán quốc gia, không có định danh thống nhất.
 - Giám sát của BRH: qua báo cáo định kỳ của từng định chế, không có bức tranh giao dịch bán lẻ thời gian thực.
 
+<a id="muc-2-3-hien-trang-ha-tang-du-lieu"></a>
 ### 2.3. Hiện trạng hạ tầng dữ liệu
 
 Chưa có hệ thống nghiệp vụ tiền nhiệm — toàn bộ dữ liệu hình thành mới, **không có bài toán chuyển đổi dữ liệu**. Dữ liệu tham chiếu ngoài: dữ liệu định danh công dân (ONI) truy cập qua dịch vụ eKYC của BRH-System; danh mục mã định chế và mã ngành nghề MCC do BRH cấp khi ban hành chuẩn; báo cáo đối soát cuối ngày từ Switch quốc gia.
 
+<a id="muc-2-4-buc-tranh-he-sinh-thai-duong-tien-tach-khoi-duong-thong"></a>
 ### 2.4. Bức tranh hệ sinh thái — đường TIỀN tách khỏi đường THÔNG TIN
 
 Nguyên tắc nền tảng của toàn bộ thiết kế: **Peye-Haiti đứng ngoài đường tiền**. Tiền đi giữa các định chế qua chuyển mạch quốc gia; Peye-Haiti chỉ nhận **thông tin** (báo Có, đối soát) và cung cấp **thông tin** (tra cứu xác minh người bán). Nhờ vậy nền tảng không cần giấy phép giữ tiền, không tạo rủi ro thanh khoản, và sự cố nền tảng **không bao giờ chặn được dòng tiền**.
@@ -124,8 +216,10 @@ flowchart LR
 
 ---
 
+<a id="muc-3-muc-tieu-nghiep-vu-chi-so-thanh-cong"></a>
 ## 3. MỤC TIÊU NGHIỆP VỤ & CHỈ SỐ THÀNH CÔNG
 
+<a id="muc-3-1-muc-tieu-he-thong"></a>
 ### 3.1. Mục tiêu hệ thống
 
 - **Cho phép** tiểu thương đăng ký, định danh và nhận tiền bằng một mã QR chuẩn quốc gia duy nhất, kích hoạt **ngay khi hoàn tất hồ sơ** (tạo là active, BRH hậu kiểm).
@@ -135,6 +229,7 @@ flowchart LR
 - **Chuẩn hóa** kết nối định chế bằng bộ Open Banking 12 API + sandbox + quy trình chứng nhận, để định chế mới **tự tích hợp** không cần can thiệp thủ công.
 - **Quy mô**: pilot 10/2026 = 601 người bán tại các chợ chỉ định (3 thành phố); quy mô thiết kế = 5.000 người bán hoạt động, ~60.000 giao dịch/ngày, năng lực tiếp nhận báo Có 50 giao dịch/giây (≈ 2,5 lần đỉnh dự phóng).
 
+<a id="muc-3-2-chi-so-thanh-cong-kpi-pilot"></a>
 ### 3.2. Chỉ số thành công (KPI pilot)
 
 | Chỉ số | Mục tiêu | Đo tại |
@@ -153,8 +248,10 @@ flowchart LR
 
 ---
 
+<a id="muc-4-pham-vi"></a>
 ## 4. PHẠM VI
 
+<a id="muc-4-1-trong-pham-vi-6-phan-he"></a>
 ### 4.1. Trong phạm vi — 6 phân hệ
 
 ```mermaid
@@ -195,10 +292,12 @@ flowchart TB
 
 Ngoài ra còn **5 màn tham chiếu bên trả** (đặc tả để định chế đối chiếu khi nhúng quét QR vào app của họ) — tổng thể bộ wireframe là **42 màn**.
 
+<a id="muc-4-2-ngoai-pham-vi-sau-10-2026"></a>
 ### 4.2. Ngoài phạm vi (sau 10/2026)
 
 QR Pay theo đơn hàng qua Switch · tồn kho · web người bán · thu ngân đa người dùng · loyalty nâng cao · đặt hàng & đánh giá trên app người mua · Open Banking MonCash (đợt 2) · hoàn tiền tự động qua Switch · trả theo số điện thoại/alias không quét QR (chờ chuẩn HTQR v1.1 alias/RNI).
 
+<a id="muc-4-3-cac-quyet-dinh-nghiep-vu-da-chot"></a>
 ### 4.3. Các quyết định nghiệp vụ đã chốt
 
 | # | Quyết định | Hệ quả nghiệp vụ |
@@ -216,8 +315,10 @@ QR Pay theo đơn hàng qua Switch · tồn kho · web người bán · thu ngâ
 
 ---
 
+<a id="muc-5-cac-ben-lien-quan-nhom-nguoi-su-dung"></a>
 ## 5. CÁC BÊN LIÊN QUAN & NHÓM NGƯỜI SỬ DỤNG
 
+<a id="muc-5-1-cac-ben-lien-quan"></a>
 ### 5.1. Các bên liên quan
 
 | Bên | Vai trò trong dự án |
@@ -228,6 +329,7 @@ QR Pay theo đơn hàng qua Switch · tồn kho · web người bán · thu ngâ
 | Định chế tham gia | Cung cấp Open Banking theo chuẩn (chiều nhận 8 API; chiều trả đủ 12); giữ tài khoản, quyết định cuối về số dư/hạn mức; gửi OTP xác thực |
 | ONI (qua BRH-System) | Nguồn dữ liệu định danh công dân cho eKYC |
 
+<a id="muc-5-2-nhom-nguoi-su-dung-he-thong"></a>
 ### 5.2. Nhóm người sử dụng hệ thống
 
 | STT | Nhóm người dùng | Vai trò trên hệ thống |
@@ -243,8 +345,10 @@ QR Pay theo đơn hàng qua Switch · tồn kho · web người bán · thu ngâ
 
 ---
 
+<a id="muc-6-luong-nghiep-vu-dau-cuoi"></a>
 ## 6. LUỒNG NGHIỆP VỤ ĐẦU-CUỐI
 
+<a id="muc-6-1-nhan-tien-bang-qr-ting-ting-trong-5-giay"></a>
 ### 6.1. Nhận tiền bằng QR — «ting ting» trong 5 giây
 
 Luồng găng nhất của hệ thống. Người bán trình QR (tĩnh trên standee, hoặc động kèm số tiền); người mua trả bằng **bất kỳ** ứng dụng nào đọc chuẩn HTQR; tiền đi thuần đường định chế; nền tảng nhận báo Có và lo phần «biết tiền về — khớp đơn — báo người bán».
@@ -275,6 +379,7 @@ sequenceDiagram
 - **Khử trùng 2 tầng**: cùng một sự kiện báo Có gửi lại nhiều lần (retry) không bao giờ sinh hai khoản tiền trên két người bán.
 - **Không có mạng phía người bán**: tiền vẫn về (đường tiền độc lập); hệ thống gửi **SMS báo có** khi app không xác nhận trong 60 giây.
 
+<a id="muc-6-2-thanh-toan-trong-app-hai-bac-xac-thuc"></a>
 ### 6.2. Thanh toán trong app — hai bậc xác thực
 
 Áp dụng cho **mọi vai** (người bán cũng trả được — trả nhà cung cấp, mua hàng lẫn nhau). Tiền không chạm nền tảng: lệnh trả đi qua **định chế trả** (nhóm API M-PAY); quyết định cuối cùng (số dư, hạn mức, khóa tài khoản) luôn thuộc định chế.
@@ -308,10 +413,12 @@ sequenceDiagram
 
 ---
 
+<a id="muc-7-quy-trinh-nghiep-vu-qt-01-qt-07"></a>
 ## 7. QUY TRÌNH NGHIỆP VỤ (QT-01 → QT-07)
 
 > Quy ước sơ đồ: hình **thoi** = bước kiểm tra (V) có rẽ nhánh; hình **chữ nhật** = bước thao tác của người dùng (A thêm mới · B tra cứu · C cập nhật · D hủy/xóa · S tìm kiếm) — riêng bước **chọn lựa của người dùng** (ví dụ chọn vai) là bước C có nhánh ra theo lựa chọn; các quy trình mô tả nghiệp vụ **đã tin học hóa**.
 
+<a id="muc-7-1-qt-01-dang-ky-va-mo-quyen-nhan-tien-tao-la-active"></a>
 ### 7.1. QT-01 — Đăng ký và mở quyền nhận tiền («tạo là active»)
 
 Tác nhân: người dùng (vai bán); hệ thống eKYC và định chế tham gia ở vai hệ thống ngoài. Mục tiêu nghiệp vụ: người mới hoàn tất tự khai **dưới 10 phút**, gian hàng **kích hoạt ngay** khi đủ điều kiện — không chờ duyệt.
@@ -355,6 +462,7 @@ flowchart TD
 
 **Luật đi kèm:** điểm tin cậy tự động dưới ngưỡng chỉ **gắn cờ** hậu kiểm (không chặn kích hoạt); lỗi hệ thống ở dịch vụ sàng lọc **không chặn** kích hoạt (sàng lọc bù khi phục hồi); người dùng dừng giữa chừng → hồ sơ dở dang, màn trạng thái chỉ rõ bước còn thiếu; đăng ký hộ bởi nhân viên hiện trường gắn mã nhân viên để truy vết.
 
+<a id="muc-7-2-qt-02-thu-tien-bang-qr-va-don-tinh-tien"></a>
 ### 7.2. QT-02 — Thu tiền bằng QR và đơn tính tiền
 
 Tác nhân: người bán; người mua trả bằng ứng dụng bất kỳ đọc chuẩn HTQR. Mục tiêu: tính tiền không cần máy tính, tiền về **tự gạch đơn** ≥ 95%.
@@ -387,6 +495,7 @@ flowchart TD
 
 **Luật đi kèm:** hai đơn mở cùng số tiền → hệ thống **không đoán**, yêu cầu người bán chọn (trừ khi chỉ một đơn tạo trong ±15 phút quanh giờ ghi Có); khoản «không phải doanh thu» (người nhà chuyển) đánh dấu loại khỏi doanh số nhưng **vẫn** tính trong giám sát ngưỡng; đơn tiền mặt tách riêng, không lẫn vào đối soát với định chế.
 
+<a id="muc-7-3-qt-03-thanh-toan-quet-qr-trong-ung-dung-hai-bac-xac-thuc"></a>
 ### 7.3. QT-03 — Thanh toán quét QR trong ứng dụng (hai bậc xác thực)
 
 Tác nhân: người dùng đã liên kết nguồn trả (mọi vai — người bán cũng thanh toán được).
@@ -424,6 +533,7 @@ flowchart TD
 | 5a | Hủy lệnh trả (D) | Sai PIN quá 5 lần — lệnh hủy, tài khoản khóa đăng nhập 60 phút | Người dùng |
 | 6a | Hủy lệnh trả (D) | OTP sai/hết hạn quá số lượt định chế cho phép — lệnh chuyển «thất bại» kèm lý do dễ hiểu | Người dùng |
 
+<a id="muc-7-4-qt-04-hau-kiem-gian-hang-portal-brh"></a>
 ### 7.4. QT-04 — Hậu kiểm gian hàng (portal BRH)
 
 Mô hình «tạo là active»: portal **không duyệt trước**; danh sách hậu kiểm xử lý trong **24 giờ** với cờ ưu tiên, lấy mẫu **10%** hồ sơ thường.
@@ -449,6 +559,7 @@ flowchart TD
 | — | **Luồng dữ liệu rẽ nhánh** | | |
 | 4a | Tạm khóa và yêu cầu bổ sung (C) | Gian hàng chuyển «suspended» kèm lý do bắt buộc; người bán nhận thông báo và bổ sung qua ứng dụng; hồ sơ quay lại danh sách | Cán bộ BRH |
 
+<a id="muc-7-5-qt-05-xu-ly-khieu-nai-va-hoan-tien-portal-brh"></a>
 ### 7.5. QT-05 — Xử lý khiếu nại và hoàn tiền (portal BRH)
 
 Nguyên tắc bất di bất dịch: kết luận «hoàn tiền» **bắt buộc có xác minh** (dò được bút toán hoàn qua sao kê định chế hoặc đính chứng từ) — hệ thống **chặn** kết luận không căn cứ.
@@ -478,6 +589,7 @@ flowchart TD
 | 5a | Xác minh bút toán hoàn (V) | Dò bút toán chuyển trả qua sao kê định chế hoặc đính chứng từ — thiếu xác minh hệ thống không cho chốt «Đã hoàn» | Cán bộ BRH |
 | 5b | Bác khiếu nại (C) | Kết luận bác kèm lý do bắt buộc | Cán bộ BRH |
 
+<a id="muc-7-6-qt-06-doi-soat-cuoi-ngay-va-xu-ly-chenh-lech-console-van"></a>
 ### 7.6. QT-06 — Đối soát cuối ngày và xử lý chênh lệch (console vận hành)
 
 So khớp **ba nguồn**: nền tảng — bảng kê định chế — báo cáo Switch (E3), theo phiên ngày nghiệp vụ; chênh lệch phân loại và đóng **≤ 2 ngày làm việc**.
@@ -505,6 +617,7 @@ flowchart TD
 | — | **Luồng dữ liệu rẽ nhánh** | | |
 | 4a | Xử lý khoản chênh lệch (C) | Quét bù lịch sử định chế lấp khoảng trống; hoặc lập bút toán điều chỉnh (nháp → duyệt bốn mắt → hạch toán); hoặc mở case điều tra; đóng ≤ 2 ngày làm việc | Vận hành VDS |
 
+<a id="muc-7-7-qt-07-ket-nap-dinh-che-moi"></a>
 ### 7.7. QT-07 — Kết nạp định chế mới
 
 Chuẩn hóa để định chế **tự tích hợp**; định mức hỗ trợ 10 ngày-công/định chế, tối đa 03 định chế giai đoạn đầu.
@@ -533,10 +646,12 @@ flowchart TD
 
 ---
 
+<a id="muc-8-yeu-cau-chuc-nang-theo-phan-he"></a>
 ## 8. YÊU CẦU CHỨC NĂNG THEO PHÂN HỆ
 
 > Toàn bộ 42 chức năng CN-01 → CN-42, mức «Bắt buộc» trừ khi ghi khác. Các chức năng lõi (CN-01, CN-03, CN-06, CN-08, CN-17) đặc tả sâu kèm bảng thông tin chung và dòng sự kiện; các chức năng còn lại ở mức phân rã — chi tiết màn hình và luồng sự kiện từng màn đã đặc tả tại Phụ lục MOU mục A.3 (đặc tả màn hình) và bộ wireframe 42 màn.
 
+<a id="muc-8-1-ph-01-ung-dung-di-dong-peye-haiti-nguoi-mua-nguoi-ban"></a>
 ### 8.1. PH-01 · Ứng dụng di động Peye-Haiti (người mua & người bán)
 
 | Mã | Chức năng | Mô tả | Mức độ |
@@ -556,6 +671,7 @@ flowchart TD
 | CN-13 | Hồ sơ, cài đặt & ngoại tuyến | Quản lý tài khoản/thiết bị/ngôn ngữ (FR + Kreyòl tối thiểu); chế độ ngoại tuyến đọc QR, xem/tạo đơn, đồng bộ lại | Bắt buộc |
 | CN-14 | Chuyển vai & nâng cấp người bán | Nút «Trở thành người bán» kích hoạt onboarding merchant ngay trong app (làm nốt phần còn thiếu, không lặp bước nào); chuyển vai khi gian hàng active | **Sau pilot** — trong pilot đổi vai qua kênh hỗ trợ/đội hiện trường |
 
+<a id="muc-cn-01-dang-ky-chon-vai-dinh-danh"></a>
 #### CN-01 · Đăng ký, chọn vai & định danh
 
 | Trường | Nội dung |
@@ -582,6 +698,7 @@ flowchart TD
 
 **Ghi chú:** quy tắc «tạo là active» — điểm tin cậy tự động dưới ngưỡng cấu hình chỉ **gắn cờ** hậu kiểm (xử lý trong 24 giờ, lấy mẫu 10%), không chặn kích hoạt; mã người bán sinh dạng PIN-M-xxxxxx; vai mua không chạy eKYC/sàng lọc.
 
+<a id="muc-cn-03-lien-ket-tai-khoan-nhan-tien"></a>
 #### CN-03 · Liên kết tài khoản nhận tiền
 
 | Trường | Nội dung |
@@ -604,6 +721,7 @@ flowchart TD
 
 **Ghi chú:** đổi tài khoản chính là quy trình nhiều bước có hoàn tác an toàn — tài khoản cũ vào **ân hạn 30 ngày** (tham số) vẫn nhận tiền, QR phát hành lại phiên bản mới; thu hồi liên kết hiệu lực tức thời và định chế ngừng gửi báo Có.
 
+<a id="muc-cn-06-don-tinh-tien-danh-muc-mon"></a>
 #### CN-06 · Đơn tính tiền & danh mục món
 
 | Trường | Nội dung |
@@ -624,6 +742,7 @@ flowchart TD
 | 3. Chọn «Thu tiền» / «Bán chịu» / «Lưu chờ» | 4. Thu tiền: sinh QR động đúng tổng gắn mã đơn; Bán chịu: ghi vào sổ nợ khách; Lưu chờ: giữ đơn mở | đơn (U), QR (C) |
 | 5. Theo dõi trạng thái đơn trong ngày | 6. Cập nhật thời gian thực khi tiền về khớp mã đơn (đơn tự gạch); đơn quá hạn chuyển «hết hạn» | đơn (U) |
 
+<a id="muc-cn-08-thanh-toan-trong-app-hai-bac-xac-thuc"></a>
 #### CN-08 · Thanh toán trong app — hai bậc xác thực
 
 | Trường | Nội dung |
@@ -648,6 +767,7 @@ flowchart TD
 
 **Ghi chú:** hạn mức ngày bậc-PIN đếm riêng (chỉ đếm lệnh không OTP); OTP thanh toán dùng SMS GW của định chế (điều kiện kết nạp); lệnh treo quá hạn chuyển «quá hạn» và được tra lại; trạng thái «thành công/thất bại» là cuối cùng, bất biến.
 
+<a id="muc-8-2-ph-02-portal-giam-sat-brh"></a>
 ### 8.2. PH-02 · Portal giám sát BRH
 
 | Mã | Chức năng | Mô tả | Mức độ |
@@ -663,6 +783,7 @@ flowchart TD
 | CN-23 | Quản trị người dùng bốn mắt | Tạo/sửa tài khoản, gán vai trò; người tạo khác người phê duyệt; vô hiệu hóa tức thời | Bắt buộc |
 | CN-24 | Tham số hệ thống (API) | 25 tham số cấu hình (danh mục TSD §13.3) theo cơ chế đề xuất — phê duyệt — áp dụng (bốn mắt), có nhật ký | Bắt buộc |
 
+<a id="muc-cn-17-hau-kiem-quan-ly-nguoi-ban"></a>
 #### CN-17 · Hậu kiểm & quản lý người bán
 
 | Trường | Nội dung |
@@ -677,6 +798,7 @@ flowchart TD
 
 Basic Flow: theo QT-04 (mục 7.4). Alternative Flow: đóng vĩnh viễn — hoàn thành checklist (thu hồi liên kết, xử lý QR đã phát hành) rồi người duyệt thứ hai xác nhận; mở khóa gian hàng suspended cần lý do.
 
+<a id="muc-8-3-ph-03-console-van-hanh-vds"></a>
 ### 8.3. PH-03 · Console vận hành (VDS)
 
 | Mã | Chức năng | Mô tả | Mức độ |
@@ -686,6 +808,7 @@ Basic Flow: theo QT-04 (mục 7.4). Alternative Flow: đóng vĩnh viễn — ho
 | CN-27 | Đối soát cuối ngày | Phiên đối soát với định chế và Switch (E3); kết quả khớp/lệch; báo cáo phiên | Bắt buộc |
 | CN-28 | Xử lý chênh lệch | Hàng đợi chênh lệch theo trạng thái; quét bù/điều chỉnh bốn mắt/mở case; chỉ đóng khi hai bên khớp hoặc có quyết định được duyệt | Bắt buộc |
 
+<a id="muc-8-4-ph-04-nen-tang-loi-backend"></a>
 ### 8.4. PH-04 · Nền tảng lõi (backend)
 
 Nền tảng lõi không có màn hình riêng — cung cấp năng lực cho các phân hệ trên qua **4 dịch vụ** (Merchant & Identity · Commerce · Back-office · Notification) chứa **12 module** nghiệp vụ (Gian hàng · Định danh · Tài khoản & Token — thuộc Merchant & Identity; Ingest · Khớp tiền · Đơn hàng & Sổ nợ · Biên lai · Payment · Sync — thuộc Commerce; Compliance · Admin & Config — thuộc Back-office; Notification) chạy trên Kubernetes với event bus Kafka; 109 đầu mục API; 28 bảng dữ liệu/306 trường.
@@ -699,6 +822,7 @@ Nền tảng lõi không có màn hình riêng — cung cấp năng lực cho c�
 | CN-33 | Nhật ký & khóa tham chiếu | Ghi vết mọi sự kiện tài chính, khóa tham chiếu xuyên hệ thống, nguyên tắc «3 KHÔNG» với dữ liệu đẩy ra ngoài | Bắt buộc |
 | CN-34 | Hạn mức & cảnh báo theo ngưỡng | Ngưỡng giá trị/tần suất cấu hình; hậu kiểm AML theo ngưỡng ngày; danh sách theo dõi | Bắt buộc |
 
+<a id="muc-8-5-ph-05-cong-open-banking-ket-nap-dinh-che"></a>
 ### 8.5. PH-05 · Cổng Open Banking & kết nạp định chế
 
 | Mã | Chức năng | Mô tả | Mức độ |
@@ -710,6 +834,7 @@ Nền tảng lõi không có màn hình riêng — cung cấp năng lực cho c�
 
 **Giải thích an ninh kênh đối tác (mức nghiệp vụ):** mỗi hệ thống tham gia có **một cặp khóa** và công bố khóa công khai qua bảng JWKS. Khi gọi API, bên gọi tự ký một «thẻ hệ thống» nói rõ *tôi là ai — gọi tới ai — lúc nào*, và nếu request có nội dung thì thẻ khắc thêm **hash của body request** — bên nhận đối chiếu để chắc chắn nội dung không bị sửa trên đường truyền. Response tài chính (số dư, lịch sử, kết quả trả) được ký cùng định dạng ở chiều ngược lại — hai bên đều **không thể chối bỏ** bản tin đã gửi. Tầng hạ tầng (mTLS, VPN, IP) cấu hình **một lần** theo hồ sơ kết nạp.
 
+<a id="muc-8-6-ph-06-tich-hop-he-thong-ngoai"></a>
 ### 8.6. PH-06 · Tích hợp hệ thống ngoài
 
 | Mã | Chức năng | Hệ thống ngoài | Mô tả | Mức độ |
@@ -721,8 +846,10 @@ Nền tảng lõi không có màn hình riêng — cung cấp năng lực cho c�
 
 ---
 
+<a id="muc-9-luat-nghiep-vu-vong-doi-trang-thai"></a>
 ## 9. LUẬT NGHIỆP VỤ & VÒNG ĐỜI TRẠNG THÁI
 
+<a id="muc-9-1-bang-luat-nghiep-vu-chinh"></a>
 ### 9.1. Bảng luật nghiệp vụ chính
 
 | Mã | Luật nghiệp vụ | Áp tại |
@@ -742,6 +869,7 @@ Nền tảng lõi không có màn hình riêng — cung cấp năng lực cho c�
 | BR-13 | Lệnh trả đứt mạng giữa chừng: chỉ tra lại trạng thái, không tạo lệnh mới; chặn lệnh trùng tới cùng đích khi lệnh cũ chưa chốt | CN-08 |
 | BR-14 | Tiền tệ HTG, đơn vị lưu trữ centime (1 HTG = 100 centime), số nguyên 64-bit — không dùng số thực | Toàn hệ thống |
 
+<a id="muc-9-2-vong-doi-gian-hang"></a>
 ### 9.2. Vòng đời gian hàng
 
 ```mermaid
@@ -759,6 +887,7 @@ stateDiagram-v2
   Closed --> [*]
 ```
 
+<a id="muc-9-3-vong-doi-don-tinh-tien"></a>
 ### 9.3. Vòng đời đơn tính tiền
 
 ```mermaid
@@ -780,6 +909,7 @@ stateDiagram-v2
   HetHan --> [*]
 ```
 
+<a id="muc-9-4-vong-doi-lenh-tra-thanh-toan-trong-app"></a>
 ### 9.4. Vòng đời lệnh trả (thanh toán trong app)
 
 ```mermaid
@@ -801,6 +931,7 @@ stateDiagram-v2
   ThatBai --> [*]
 ```
 
+<a id="muc-9-5-vong-doi-lien-ket-tai-khoan"></a>
 ### 9.5. Vòng đời liên kết tài khoản
 
 ```mermaid
@@ -821,8 +952,10 @@ stateDiagram-v2
 
 ---
 
+<a id="muc-10-cac-yeu-cau-phi-chuc-nang"></a>
 ## 10. CÁC YÊU CẦU PHI CHỨC NĂNG
 
+<a id="muc-10-1-yeu-cau-bao-mat-he-thong-attt"></a>
 ### 10.1. Yêu cầu bảo mật hệ thống — ATTT
 
 - **Kênh đối tác:** mTLS chứng chỉ riêng từng đối tác + VPN site-to-site + IP allowlist (tầng hạ tầng, cấu hình một lần theo hồ sơ kết nạp).
@@ -841,14 +974,17 @@ stateDiagram-v2
 | Trung bình | Dò quét API công khai (rate-limit theo IP); lạm dụng OTP/SMS (giới hạn 5 OTP/ngày/số); nhân viên nội bộ tra cứu ngoài thẩm quyền (RBAC + nhật ký phiên tra cứu) |
 | Thấp | Lộ metadata qua trang công khai (chỉ dữ liệu công khai); từ chối dịch vụ mức ứng dụng (circuit breaker, backpressure) |
 
+<a id="muc-10-2-yeu-cau-sao-luu"></a>
 ### 10.2. Yêu cầu sao lưu
 
 Ảnh chụp toàn phần hằng ngày + nhật ký giao dịch đẩy liên tục 5 phút/lần về lưu trữ đối tượng; giữ bản ngày 30 ngày — tuần 12 tuần — tháng 12 tháng; bật phiên bản hóa chống xóa nhầm; khôi phục được về bất kỳ thời điểm nào trong 30 ngày. Ước lượng dung lượng theo sizing Production ~15 TB.
 
+<a id="muc-10-3-yeu-cau-ve-tinh-on-dinh"></a>
 ### 10.3. Yêu cầu về tính ổn định
 
 Mức sẵn sàng mục tiêu ≥ 99,5%/tháng ngoài cửa sổ bảo trì báo trước; RPO ≤ 15 phút; RTO ≤ 8 giờ (dựng lại từ hạ tầng khai báo bằng mã + phục hồi sao lưu); diễn tập khôi phục bắt buộc trước khai trương và tối thiểu 6 tháng/lần; mọi lớp trọng yếu có dự phòng nóng trong site (PostgreSQL đôi đồng bộ, Kafka 3 bản sao, cân bằng tải kép).
 
+<a id="muc-10-4-yeu-cau-ve-hieu-nang"></a>
 ### 10.4. Yêu cầu về hiệu năng
 
 | KPI | Chức năng nghiệp vụ | Giá trị cần đạt | Đơn vị đo |
@@ -864,6 +1000,7 @@ Mức sẵn sàng mục tiêu ≥ 99,5%/tháng ngoài cửa sổ bảo trì báo
 
 Kiểm chứng bằng bài kiểm thử tải trên UAT (50 giao dịch/giây báo Có + 300 request/giây API) trước khai trương.
 
+<a id="muc-10-5-yeu-cau-ve-giao-tiep"></a>
 ### 10.5. Yêu cầu về giao tiếp
 
 **Giao diện người dùng:** ứng dụng PWA chạy Android và iOS, cài từ web; đa ngôn ngữ tối thiểu tiếng Pháp + Kreyòl Ayisyen (bộ thiết kế hiện có 4 ngôn ngữ); ưu tiên ngoại tuyến (đọc QR, xem/tạo đơn khi mất mạng, đồng bộ lại khi có mạng); tương thích điện thoại phổ thông cấu hình thấp và vùng sóng 2G; bố cục 42 màn theo bộ đặc tả màn hình tại Phụ lục MOU A.3; thiết kế đồ họa chính thức theo bộ nhận diện BRH bàn giao (Figma).
@@ -880,10 +1017,12 @@ Kiểm chứng bằng bài kiểm thử tải trên UAT (50 giao dịch/giây b�
 | Switch/ACI | E3 báo cáo cuối ngày · đăng ký danh mục tài khoản | Hai chiều | File ký số; SFTP dự phòng |
 | SMS Natcom | N1 gửi SMS + báo phát DLR | Nền tảng gọi ra | Brandname PEYE-HAITI |
 
+<a id="muc-10-6-yeu-cau-ve-tinh-ho-tro"></a>
 ### 10.6. Yêu cầu về tính hỗ trợ
 
 Hỗ trợ vận hành sau pilot 6 tháng theo SLA ba mức: Mức 1 (ngừng dịch vụ/sai lệch tiền) tiếp nhận ≤ 30 phút, khắc phục ≤ 4 giờ, trực 24/7; Mức 2 tiếp nhận ≤ 2 giờ, khắc phục ≤ 8 giờ làm việc; Mức 3 tiếp nhận ≤ 1 ngày, khắc phục ≤ 3 ngày làm việc; chuẩn đạt ≥ 95% sự cố mỗi mức trong SLA. Kênh: hotline + email + hệ thống ghi nhận sự cố; hotline người dùng cuối 8686 (Natcom).
 
+<a id="muc-10-7-yeu-cau-ve-cong-nghe-va-cac-rang-buoc"></a>
 ### 10.7. Yêu cầu về công nghệ và các ràng buộc
 
 - Kiến trúc dịch vụ trên Kubernetes; PostgreSQL (Production chạy đôi đồng bộ); Kafka; Redis; MinIO; hạ tầng khai báo bằng mã (dựng lại toàn bộ từ mã nguồn hạ tầng).
@@ -891,14 +1030,17 @@ Hỗ trợ vận hành sau pilot 6 tháng theo SLA ba mức: Mức 1 (ngừng d�
 - Chuẩn QR: HTQR 1.0 trên nền EMVCo, đọc ngoại tuyến; mọi thay đổi chuẩn sau ban hành là yêu cầu thay đổi.
 - Ràng buộc: nền tảng không giữ tiền, không có tài khoản tiền; ngưỡng hai bậc xác thực 5.000 HTG chuẩn hóa toàn hệ thống; tiền tệ HTG, đơn vị lưu trữ centime.
 
+<a id="muc-10-8-cac-yeu-cau-tai-lieu-nguoi-dung-va-ho-tro-truc-tuyen"></a>
 ### 10.8. Các yêu cầu tài liệu người dùng và hỗ trợ trực tuyến
 
 Bộ tài liệu bàn giao: hướng dẫn sử dụng ứng dụng (đa ngôn ngữ, kèm tài liệu đào tạo đội hiện trường), hướng dẫn portal BRH, hướng dẫn console vận hành, bộ tài liệu tích hợp cho định chế (hướng dẫn từng bước + ví dụ bản tin đầy đủ toàn luồng); trợ giúp trong ứng dụng ở các màn nghiệp vụ chính. *[Giả định]* Không yêu cầu hệ thống help-desk trực tuyến riêng trong phạm vi footprint.
 
+<a id="muc-10-9-cac-thanh-phan-mua-ngoai"></a>
 ### 10.9. Các thành phần mua ngoài
 
 Chứng thư số/chứng chỉ kênh truyền của bên thứ ba; brandname SMS. Các thành phần nền tảng dùng mã nguồn mở (Kubernetes, PostgreSQL, Kafka, Redis, MinIO, Keycloak, Vault) — không phát sinh chi phí bản quyền. Phí SMS vận hành và kênh truyền nằm ngoài phạm vi tài liệu này (phân bổ tại hợp đồng chính).
 
+<a id="muc-10-10-yeu-cau-ve-van-hanh-khai-thac"></a>
 ### 10.10. Yêu cầu về vận hành khai thác
 
 - Giám sát — quan trắc tập trung (metrics, log, trace) với bảng cảnh báo theo ngưỡng cấu hình; trực ban tích hợp qua console vận hành.
@@ -906,10 +1048,12 @@ Chứng thư số/chứng chỉ kênh truyền của bên thứ ba; brandname SM
 - Quy trình phát hành có kiểm soát (CI/CD), môi trường UAT — Sandbox — Production tách biệt; tham số vận hành thay đổi qua cơ chế bốn mắt.
 - Runbook sự cố cho các kịch bản: định chế gián đoạn webhook (chuyển quét bù), Switch trễ báo cáo, nghẽn SMS, khóa bị thu hồi khẩn.
 
+<a id="muc-10-11-yeu-cau-ve-giai-phap-ha-tang"></a>
 ### 10.11. Yêu cầu về giải pháp hạ tầng
 
 Ba môi trường, tổng 33 VM · ~134 vCPU · ~492 GB RAM · ~17 TB: **Production** 24 VM (88 vCPU/396 GB/~15 TB, mọi lớp trọng yếu dự phòng nóng trong site); **UAT** 8 VM (38 vCPU/80 GB/~1,9 TB) — môi trường BRH nghiệm thu; **Sandbox** = phân vùng trên cụm UAT + 1 VM bổ sung, cách ly dữ liệu hoàn toàn. Chưa bao gồm trung tâm dữ liệu dự phòng địa lý (bổ sung theo yêu cầu chính thức, không đổi kiến trúc). Trách nhiệm đầu tư và vận hành hạ tầng phân bổ tại hợp đồng chính.
 
+<a id="muc-10-12-yeu-cau-ve-tinh-ghi-log"></a>
 ### 10.12. Yêu cầu về tính ghi log
 
 Log nghiệp vụ phải ghi: mọi sự kiện tài chính (báo Có, khớp lệnh, lệnh trả, điều chỉnh) với khóa tham chiếu xuyên hệ thống; mọi thao tác quản trị trên portal/console (kèm giá trị trước/sau); mọi phiên tra cứu dữ liệu giao dịch; mọi quyết định hậu kiểm/case kèm người quyết định; sự kiện an ninh (đăng nhập kể cả thất bại, thu hồi khóa, thay tham số).
@@ -922,6 +1066,7 @@ Log nghiệp vụ phải ghi: mọi sự kiện tài chính (báo Có, khớp l�
 
 Nhật ký kiểm toán quản trị dạng bất biến (chuỗi hash, job kiểm tra hằng đêm), lưu tối thiểu 10 năm (đề xuất C17); log kỹ thuật lưu theo chính sách vận hành, tối thiểu 12 tháng *[Giả định]*; log không có quy định riêng thì mặc định không xóa.
 
+<a id="muc-10-13-yeu-cau-tuan-thu-tieu-chuan-quan-tri-du-lieu"></a>
 ### 10.13. Yêu cầu tuân thủ tiêu chuẩn Quản trị dữ liệu
 
 **Danh mục phần tử dữ liệu trọng yếu (CDE):**
@@ -946,6 +1091,7 @@ Nhật ký kiểm toán quản trị dạng bất biến (chuỗi hash, job ki�
 
 ---
 
+<a id="muc-11-tieu-chuan-nghiem-thu-he-thong"></a>
 ## 11. TIÊU CHUẨN NGHIỆM THU HỆ THỐNG
 
 Nghiệm thu trên môi trường UAT theo bộ tiêu chí nghiệm thu (AC) của tài liệu PRD, theo phạm vi từng giai đoạn; kèm các điều kiện hệ thống: bài kiểm thử tải đạt 50 giao dịch/giây; kiểm thử xâm nhập không còn lỗi nghiêm trọng; diễn tập khôi phục đạt RPO/RTO. Các chức năng là điều kiện nghiệm thu:
@@ -973,8 +1119,10 @@ Loại trừ khỏi điều kiện nghiệm thu (tiện ích hỗ trợ): CN-11 
 
 ---
 
+<a id="muc-12-rui-ro-phu-thuoc-gia-dinh"></a>
 ## 12. RỦI RO, PHỤ THUỘC & GIẢ ĐỊNH
 
+<a id="muc-12-1-rui-ro-chinh"></a>
 ### 12.1. Rủi ro chính
 
 | Rủi ro | Mức | Giảm thiểu |
@@ -986,6 +1134,7 @@ Loại trừ khỏi điều kiện nghiệm thu (tiện ích hỗ trợ): CN-11 
 | Người bán bỏ cuộc sau đăng ký | Cao | Đăng ký hộ tại chợ; sổ nợ/tính tiền là giá trị dùng hằng ngày; hotline |
 | Số liệu lệch giữa các bên | Trung bình | Chốt theo ngày đối soát; hàng đợi chênh lệch đóng ≤ 2 ngày làm việc |
 
+<a id="muc-12-2-phu-thuoc-d1-d11"></a>
 ### 12.2. Phụ thuộc (D1 → D11)
 
 | # | Phụ thuộc | Hạn | Chủ trì |
@@ -1002,12 +1151,14 @@ Loại trừ khỏi điều kiện nghiệm thu (tiện ích hỗ trợ): CN-11 
 | D10 | Đặc tả + lịch báo cáo cuối ngày từ Switch (E3) | T8/2026 | BRH/ACI |
 | D11 | Chốt danh sách chợ & phân bổ 601 người bán | T8/2026 | BRH·Natcom |
 
+<a id="muc-12-3-gia-dinh"></a>
 ### 12.3. Giả định
 
 - *[Giả định]* ~800 phiên đồng thời giờ cao điểm; CPU ≤ 70% và RAM ≤ 75% trung bình cụm tại tải thiết kế.
 - *[Giả định]* Log kỹ thuật lưu tối thiểu 12 tháng; không yêu cầu help-desk trực tuyến riêng trong footprint.
 - *[Giả định]* Áp chuẩn ATTT nội bộ đang dùng cho các sản phẩm hiện hữu ở những điểm chưa có quy định riêng của BRH.
 
+<a id="muc-12-4-diem-chua-co-thong-tin-can-chot"></a>
 ### 12.4. Điểm chưa có thông tin (cần chốt)
 
 | # | **[Chưa có thông tin]** | Cần trước |
@@ -1020,6 +1171,7 @@ Loại trừ khỏi điều kiện nghiệm thu (tiện ích hỗ trợ): CN-11 
 
 ---
 
+<a id="muc-13-lo-trinh"></a>
 ## 13. LỘ TRÌNH
 
 ```mermaid
@@ -1055,6 +1207,7 @@ gantt
 
 ---
 
+<a id="muc-phu-luc-a-anh-xa-chuc-nang-tai-lieu-san-pham-ky-thuat"></a>
 ## PHỤ LỤC A. Ánh xạ chức năng ↔ tài liệu sản phẩm/kỹ thuật
 
 | Phân hệ | Chức năng BRD | Epic PRD | Quy trình | Đặc tả kỹ thuật |
@@ -1071,6 +1224,7 @@ gantt
 
 ---
 
+<a id="muc-bang-ghi-nhan-thay-doi"></a>
 ## BẢNG GHI NHẬN THAY ĐỔI
 
 | Ngày | Vị trí | A/M/D | Nguồn gốc | PB cũ | Mô tả | PB mới |

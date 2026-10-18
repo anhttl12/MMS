@@ -1,11 +1,51 @@
 # SSD — Thiết kế giải pháp hệ thống · Giải pháp Merchant Peye-Haiti
 
+<!-- TOC -->
+<a id="muc-luc"></a>
+
+**Mục lục**
+
+- [Quy ước đọc](#muc-quy-uoc-doc)
+- [1. Phạm vi thiết kế](#muc-1-pham-vi-thiet-ke)
+- [2. Kiến trúc tổng thể](#muc-2-kien-truc-tong-the)
+- [3. Quyết định kiến trúc (ADR)](#muc-3-quyet-dinh-kien-truc-adr)
+- [4. Bốn dịch vụ trong hệ thống](#muc-4-bon-dich-vu-trong-he-thong)
+  - [4.1. Thiết kế C4 — Level 3: các cấu phần bên trong từng dịch vụ](#muc-4-1-thiet-ke-c4-level-3-cac-cau-phan-ben-trong-tung-dich-vu)
+    - [BFF & Cổng API](#muc-bff-cong-api)
+    - [Dịch vụ 1 · Merchant & Identity](#muc-dich-vu-1-merchant-identity)
+    - [Dịch vụ 2 · Commerce — module Ingest *(cửa nhận tiền về)*](#muc-dich-vu-2-commerce-module-ingest-cua-nhan-tien-ve)
+    - [Dịch vụ 2 · Commerce — các module nghiệp vụ *(nơi khớp tiền — lõi)*](#muc-dich-vu-2-commerce-cac-module-nghiep-vu-noi-khop-tien-loi)
+    - [Dịch vụ 3 · Back-office — module Compliance](#muc-dich-vu-3-back-office-module-compliance)
+    - [Dịch vụ 4 · Notification](#muc-dich-vu-4-notification)
+    - [Dịch vụ 3 · Back-office — module Admin & Config](#muc-dich-vu-3-back-office-module-admin-config)
+- [5. Chín luồng xử lý nghiệp vụ («Peye-Haiti 15/08»: +S9 người mua)](#muc-5-chin-luong-xu-ly-nghiep-vu-peye-haiti-15-08-s9-nguoi-mua)
+  - [S2 · Tiền về, chống trùng & gạch bill  *(luồng găng nhất)*](#muc-s2-tien-ve-chong-trung-gach-bill-luong-gang-nhat)
+  - [S4 · Token & cutover đổi tài khoản](#muc-s4-token-cutover-doi-tai-khoan)
+  - [S9 · Người mua quét & trả (module Payment — màn NM-01→05) «Peye-Haiti 15/08»](#muc-s9-nguoi-mua-quet-tra-module-payment-man-nm-0105-peye-haiti)
+  - [Trạng thái bill](#muc-trang-thai-bill)
+- [6. Mô hình dữ liệu khái niệm](#muc-6-mo-hinh-du-lieu-khai-niem)
+- [7. Thiết kế tích hợp — 14 mục: 12 giao diện với bên ngoài + 2 năng lực nội bộ («Peye-Haiti 15/08»: +M-PAY)](#muc-7-thiet-ke-tich-hop-14-muc-12-giao-dien-voi-ben-ngoai-2-nang)
+  - [7.1. Đặc tả tham chiếu BÊN TRẢ (VI-00→04 · D9)](#muc-7-1-dac-ta-tham-chieu-ben-tra-vi-0004-d9)
+- [8. Bảo mật & tuân thủ](#muc-8-bao-mat-tuan-thu)
+- [9. Chạy offline & đồng bộ](#muc-9-chay-offline-dong-bo)
+- [10. Ánh xạ NFR → cơ chế (đo được)](#muc-10-anh-xa-nfr-co-che-do-duoc)
+- [11. Mô hình triển khai](#muc-11-mo-hinh-trien-khai)
+  - [11.1. Sơ đồ triển khai (PROD)](#muc-11-1-so-do-trien-khai-prod)
+  - [11.2. Vai trò các thành phần dùng chung](#muc-11-2-vai-tro-cac-thanh-phan-dung-chung)
+  - [11.3. Vận hành](#muc-11-3-van-hanh)
+- [12. Giám sát & vận hành](#muc-12-giam-sat-van-hanh)
+- [13. Rủi ro kỹ thuật](#muc-13-rui-ro-ky-thuat)
+- [14. Ánh xạ màn hình → dịch vụ → tích hợp](#muc-14-anh-xa-man-hinh-dich-vu-tich-hop)
+
+<!-- /TOC -->
+
 | Trường | Nội dung |
 |---|---|
 | Mã | Peye-Haiti-SSD-001 · **v5.1c (24/08 — vá nhỏ theo rà soát chéo: chú thích B.5 trong kiểm đếm §7 · bổ sung M-PAY vào sơ đồ triển khai §11.1 — không đổi thiết kế) · v5.1b (tối 20/08 — đồng bộ v3.6: CH-00 trước eKYC · TẠO LÀ ACTIVE — S1 kích hoạt ngay, BRH-03 hậu kiểm) · v5.1 (20/08 — đồng bộ v3.5: một app chọn vai CH-00, người bán thanh toán được; S9 +nhánh OTP định chế >5.000 HTG qua C.9; M-PAY ×4) · nền v5.0 (Markdown)** — 15/08/2026 · **15/08 (Peye-Haiti — app chung, mô hình BiMPay):** đổi tên PINASSI→HaitiPay; MỘT app 2 profile (Marchand · Client); Commerce +**module Payment** (người mua khởi tạo trả — tiền vẫn ngoài hệ thống); +luồng **S9** quét & trả; tích hợp 12→**14** (+M-PAY · M-PAY-hook); ERD +thực thể `payment` (19→20) · **15/08 (CR BRH)**: §8 +nguyên tắc «3 KHÔNG» dữ liệu ra hệ thống quốc gia (CR-8) + tuyên bố KYC2 (CR-12) — theo `BRH/PeyeHaiti_CR_BRH_LuuTru_NhatKy.md` (đối chiếu văn bản BRH 12/08) · **04/08**: bỏ màn BRH-09 «Cấu hình» — màn 37→36 (BRH 10), tham số chuyển vận hành Natcom qua E.13.x (4 mắt) · **02/08**: áp CANON2 — 8 rút gọn pilot (bỏ M7/M4b/qr_intent/report_schedule, hoãn app người mua NM + danh bạ V1, gộp device→auth_session, matching 2 mức); màn 43→37 · tích hợp 15→12 · thực thể ERD 21→19 · **25/07**: bỏ API M5 (đối chiếu tên — bank tự xác thực qua OTP) + gộp còn 1 bậc KYC · sắp xếp mục C theo luồng onboarding · tích hợp 17→15, mã lỗi 48→44 · đồng bộ tên ví Natcash→wallet2 (NatTransfer), mã ví dụ NATC→NTRF · 4 dịch vụ · mỗi dịch vụ một schema · event bus Kafka · quy mô 5.000 merchant |
 | Nguồn | `PeyeHaiti_PRD.md` · `PeyeHaiti_Wireframes.html` (42 màn — đã gồm CH-00 chọn vai) |
 | Phạm vi | Thiết kế mức giải pháp. Chi tiết code-ready (API contract, DDL, sizing) tại `PeyeHaiti_TSD.md` |
 
+<a id="muc-quy-uoc-doc"></a>
 ## Quy ước đọc
 
 Tài liệu dùng mã tham chiếu đặt trong ngoặc để truy vết sang tài liệu khác. **Bỏ qua phần trong ngoặc, câu vẫn đọc trọn nghĩa** — mã chỉ là mỏ neo, không phải một từ trong câu.
@@ -24,12 +64,14 @@ Tài liệu dùng mã tham chiếu đặt trong ngoặc để truy vết sang t�
 | wallet2 | Ví điện tử do NatTransfer vận hành — vừa là ví NHẬN của merchant (cấp Open Banking) vừa là ví bên TRẢ của người mua | — |
 | 4 dịch vụ | Merchant & Identity · Commerce (gồm module Ingest) · Back-office (module Compliance + module Admin & Config) · Notification | mục 4 |
 
+<a id="muc-1-pham-vi-thiet-ke"></a>
 ## 1. Phạm vi thiết kế
 
 **Trong phạm vi**: phần lõi hệ thống quản lý điểm bán dùng chung, **MỘT ứng dụng di động 2 profile (Marchand · Client — mô hình BiMPay, «Peye-Haiti 15/08»; thời điểm bật Client theo lộ trình BRH)**, portal quản trị cho BRH và màn hình vận hành; các đầu nối sang Open Banking của bank/ví nhận tiền và **định chế TRẢ (M-PAY)**; tích hợp định danh điện tử và phòng chống rửa tiền của BRH (E1, E2), SMS của Natcom (N1), bảng kê cuối ngày của Switch (E3); kèm đặc tả tham chiếu cho ví bên trả (mục 7.1 — phụ thuộc D9).
 
 **Ngoài phạm vi**: thanh toán theo đơn hàng qua Switch (sau 10/2026); hệ thống nội bộ của bank/ví.
 
+<a id="muc-2-kien-truc-tong-the"></a>
 ## 2. Kiến trúc tổng thể
 
 ```mermaid
@@ -70,6 +112,7 @@ flowchart TB
 
 Công nghệ: phía máy người dùng dùng ứng dụng web cài được (PWA) với kho dữ liệu cục bộ mã hóa; phía máy chủ dùng Kubernetes + PostgreSQL + Redis + **Apache Kafka** + MinIO; portal là ứng dụng một trang.
 
+<a id="muc-3-quyet-dinh-kien-truc-adr"></a>
 ## 3. Quyết định kiến trúc (ADR)
 
 | # | Quyết định | Lý do | Đánh đổi |
@@ -86,6 +129,7 @@ Công nghệ: phía máy người dùng dùng ứng dụng web cài được (PW
 | A10 | **Bốn dịch vụ**, không phải mười hai. Đường tiền nằm trọn trong **một dịch vụ (Commerce)**: nhận báo có (module Ingest), khớp tiền, đơn hàng, sổ nợ, biên lai; phần hậu kiểm portal gom vào **Back-office** (Compliance + Admin & Config) | Thao tác găng nhất — «khớp khoản tiền rồi đánh dấu đơn đã thu» — là **một transaction trong cùng database**; số kho mã khớp với đội 4 dev (mỗi người làm chủ trọn một dịch vụ). Mỗi dịch vụ đúng **một schema** — vận hành và phân quyền đơn giản | Commerce là dịch vụ lớn nhất; Back-office trộn hai miền ít liên quan; sau này tách lại dịch vụ sẽ phải di trú bảng sang schema mới (chấp nhận — ranh giới module trong code vẫn giữ) |
 | A11 | Event bus = **Apache Kafka** (chế độ KRaft, không cần Zookeeper) | Đội vận hành đã quen Kafka; hệ sinh thái công cụ sẵn có | Nặng hơn nhu cầu thật (~60.000 sự kiện/ngày) — chấp nhận đánh đổi để đội làm chủ được công nghệ |
 
+<a id="muc-4-bon-dich-vu-trong-he-thong"></a>
 ## 4. Bốn dịch vụ trong hệ thống
 
 Mỗi dịch vụ là một khối triển khai độc lập: kho mã riêng, container riêng, **một schema PostgreSQL riêng** (không dịch vụ nào đọc thẳng bảng của schema dịch vụ khác). Trao đổi giữa các dịch vụ: gọi REST nội bộ khi cần trả lời ngay, phát/nhận sự kiện qua Kafka khi có thể chờ.
@@ -99,12 +143,14 @@ Mỗi dịch vụ là một khối triển khai độc lập: kho mã riêng, co
 
 > **Vì sao gom Matching vào Commerce**: khớp tiền rồi đổi trạng thái đơn hàng là thao tác **không được phép sai**. Để chúng ở hai dịch vụ tách rời thì phải gọi mạng qua lại kèm khóa lạc quan — tự tạo ra giao dịch phân tán ở đúng chỗ nguy hiểm nhất. Ở chung một dịch vụ, đây chỉ là một transaction cơ sở dữ liệu bình thường, khóa hàng bằng `SELECT … FOR UPDATE`, và nguyên tắc bất biến được bảo đảm bằng ràng buộc duy nhất trên bảng kết quả khớp.
 
+<a id="muc-4-1-thiet-ke-c4-level-3-cac-cau-phan-ben-trong-tung-dich-vu"></a>
 ### 4.1. Thiết kế C4 — Level 3: các cấu phần bên trong từng dịch vụ
 
 Ánh xạ theo mô hình C4: **L1 Bối cảnh** = PRD mục 6 · **L2 Khối triển khai** = sơ đồ mục 2 (4 dịch vụ + BFF + hạ tầng) · **L3 Cấu phần** = mục này · **L4 Mã nguồn** = TSD (hợp đồng API, lược đồ dữ liệu, thuật toán).
 
 Chuẩn chung mọi dịch vụ: một container, một schema PostgreSQL riêng, expose REST nội bộ (`/internal/*`, xác thực giữa các dịch vụ bằng token), phát và nhận sự kiện qua **Kafka** theo mẫu **outbox + giao ít nhất một lần** (bên nhận tự chống trùng theo mã sự kiện). Ký hiệu trong sơ đồ: hình trụ = bảng dữ liệu dịch vụ sở hữu · `[[…]]` = chủ đề (topic) Kafka · nét đứt = gọi ra ngoài dịch vụ.
 
+<a id="muc-bff-cong-api"></a>
 #### BFF & Cổng API
 
 ```mermaid
@@ -125,6 +171,7 @@ flowchart LR
   SYNC -.-> SVCS
 ```
 
+<a id="muc-dich-vu-1-merchant-identity"></a>
 #### Dịch vụ 1 · Merchant & Identity
 
 ```mermaid
@@ -165,6 +212,7 @@ flowchart LR
   CSE[["case.concluded"]] -->|khóa/mở gian hàng| LCM
 ```
 
+<a id="muc-dich-vu-2-commerce-module-ingest-cua-nhan-tien-ve"></a>
 #### Dịch vụ 2 · Commerce — module Ingest *(cửa nhận tiền về)*
 
 ```mermaid
@@ -185,6 +233,7 @@ flowchart LR
   AQ["Màn vận hành"] -.->|kích hoạt quét M3| POL
 ```
 
+<a id="muc-dich-vu-2-commerce-cac-module-nghiep-vu-noi-khop-tien-loi"></a>
 #### Dịch vụ 2 · Commerce — các module nghiệp vụ *(nơi khớp tiền — lõi)*
 
 ```mermaid
@@ -230,6 +279,7 @@ flowchart LR
 
 > Mũi tên đậm là điểm mấu chốt của thiết kế: toàn bộ «ghi kết quả khớp + đổi trạng thái đơn + sinh biên lai» xảy ra trong **một transaction duy nhất**, khóa hàng bằng `SELECT … FOR UPDATE`. Nguyên tắc bất biến «một khoản tiền về ↔ tối đa một đích» do ràng buộc **duy nhất trên `match_result.credit_event_id`** bảo đảm, không cần saga hay khóa phân tán.
 
+<a id="muc-dich-vu-3-back-office-module-compliance"></a>
 #### Dịch vụ 3 · Back-office — module Compliance
 
 ```mermaid
@@ -265,6 +315,7 @@ flowchart LR
   DIM -->|phát| EV11[["recon.discrepancy"]]
 ```
 
+<a id="muc-dich-vu-4-notification"></a>
 #### Dịch vụ 4 · Notification
 
 ```mermaid
@@ -283,6 +334,7 @@ flowchart LR
   RTR --> TRK --> NDB
 ```
 
+<a id="muc-dich-vu-3-back-office-module-admin-config"></a>
 #### Dịch vụ 3 · Back-office — module Admin & Config
 
 ```mermaid
@@ -305,8 +357,10 @@ flowchart LR
 
 > Nhật ký chỉ ghi những sự kiện **có người thao tác đằng sau** (quyết định của cán bộ, thay đổi tham số). Sự kiện kỹ thuật thuần (tiền về, đổi trạng thái đơn) đi vào hệ giám sát và bộ tổng hợp chỉ số, **không** vào nhật ký — đúng yêu cầu truy vết US-31 và chính sách lưu 10 năm.
 
+<a id="muc-5-chin-luong-xu-ly-nghiep-vu-peye-haiti-15-08-s9-nguoi-mua"></a>
 ## 5. Chín luồng xử lý nghiệp vụ («Peye-Haiti 15/08»: +S9 người mua)
 
+<a id="muc-s2-tien-ve-chong-trung-gach-bill-luong-gang-nhat"></a>
 ### S2 · Tiền về, chống trùng & gạch bill  *(luồng găng nhất)*
 
 ```mermaid
@@ -339,6 +393,7 @@ sequenceDiagram
 
 **Bổ sung «16/08» — khớp ĐÍCH DANH:** khi app định chế TRẢ có mạng, nó gọi `B.5 /qr-inquiry` vào nền tảng TRƯỚC khi chuyển và mang `payment_ref` (TTL 15′) vào lệnh; báo Có M4 kèm `addenda.payment_ref` → khớp mức ① thành đích danh, hết lệ thuộc thuần số tiền (offline-first A9 giữ nguyên — không gọi được B.5 vẫn trả và khớp như cũ).
 
+<a id="muc-s4-token-cutover-doi-tai-khoan"></a>
 ### S4 · Token & cutover đổi tài khoản
 
 ```mermaid
@@ -355,10 +410,12 @@ sequenceDiagram
   TK->>OB: ⑤ Hết 30 ngày + đã dán bảng mới → thu hồi token cũ (M1b), cập nhật danh mục TK với Switch
 ```
 
+<a id="muc-s9-nguoi-mua-quet-tra-module-payment-man-nm-0105-peye-haiti"></a>
 ### S9 · Người mua quét & trả (module Payment — màn NM-01→05) «Peye-Haiti 15/08»
 
 ① App parse QR HTQR **offline** (A9) → ② `POST /payments`: server resolve đích, trả TÊN người bán để khách xác nhận (chống dán đè) → ③ xác nhận PIN 1 chạm (≤5.000 HTG: bước duy nhất; «v3.5»: lệnh >5.000 → thêm ③b định chế trả `sca_required` + tự gửi SMS OTP tới chủ TK → ③c người dùng nhập OTP trong app, chuyển tiếp qua M-PAY.3/C.9) → gọi **M-PAY.1** của định chế TRẢ bằng token liên kết nguồn trả → ④ định chế trả chuyển tiền theo đường tiền hiện hữu (Switch hoặc on-us) — **Peye-Haiti không chạm tiền** → ⑤ webhook **M-PAY-hook** báo kết quả → cập nhật `payment` + thông báo người mua (tổng ≤3s P95; quá `PAY_TIMEOUT` → job hỏi M-PAY.2) → ⑥ phía NHẬN không đổi: bank nhận bắn M4 → S2 khớp bill, «ting ting», biên lai — hai phía độc lập, đối chiếu qua `ref_id`. Sóng yếu: app cho xếp lệnh chờ (client_uuid idempotent), KHÔNG bao giờ tự bắn lại khi chưa rõ kết quả.
 
+<a id="muc-trang-thai-bill"></a>
 ### Trạng thái bill
 
 ```mermaid
@@ -386,6 +443,7 @@ stateDiagram-v2
 - **S7 · Gạch nợ khách quen**: khi khoản tiền về không khớp đơn hàng nào nhưng trùng số tiền với một khoản nợ đang mở, hệ thống **chỉ đề xuất, người bán xác nhận** — không bao giờ tự gạch. Thứ tự ưu tiên khi khớp: đơn hàng → khoản nợ → tiền vãng lai. Nếu người bán đã gạch tay từ trước (lúc offline), khoản tiền về sẽ tham chiếu vào chính bút ghi đó, không trừ nợ hai lần.
 - **S8 · Bảng QR tại quầy**: khi gian hàng được kích hoạt, hệ thống sinh mã QR từ tài khoản đã liên kết; người bán in ngay một bản giấy A5 để dùng tạm, đồng thời hệ thống tạo lệnh in bảng QR mica theo đợt (mẫu chuẩn BRH: mã QR + tên gian hàng + mã người bán) và theo dõi tiến độ in → giao → dán trên portal. **Đổi tài khoản nhận** → sinh QR mới và in lại bảng, tài khoản cũ vẫn giữ liên kết 30 ngày nên không mất giao dịch nào (luồng S4). **Đóng gian hàng** → thu hồi bảng QR theo danh mục kiểm và thu hồi token (M1b), bank ngừng gửi báo có; tiền nếu còn ai quét mã cũ sẽ về thẳng tài khoản thật của chính chủ — nằm ngoài phạm vi hệ thống.
 
+<a id="muc-6-mo-hinh-du-lieu-khai-niem"></a>
 ## 6. Mô hình dữ liệu khái niệm
 
 ```mermaid
@@ -417,6 +475,7 @@ erDiagram
 
 20 nhóm thực thể chính («Peye-Haiti 15/08»: +`payment`) (ERD mức khái niệm — các bảng quản trị/phiên/thông báo xem TSD §5); cột/khóa/index chi tiết tại TSD §5.
 
+<a id="muc-7-thiet-ke-tich-hop-14-muc-12-giao-dien-voi-ben-ngoai-2-nang"></a>
 ## 7. Thiết kế tích hợp — 14 mục: 12 giao diện với bên ngoài + 2 năng lực nội bộ («Peye-Haiti 15/08»: +M-PAY)
 
 | Nhóm | Mã | Giao thức & bảo mật | Chiều | SLA/Ghi chú |
@@ -436,11 +495,13 @@ erDiagram
 
 Nguyên tắc chung: mọi lệnh ghi đều mang khóa chống trùng; mỗi đối tác có timeout và bộ ngắt mạch riêng; đánh phiên bản API; **lỗi hạ tầng không bao giờ được tự động sinh giao dịch hoàn tiền**.
 
+<a id="muc-7-1-dac-ta-tham-chieu-ben-tra-vi-0004-d9"></a>
 ### 7.1. Đặc tả tham chiếu BÊN TRẢ (VI-00→04 · D9)
 - wallet2 tối thiểu: quét payload EMVCo theo **HTQR 1.0** (TSD §13.4), hiển thị đúng tên gian hàng, chuyển tới SỐ TK THẬT trong QR (tag 38-02).
 - **Bộ test vectors QR** (TSD §12.1 · payload §13.4): tĩnh TK thật · động có tiền · addenda bill_id · sai chuẩn — nghiệm thu D9.
 - Chỗ đáp: C20 phí liên ví (BRH quyết), C21 lộ trình liên thông (wallet2→MonCash→bank), C22 SDK quét nhúng app wallet2.
 
+<a id="muc-8-bao-mat-tuan-thu"></a>
 ## 8. Bảo mật & tuân thủ
 - **Xác thực người bán**: mã PIN 6 số băm bằng Argon2id, khóa tài khoản sau 5 lần sai; mã OTP gửi qua SMS; mỗi phiên đăng nhập gắn với dấu vân tay thiết bị.
 - **Mất máy**: khóa khẩn qua hotline 8686 (xác thực OTP về SIM đăng ký) — thu hồi mọi phiên trong 60 giây, mã QR vẫn nhận tiền bình thường; phiên hỗ trợ của nhân viên hiện trường là ngoại lệ có kiểm soát.
@@ -452,12 +513,14 @@ Nguyên tắc chung: mọi lệnh ghi đều mang khóa chống trùng; mỗi đ
 - **Dữ liệu ra hệ thống quốc gia (3 KHÔNG — CR-8, 15/08)**: mọi khai báo cho nhật ký giao dịch quốc gia/RNI/BRH không bao giờ chứa chuỗi QR thô, bí mật sống (token/HMAC — chỉ mã khóa hoặc băm) hay số tài khoản đầy đủ (chỉ bản che). Bản đồ khai báo nhóm A–G: DataDict §6.
 - **Khung KYC hài hòa (CR-12, cập nhật 15/08)**: KYC merchant = **KYC2** quốc gia · profile Client (người mua) = **KYC1** (OTP — `person.kyc_level`); NIF bổ sung song song CIN; PersonID quốc gia là cột chờ, điền khi RNI vận hành.
 
+<a id="muc-9-chay-offline-dong-bo"></a>
 ## 9. Chạy offline & đồng bộ
 - **Ghi tại máy trước** (kho dữ liệu trên máy có mã hóa): sổ nợ, đơn tính tiền, danh mục món — thao tác phản hồi tức thì. Riêng **tiền thì máy chủ là nguồn sự thật duy nhất**.
 - **Đồng bộ theo lô** khi có mạng. Quy tắc xử lý xung đột: liên quan đến tiền thì máy chủ thắng, còn ghi chú của người bán thì máy thắng; mỗi bản ghi có mã định danh riêng và mốc thời gian cập nhật.
 - Giao diện tiếng Pháp và Creole; có thể hiển thị kèm quy đổi USD theo tham số (C5) — nhưng mọi bút toán đều 100% bằng Gourde.
 - Khi offline, app **không bao giờ** được tự đánh dấu «đã thu tiền» nếu chưa nhận được báo có từ bank; ảnh chụp nén xuống dưới 200KB để đi được trên mạng 2G.
 
+<a id="muc-10-anh-xa-nfr-co-che-do-duoc"></a>
 ## 10. Ánh xạ NFR → cơ chế (đo được)
 
 | NFR | Cơ chế & điểm đo |
@@ -468,10 +531,12 @@ Nguyên tắc chung: mọi lệnh ghi đều mang khóa chống trùng; mỗi đ
 | Vượt 5.000 merchant | Mở rộng ngang: thêm bản sao dịch vụ, thêm bản sao đọc cho cơ sở dữ liệu, thêm broker Kafka — kiến trúc không đổi (lộ trình TSD §9.5) |
 | Đăng ký dưới 10 phút · kích hoạt tức thời khi hoàn tất («v3.6») · hậu kiểm hồ sơ có cờ ≤24h | Ghi nhận sự kiện ở từng bước để đo phễu; báo cáo trên portal |
 
+<a id="muc-11-mo-hinh-trien-khai"></a>
 ## 11. Mô hình triển khai
 
 Hai môi trường: **UAT** (dùng sandbox của BRH, bank, Natcom, Switch; chạy tự động 9 luồng nghiệp vụ (S1–S9; S9 khi có sandbox M-PAY — gate điều kiện PRD §13); BRH nghiệm thu tại đây) và **PROD** (trung tâm dữ liệu Natcom). **Sizing chi tiết từng máy ảo tại TSD §9.**
 
+<a id="muc-11-1-so-do-trien-khai-prod"></a>
 ### 11.1. Sơ đồ triển khai (PROD)
 
 ```mermaid
@@ -527,6 +592,7 @@ flowchart TB
   SWX -->|bảng kê cuối ngày| WAF
 ```
 
+<a id="muc-11-2-vai-tro-cac-thanh-phan-dung-chung"></a>
 ### 11.2. Vai trò các thành phần dùng chung
 
 Không phải thứ nào cũng là một máy ảo riêng. **API Gateway, Keycloak và Vault chạy dạng pod bên trong Kubernetes** (nhiều bản sao, không tốn thêm máy ảo ở quy mô 5.000 merchant). Kafka, PostgreSQL, Redis, MinIO nằm trên máy ảo riêng vì có trạng thái.
@@ -541,13 +607,16 @@ Không phải thứ nào cũng là một máy ảo riêng. **API Gateway, Keyclo
 | **PostgreSQL HA** | Cơ sở dữ liệu chính, 5 schema — mỗi dịch vụ một schema (+ `shared`); có bản sao đồng bộ và tự chuyển đổi khi lỗi | Nguồn sự thật cho mọi dữ liệu, kể cả tiền |
 | **MinIO** | Kho tệp: ảnh định danh, chứng cứ khiếu nại, bảng kê cuối ngày, bản sao lưu | Tệp lớn không nên nhét vào cơ sở dữ liệu |
 
+<a id="muc-11-3-van-hanh"></a>
 ### 11.3. Vận hành
 
 Sao lưu: ảnh chụp cơ sở dữ liệu hằng ngày + nhật ký giao dịch đẩy liên tục sang kho đối tượng (mục tiêu khôi phục: mất tối đa 15 phút dữ liệu, dựng lại trong 8 giờ). Chưa có trung tâm dữ liệu dự phòng — nếu BRH yêu cầu, bổ sung site thứ hai sau. Quy trình phát hành tự động (dựng → kiểm thử → quét bảo mật → triển khai), hạ tầng khai báo bằng mã, app tự cập nhật lặng lẽ.
 
+<a id="muc-12-giam-sat-van-hanh"></a>
 ## 12. Giám sát & vận hành
 Bảy chỉ số vàng phải nhìn được mọi lúc: độ trễ báo có (P95) · tỷ lệ gạch bill tự động · số webhook lỗi và phải thử lại · tồn đọng khoản lệch chưa xử · độ sẵn sàng của dịch vụ định danh và SMS · số token sắp hết hạn · các khoảng thời gian còn thiếu dữ liệu cần quét M3 lấp. Ngưỡng cảnh báo đặt tại portal (đề xuất C12); mọi truy vết đi theo mã giao dịch hoặc mã sự kiện; quy trình xử lý sự cố nằm ở màn vận hành.
 
+<a id="muc-13-rui-ro-ky-thuat"></a>
 ## 13. Rủi ro kỹ thuật
 | Rủi ro | Cách hóa giải |
 |---|---|
@@ -557,6 +626,7 @@ Bảy chỉ số vàng phải nhìn được mọi lúc: độ trễ báo có (P
 | Báo có thiếu thông tin để khớp | Dung sai số tiền bằng 0, không đoán bừa; rơi về xác nhận tay — thà chậm còn hơn gạch sai |
 | Kafka nặng hơn nhu cầu thật | Chạy chế độ KRaft (không cần Zookeeper), 3 broker; đội đã quen công nghệ nên đổi lại chi phí vận hành thấp |
 
+<a id="muc-14-anh-xa-man-hinh-dich-vu-tich-hop"></a>
 ## 14. Ánh xạ màn hình → dịch vụ → tích hợp
 
 | Nhóm màn | Màn | Dịch vụ xử lý | Gọi ra ngoài |

@@ -1,5 +1,55 @@
 # Data Dictionary — Giải pháp Merchant Peye-Haiti (từ điển dữ liệu từng trường)
 
+<!-- TOC -->
+<a id="muc-luc"></a>
+
+**Mục lục**
+
+- [1. Quy ước chung](#muc-1-quy-uoc-chung)
+  - [1.1. Kiểu dữ liệu chuẩn](#muc-1-1-kieu-du-lieu-chuan)
+  - [1.2. Quy tắc đặt tên & cột chuẩn](#muc-1-2-quy-tac-dat-ten-cot-chuan)
+  - [1.3. Mã định danh nghiệp vụ](#muc-1-3-ma-dinh-danh-nghiep-vu)
+  - [1.4. Nguyên tắc kiến trúc phản chiếu vào dữ liệu](#muc-1-4-nguyen-tac-kien-truc-phan-chieu-vao-du-lieu)
+- [2. Từ điển bảng (28 bảng nghiệp vụ + `outbox`)](#muc-2-tu-dien-bang-28-bang-nghiep-vu-outbox)
+  - [2.1. `merchant` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Gian hàng)*](#muc-2-1-merchant-dich-vu-merchant-identity-schema-merchantidenti)
+  - [2.2. `person` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Định danh)*](#muc-2-2-person-dich-vu-merchant-identity-schema-merchantidentity)
+  - [2.4. `auth_session` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Định danh)*](#muc-2-4-authsession-dich-vu-merchant-identity-schema-merchantide)
+  - [2.5. `ekyc_result` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Định danh)*](#muc-2-5-ekycresult-dich-vu-merchant-identity-schema-merchantiden)
+  - [2.6. `account_link` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Tài khoản & Token)*](#muc-2-6-accountlink-dich-vu-merchant-identity-schema-merchantide)
+  - [2.7. `token` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Tài khoản & Token)*](#muc-2-7-token-dich-vu-merchant-identity-schema-merchantidentity)
+  - [2.8. `standee` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Gian hàng)*](#muc-2-8-standee-dich-vu-merchant-identity-schema-merchantidentit)
+  - [2.9. `credit_event` — dịch vụ **Commerce** · schema `commerce` *(module Ingest)*](#muc-2-9-creditevent-dich-vu-commerce-schema-commerce-module-inge)
+  - [2.11. `match_result` — dịch vụ **Commerce** · schema `commerce` *(module Khớp tiền)*](#muc-2-11-matchresult-dich-vu-commerce-schema-commerce-module-kho)
+  - [2.12. `product` — dịch vụ **Commerce** · schema `commerce` *(module Đơn hàng)*](#muc-2-12-product-dich-vu-commerce-schema-commerce-module-don-han)
+  - [2.13. `bill` — dịch vụ **Commerce** · schema `commerce` *(module Đơn hàng)*](#muc-2-13-bill-dich-vu-commerce-schema-commerce-module-don-hang)
+  - [2.14. `bill_item` — dịch vụ **Commerce** · schema `commerce` *(module Đơn hàng)*](#muc-2-14-billitem-dich-vu-commerce-schema-commerce-module-don-ha)
+  - [2.15. `debtor` — dịch vụ **Commerce** · schema `commerce` *(module Sổ nợ)*](#muc-2-15-debtor-dich-vu-commerce-schema-commerce-module-so-no)
+  - [2.16. `ledger_entry` — dịch vụ **Commerce** · schema `commerce` *(module Sổ nợ)*](#muc-2-16-ledgerentry-dich-vu-commerce-schema-commerce-module-so)
+  - [2.18. `case` — dịch vụ **Back-office** · schema `backoffice` *(module Khiếu nại)*](#muc-2-18-case-dich-vu-back-office-schema-backoffice-module-khieu)
+  - [2.19. `adjustment` — dịch vụ **Back-office** · schema `backoffice` *(bút toán điều chỉnh — dùng chung 2 module)*](#muc-2-19-adjustment-dich-vu-back-office-schema-backoffice-but-to)
+  - [2.20. `aml_alert` — dịch vụ **Back-office** · schema `backoffice` *(module Rửa tiền)*](#muc-2-20-amlalert-dich-vu-back-office-schema-backoffice-module-r)
+  - [2.21. `recon_run` — dịch vụ **Back-office** · schema `backoffice` *(module Đối soát)*](#muc-2-21-reconrun-dich-vu-back-office-schema-backoffice-module-d)
+  - [2.22. `discrepancy` — dịch vụ **Back-office** · schema `backoffice` *(module Đối soát)*](#muc-2-22-discrepancy-dich-vu-back-office-schema-backoffice-modul)
+  - [2.23. `param` — dịch vụ **Back-office** · schema `backoffice`](#muc-2-23-param-dich-vu-back-office-schema-backoffice)
+  - [2.24. `market` — dịch vụ **Back-office** · schema `backoffice`](#muc-2-24-market-dich-vu-back-office-schema-backoffice)
+  - [2.25. `app_user` — dịch vụ **Back-office** · schema `backoffice`](#muc-2-25-appuser-dich-vu-back-office-schema-backoffice)
+  - [2.26. `audit_log` — dịch vụ **Back-office** · schema `backoffice`](#muc-2-26-auditlog-dich-vu-back-office-schema-backoffice)
+  - [2.27. `notification` — dịch vụ **Notification** · schema `notification`](#muc-2-27-notification-dich-vu-notification-schema-notification)
+  - [2.28. `report` — dịch vụ **Back-office** · schema `backoffice`](#muc-2-28-report-dich-vu-back-office-schema-backoffice)
+  - [2.29. `idem_key` — hạ tầng tầng API · schema `shared` *(không thuộc dịch vụ nào)*](#muc-2-29-idemkey-ha-tang-tang-api-schema-shared-khong-thuoc-dich)
+  - [2.30. `application` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Gian hàng)* «bổ sung chuẩn v1.1»](#muc-2-30-application-dich-vu-merchant-identity-schema-merchantid)
+  - [2.31. `payment` — dịch vụ **Commerce** · schema `commerce` *(module Payment — profile người mua)* «Peye-Haiti 15/08»](#muc-2-31-payment-dich-vu-commerce-schema-commerce-module-payment)
+  - [2.32. `outbox` — hạ tầng **mỗi schema một bảng** (mẫu transactional outbox)](#muc-2-32-outbox-ha-tang-moi-schema-mot-bang-mau-transactional-ou)
+- [3. Bảng enum tập trung](#muc-3-bang-enum-tap-trung)
+- [4. Quan hệ khóa ngoại (FK) & tham chiếu logic xuyên schema](#muc-4-quan-he-khoa-ngoai-fk-tham-chieu-logic-xuyen-schema)
+- [5. Retention & dữ liệu cá nhân (PII)](#muc-5-retention-du-lieu-ca-nhan-pii)
+  - [5.1. Thời hạn lưu trữ (TSD §5)](#muc-5-1-thoi-han-luu-tru-tsd-5)
+  - [5.2. Bản đồ trường PII/bí mật (đánh dấu 🔒 trong §2)](#muc-5-2-ban-do-truong-pii-bi-mat-danh-dau-trong-2)
+  - [5.3. Ghi chú tuân thủ](#muc-5-3-ghi-chu-tuan-thu)
+- [6. Phụ lục — Bản đồ khai báo nhật ký giao dịch quốc gia (CR-8 · 15/08)](#muc-6-phu-luc-ban-do-khai-bao-nhat-ky-giao-dich-quoc-gia-cr-8-15)
+
+<!-- /TOC -->
+
 | Trường | Nội dung |
 |---|---|
 | Mã tài liệu | **Peye-Haiti-DD-001 · v4.4** — 24/08/2026 · **«v3.7» (đồng bộ API Spec v3.7 — chỉ đổi LỜI MÔ TẢ, không đổi cột/giá trị):** `idem_key` ca đang-xử-lý (`response` nullable — trùng key khi NULL → 409 `details.state="processing"`); +mô tả `addenda.payment_ref` (khóa khớp ĐÍCH DANH B.5 — ưu tiên trước bill_id); liên kết NGUỒN TRẢ (funding) thuộc CÁ NHÂN — MỌI vai, kể cả chủ gian hàng (hết gắn riêng «người mua») · **«v3.6» TẠO LÀ ACTIVE:** đổi NGHĨA (không đổi giá trị) enum `merchant.status.pending` + `application.status` (pending_review = cờ HẬU KIỂM, không chặn active; SLA ≤24h thay «duyệt ≤8h»; flags +`e2_deferred`) · **20/08 (v3.5 — hai bậc xác thực):** `payment` +4 cột `sca_*` (18→22 trường; tổng 306→310) · `payment.status` +`sca_required` (110 giá trị) · `failure_reason` +`sca_failed` · §2.23: `PAY_MAX_PILOT`→`PAY_SCA_THRESHOLD` (ngưỡng OTP định chế), `PAY_DAY_MAX` chỉ bậc-PIN · person = mọi VAI (chọn vai CH-00, nút nâng cấp lên người bán) · **19/08 (AuthOB v3.4):** hạn mức pilot `PAY_MAX_PILOT` = 5.000 HTG/GD, PIN-only + trần ngày `PAY_DAY_MAX` (§2.23 **+2 key** — bảng `payment` KHÔNG đổi cột; xác thực = PIN app trước khi gửi, không cột SCA) · **15/08 (Peye-Haiti — app chung, mô hình BiMPay):** **15/08 (Peye-Haiti — app chung, mô hình BiMPay):** đổi tên dự án PINASSI→HaitiPay (file `PeyeHaiti_*.md`; prefix kỹ thuật `PIN-` GIỮ nguyên tránh vỡ code/hợp đồng); thêm module NGƯỜI MUA (nguồn: BRH «Application client» 15/08): +bảng 2.31 `payment` (18 trường — lệnh trả người mua khởi tạo, tiền vẫn ngoài Peye-Haiti), `account_link` mở cho person (+`person_id`, `merchant_id` nullable, scope token +`payment`), `person` +`kyc_level` (KYC1 người mua · KYC2 merchant — đảo một phần quyết định 25/07 «1 bậc»), `merchant` +`public_phone` (trang công khai xác minh) — **28 bảng · 306 trường · 28 enum/109 giá trị · 45 quan hệ (25 vật lý · 17 logic · 3 đa hình)** · **15/08 (CR BRH)**: `merchant` +3 cột (`mcc` CR-1 · `alias` chờ CR-4 · `national_merchant_id` chờ CR-2) · `person` +2 cột (`nif_no` CR-5 · `rni_person_id` chờ CR-6) · `credit_event` +2 cột chờ (`payer_person_id` · `payer_operator` CR-7) · phụ lục §6 «bản đồ khai báo nhật ký quốc gia + 3 KHÔNG» (CR-8) — theo `BRH/PeyeHaiti_CR_BRH_LuuTru_NhatKy.md` (đối chiếu văn bản BRH 12/08) · **04/08**: ghi chú `param` — màn BRH-09 bỏ, quản trị qua E.13.x (vận hành Natcom, 4 mắt) · **02/08 (CANON2)**: bỏ M7/M4b/qr_intent/report_schedule/buyer_profile, gộp device→auth_session, matching 2 mức (bỏ HIST) — **27 bảng nghiệp vụ**; nền 24/07 v3.3: đồng bộ tên ví Natcash→wallet2 (NatTransfer), mã ví dụ NATC→NTRF · **4 dịch vụ · mỗi dịch vụ một schema (5 schema)** · event bus **Apache Kafka**; các mục v1.1 giữ nhãn «bổ sung chuẩn v1.1»; v3.3: bỏ M5 + gộp còn 1 bậc KYC |
@@ -10,8 +60,10 @@
 
 ---
 
+<a id="muc-1-quy-uoc-chung"></a>
 ## 1. Quy ước chung
 
+<a id="muc-1-1-kieu-du-lieu-chuan"></a>
 ### 1.1. Kiểu dữ liệu chuẩn
 
 | Kiểu | Dùng cho | Quy ước |
@@ -27,6 +79,7 @@
 | `BYTEA` | Dữ liệu mã hóa (`*_enc`) & hash | Mã hóa **envelope Vault** (AES-256-GCM + KEK trong Vault, xoay KEK 12 tháng); hash chain của audit |
 | `TEXT[]` | Mảng (`scope`, `channel`) | — |
 
+<a id="muc-1-2-quy-tac-dat-ten-cot-chuan"></a>
 ### 1.2. Quy tắc đặt tên & cột chuẩn
 
 - **snake_case** cho mọi bảng/cột; tên bảng số ít (`merchant`, `bill`); bảng `case` là từ khóa SQL — luôn viết `"case"` khi truy vấn.
@@ -39,6 +92,7 @@
 - **🔒 = PII/bí mật**: mã hóa at-rest (AES-256), che khi hiển thị, không ghi log rõ, kiểm soát truy cập theo RBAC; chi tiết §5.
 - **Cột «Bắt buộc»**: `Có` = NOT NULL theo DDL hoặc theo nghiệp vụ khi bản ghi hoàn tất luồng; `Có*` = bắt buộc về nghiệp vụ nhưng điền ở bước sau của luồng (chú thích ngay dưới bảng); `Không` = cho phép NULL.
 
+<a id="muc-1-3-ma-dinh-danh-nghiep-vu"></a>
 ### 1.3. Mã định danh nghiệp vụ
 
 | Mã | Định dạng · Ví dụ | Ghi chú |
@@ -49,6 +103,7 @@
 | Mã nhân viên hiện trường (`agent_code`) | `NAT-xxx` · `NAT-014` | Nhân viên field Natcom, danh mục trong `param` |
 | Tiền tệ | `HTG` (ISO 4217, mã số **332**) | QR tag 53 = `332`; bút toán 100% gourde |
 
+<a id="muc-1-4-nguyen-tac-kien-truc-phan-chieu-vao-du-lieu"></a>
 ### 1.4. Nguyên tắc kiến trúc phản chiếu vào dữ liệu
 
 - **Mỗi dịch vụ đúng một schema** (TSD §5): `merchant_identity` · `commerce` · `backoffice` · `notification` + `shared` (hạ tầng tầng API — `idem_key`). Mỗi dịch vụ một DB role, chỉ được `GRANT` trên schema của mình; **không dịch vụ nào đọc/ghi thẳng bảng của schema dịch vụ khác**. Ranh giới miền nghiệp vụ giữ ở tầng module trong code.
@@ -62,6 +117,7 @@
 
 ---
 
+<a id="muc-2-tu-dien-bang-28-bang-nghiep-vu-outbox"></a>
 ## 2. Từ điển bảng (28 bảng nghiệp vụ + `outbox`)
 
 Sở hữu dữ liệu theo **SSD §4 (4 dịch vụ)** và **TSD §5 (5 schema)** — dịch vụ sở hữu là **nơi duy nhất ghi** bảng của schema mình; dịch vụ khác đọc qua REST nội bộ (`/internal/*`) hoặc sự kiện **Kafka**, không truy cập chéo schema:
@@ -79,6 +135,7 @@ Sở hữu dữ liệu theo **SSD §4 (4 dịch vụ)** và **TSD §5 (5 schema)
 
 > **Hệ quả của việc gom về 4 dịch vụ (SSD §4 · A10)**: `match_result` (kiêm biên lai) ↔ `bill` ↔ `ledger_entry` nay **cùng schema `commerce`, cùng một database**, trong cùng schema `commerce` với `credit_event` → khớp tiền → đánh dấu đơn «đã thu» / gạch nợ → sinh biên lai là **MỘT transaction ACID nội bộ**, **không còn lệnh ghi xuyên dịch vụ và không còn khóa lạc quan xuyên dịch vụ** (§1.4). Tương tự, bút toán điều chỉnh sinh từ khiếu nại và từ đối soát nay dùng chung một bảng `adjustment` trong schema `backoffice`.
 
+<a id="muc-2-1-merchant-dich-vu-merchant-identity-schema-merchantidenti"></a>
 ### 2.1. `merchant` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Gian hàng)*
 
 Hồ sơ gian hàng tiểu thương — thực thể trung tâm của vòng đời onboarding → hoạt động → đóng (F1, BRH-03/04).
@@ -105,6 +162,7 @@ Hồ sơ gian hàng tiểu thương — thực thể trung tâm của vòng đ�
 - Chuyển trạng thái phát sự kiện `merchant.activated / merchant.suspended / merchant.closed`; `suspended` → rớt nhãn «Đã xác thực» trên danh bạ ≤5 phút (cache TTL).
 - Kích hoạt (C10 «v3.6» — TẠO LÀ ACTIVE): `ekyc.matched (PASS) + đủ hồ sơ gian hàng + TK nhận` → `active` NGAY; `score < AUTO_ACTIVATE_SCORE(0.85)` HOẶC `e2.hit` HOẶC E2 5xx (`e2_deferred`) → VẪN active + cờ `post_review` (hậu kiểm ≤24h); hồ sơ sạch → mẫu 10%.
 
+<a id="muc-2-2-person-dich-vu-merchant-identity-schema-merchantidentity"></a>
 ### 2.2. `person` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Định danh)*
 
 Danh tính cá nhân của chủ gian hàng **và người dùng cá nhân (profile Client — kyc_level 1)** — «v3.7»: liên kết NGUỒN TRẢ (funding) luôn thuộc CÁ NHÂN, mọi vai — tách khỏi `merchant` để dùng lại eKYC giữa các lần nộp hồ sơ. Mã đục gửi định chế khi liên kết nguồn trả («v3.4»): `person_ref = "prn_" + HMAC-SHA256(person.id, khóa nội bộ)[:22]` — phát sinh deterministic, KHÔNG cột mới (API Spec C.1).
@@ -126,6 +184,7 @@ Danh tính cá nhân của chủ gian hàng **và người dùng cá nhân (prof
 
 \* `full_name`, `dob`, `cin_no` điền ở bước eKYC (NB-2A); NULL khi hồ sơ mới tạo bằng SĐT.
 
+<a id="muc-2-4-authsession-dich-vu-merchant-identity-schema-merchantide"></a>
 ### 2.4. `auth_session` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Định danh)*
 
 Phiên đăng nhập (refresh token) của app người bán/người mua và portal; khóa khẩn = revoke mọi phiên theo `person`.
@@ -144,6 +203,7 @@ Phiên đăng nhập (refresh token) của app người bán/người mua và po
 | `created_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 | `updated_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 
+<a id="muc-2-5-ekycresult-dich-vu-merchant-identity-schema-merchantiden"></a>
 ### 2.5. `ekyc_result` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Định danh)*
 
 Kết quả từng lần đối chiếu danh tính E1 (ảnh CIN 2 mặt + selfie ↔ dữ liệu ONI); tham chiếu `ref` dùng cho liên kết M1.
@@ -164,6 +224,7 @@ Kết quả từng lần đối chiếu danh tính E1 (ảnh CIN 2 mặt + selfi
 
 \* 3 khóa ảnh bắt buộc trong luồng E1 chuẩn (upload trước khi gọi verify); DDL khai báo qua ALTER không kèm NOT NULL.
 
+<a id="muc-2-6-accountlink-dich-vu-merchant-identity-schema-merchantide"></a>
 ### 2.6. `account_link` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Tài khoản & Token)*
 
 Liên kết tài khoản tại bank/ví (M1 liên kết TK có sẵn) — hai vai theo chủ sở hữu «Peye-Haiti 15/08»: (a) **TK NHẬN của merchant** — nguồn số TK thật cho QR/standee, nguồn đăng ký danh mục TK với Switch (E3-reg); (b) **TK NGUỒN TRẢ của CÁ NHÂN** (funding — MỌI vai, kể cả chủ gian hàng «v3.7») — consent scope `payment` để khởi tạo M-PAY.
@@ -187,6 +248,7 @@ Liên kết tài khoản tại bank/ví (M1 liên kết TK có sẵn) — hai va
 - Đổi TK/đóng gian → cập nhật E3-reg với Switch; thu hồi bằng M1b → `revoked`.
 - Không có khái niệm tài khoản ảo: mọi dòng trỏ tới TK thật tại bank/ví — của merchant (TK nhận) hoặc của cá nhân — mọi vai (TK nguồn trả «v3.7») (Q4).
 
+<a id="muc-2-7-token-dich-vu-merchant-identity-schema-merchantidentity"></a>
 ### 2.7. `token` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Tài khoản & Token)*
 
 Token consent OAuth2 theo từng liên kết (1–1 với `account_link`) — dùng gọi M3 lịch sử, nhận M4.
@@ -205,6 +267,7 @@ Token consent OAuth2 theo từng liên kết (1–1 với `account_link`) — d�
 
 - Chuyển trạng thái phát sự kiện `token.expiring` / `token.revoked` (nhắc D-7, cảnh báo AQ-00).
 
+<a id="muc-2-8-standee-dich-vu-merchant-identity-schema-merchantidentit"></a>
 ### 2.8. `standee` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Gian hàng)*
 
 Bảng QR mica tại quầy — in **số TK thật đã liên kết** + tên gian hàng + mã merchant (mẫu chuẩn BRH, D4); payload QR theo **HTQR 1.0** (TSD §13.4 — có tag 52 MCC, CR-3); tracking vòng đời in → giao → dán (BRH-04, S8).
@@ -223,6 +286,7 @@ Bảng QR mica tại quầy — in **số TK thật đã liên kết** + tên gi
 
 - In theo đợt kích hoạt; trong lúc chờ, app tự in QR giấy A5 (không tracking trong bảng này).
 
+<a id="muc-2-9-creditevent-dich-vu-commerce-schema-commerce-module-inge"></a>
 ### 2.9. `credit_event` — dịch vụ **Commerce** · schema `commerce` *(module Ingest)*
 
 Sự kiện **báo Có** tiền vào TK liên kết — nguồn của «ting ting»; hợp nhất 2 nguồn (webhook M4, quét M3-poll) sau dedup 2 tầng. MMS ngoài đường tiền: đây là bản ghi thông tin, không phải bút toán.
@@ -258,6 +322,7 @@ Sự kiện **báo Có** tiền vào TK liên kết — nguồn của «ting tin
 - **Partition**: pilot chưa bật; DDL thiết kế sẵn **RANGE theo tháng** cho `credit_event` khi >5.000 merchant (TSD §5).
 - Retention 5 năm. Quan hệ 1–1 với `match_result` (bản ghi khớp kiêm biên lai).
 
+<a id="muc-2-11-matchresult-dich-vu-commerce-schema-commerce-module-kho"></a>
 ### 2.11. `match_result` — dịch vụ **Commerce** · schema `commerce` *(module Khớp tiền)*
 
 Kết quả gạch (khớp) của từng `credit_event` — 1–1. `UNIQUE(credit_event_id)` **chính là** invariant «1 credit_event ↔ ≤1 đích». Bảng này **kiêm luôn dữ liệu biên lai** (1–1 với `credit_event` nên không cần bảng riêng). Việc ghi bản ghi này + đổi `bill.status` → `paid` (hoặc ghi `ledger_entry` gạch nợ) + điền thông tin biên lai + set cờ `credit_event.late_auto` khi khớp-muộn nằm trong **CÙNG MỘT transaction** (khóa hàng `SELECT … FOR UPDATE`, tất cả cùng schema `commerce`) — **không còn lệnh ghi nội bộ xuyên dịch vụ, không saga**. Sự kiện `match.completed` chỉ phát ra Kafka SAU COMMIT (qua `outbox`) cho Notification + Back-office (KPI) tiêu thụ.
@@ -280,6 +345,7 @@ Kết quả gạch (khớp) của từng `credit_event` — 1–1. `UNIQUE(credi
 - `PENDING` quá `STRAY_AFTER` (72h) không ai xử lý → `STRAY` (đóng, vẫn tính doanh thu vãng lai).
 - Retention 5 năm (cùng `credit_event`).
 
+<a id="muc-2-12-product-dich-vu-commerce-schema-commerce-module-don-han"></a>
 ### 2.12. `product` — dịch vụ **Commerce** · schema `commerce` *(module Đơn hàng)*
 
 Danh mục món + giá của merchant — hậu kiểm C9: hiển thị ngay khi tạo, nhãn «chờ kiểm duyệt» chỉ nội bộ, gỡ khi vi phạm/báo cáo.
@@ -298,6 +364,7 @@ Danh mục món + giá của merchant — hậu kiểm C9: hiển thị ngay khi
 | `created_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 | `updated_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 
+<a id="muc-2-13-bill-dich-vu-commerce-schema-commerce-module-don-hang"></a>
 ### 2.13. `bill` — dịch vụ **Commerce** · schema `commerce` *(module Đơn hàng)*
 
 Đơn tính tiền (F3) — 6 trạng thái; `paid` **chỉ do server đặt** qua matching (client không bao giờ set); đồng bộ offline theo ma trận transition (TSD §7).
@@ -322,6 +389,7 @@ Danh mục món + giá của merchant — hậu kiểm C9: hiển thị ngay khi
 - Chỉ mục: `UNIQUE(merchant_id, biz_date, code)` · `UNIQUE(client_uuid)` · `INDEX(merchant_id, status, total_ct)` — phục vụ tìm ứng viên matching.
 - Client chỉ được chuyển `open → cash/cancelled/credit`; mọi vi phạm trả `conflict{server_state}`; `paid`/`expired` chỉ đọc.
 
+<a id="muc-2-14-billitem-dich-vu-commerce-schema-commerce-module-don-ha"></a>
 ### 2.14. `bill_item` — dịch vụ **Commerce** · schema `commerce` *(module Đơn hàng)*
 
 Dòng món trong đơn tính tiền — snapshot tên/giá tại thời điểm bán (không đổi khi sửa `product` sau này).
@@ -337,6 +405,7 @@ Dòng món trong đơn tính tiền — snapshot tên/giá tại thời điểm 
 | `created_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 | `updated_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 
+<a id="muc-2-15-debtor-dich-vu-commerce-schema-commerce-module-so-no"></a>
 ### 2.15. `debtor` — dịch vụ **Commerce** · schema `commerce` *(module Sổ nợ)*
 
 Khách nợ trong sổ nợ của merchant — chạy offline 100% (F5); dữ liệu thuộc merchant, chỉ dùng chấm điểm khi có consent (C7).
@@ -351,6 +420,7 @@ Khách nợ trong sổ nợ của merchant — chạy offline 100% (F5); dữ li
 | `created_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 | `updated_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 
+<a id="muc-2-16-ledgerentry-dich-vu-commerce-schema-commerce-module-so"></a>
 ### 2.16. `ledger_entry` — dịch vụ **Commerce** · schema `commerce` *(module Sổ nợ)*
 
 Bút ghi sổ nợ (ghi nợ/ghi trả) — **không sửa entry đã có**, chỉ thêm bút ghi đảo; chống trừ nợ 2 lần bằng `client_uuid` + tham chiếu `credit_event_id`.
@@ -372,6 +442,7 @@ Bút ghi sổ nợ (ghi nợ/ghi trả) — **không sửa entry đã có**, ch�
 | `created_at` | timestamptz | Có | «bổ sung chuẩn» — thời điểm ghi nợ/trả (thao tác ≤10 giây, AC-4.1) | default `now()` |
 | `updated_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 
+<a id="muc-2-18-case-dich-vu-back-office-schema-backoffice-module-khieu"></a>
 ### 2.18. `case` — dịch vụ **Back-office** · schema `backoffice` *(module Khiếu nại)*
 
 Hồ sơ tra soát/khiếu nại bám RefID (F7) — hoàn tiền = merchant chuyển trả + **xác minh bút toán** (M3/chứng từ) + case chốt; tên bảng là từ khóa SQL, luôn truy vấn `"case"`.
@@ -399,6 +470,7 @@ Hồ sơ tra soát/khiếu nại bám RefID (F7) — hoàn tiền = merchant chu
 
 - Sự kiện `case.opened` / `case.concluded` phát lên **Kafka** (Notification + Merchant & Identity khóa/mở gian hàng). Cờ refund dùng **nội bộ Back-office** — module Đối soát cùng dịch vụ đọc thẳng, để E3 không đếm khoản chuyển trả thành GD bán mới.
 
+<a id="muc-2-19-adjustment-dich-vu-back-office-schema-backoffice-but-to"></a>
 ### 2.19. `adjustment` — dịch vụ **Back-office** · schema `backoffice` *(bút toán điều chỉnh — dùng chung 2 module)*
 
 Bút toán điều chỉnh doanh số — **một luồng phê duyệt duy nhất** `draft → approved (4 mắt) → posted`, nay **nằm gọn trong module Compliance của Back-office**: cả module Khiếu nại lẫn module Đối soát đều tạo nháp trên cùng bảng này (mẫu C19: bút toán đảo có tham chiếu gốc, khóa sổ ngày).
@@ -420,6 +492,7 @@ Bút toán điều chỉnh doanh số — **một luồng phê duyệt duy nhấ
 
 - Quy tắc nghiệp vụ: điền đúng một trong `case_id`/`recon_run_id` khớp với `source`.
 
+<a id="muc-2-20-amlalert-dich-vu-back-office-schema-backoffice-module-r"></a>
 ### 2.20. `aml_alert` — dịch vụ **Back-office** · schema `backoffice` *(module Rửa tiền)*
 
 Cảnh báo phòng chống rửa tiền — từ sàng lọc E2, luật ngưỡng/hành vi C14, hoặc hậu kiểm hạn mức (sự kiện Kafka `limit.breached` do Commerce phát); **module Compliance (Back-office) là nơi duy nhất ra quyết định về rửa tiền**, mọi quyết định bắt buộc lý do.
@@ -437,6 +510,7 @@ Cảnh báo phòng chống rửa tiền — từ sàng lọc E2, luật ngưỡn
 
 - Cảnh báo vượt hạn mức (`limit.breached`) → gắn cờ hạn chế gian hàng + mở case AML tới khi xử lý (AC-8.1).
 
+<a id="muc-2-21-reconrun-dich-vu-back-office-schema-backoffice-module-d"></a>
 ### 2.21. `recon_run` — dịch vụ **Back-office** · schema `backoffice` *(module Đối soát)*
 
 Một phiên đối soát với bảng kê EOD của Switch (E3) — khởi điểm 3 phiên/ngày (C18), quyết toán T+1; file JSONL ký số, đã lọc theo danh mục TK nhận đăng ký (E3-reg).
@@ -455,6 +529,7 @@ Một phiên đối soát với bảng kê EOD của Switch (E3) — khởi đi�
 
 - So khớp theo RefID / số TK / số tiền; **E3 không chứa giao dịch on-us** (`ref_id` NULL được loại khỏi đối soát E3).
 
+<a id="muc-2-22-discrepancy-dich-vu-back-office-schema-backoffice-modul"></a>
 ### 2.22. `discrepancy` — dịch vụ **Back-office** · schema `backoffice` *(module Đối soát)*
 
 Khoản chênh lệch phát hiện trong một phiên đối soát — xử lý bằng quét M3-poll lấp khoảng / bút toán điều chỉnh 4 mắt / chuyển case; SLA đóng ≤2 ngày làm việc.
@@ -473,6 +548,7 @@ Khoản chênh lệch phát hiện trong một phiên đối soát — xử lý 
 
 - Phát sự kiện `recon.discrepancy` vào hàng đợi AQ-04; vết xử lý đầy đủ nguyên nhân → hành động (AC-9.2).
 
+<a id="muc-2-23-param-dich-vu-back-office-schema-backoffice"></a>
 ### 2.23. `param` — dịch vụ **Back-office** · schema `backoffice`
 
 Tham số cấu hình hệ thống (quản trị qua E.13.x bởi vận hành Natcom — màn BRH-09 đã bỏ 04/08) — cơ chế 4 mắt maker/checker, hiệu lực theo ngày; thay đổi phát `param.changed` lên **Kafka** (mỗi dịch vụ một consumer group) để mọi dịch vụ cache-bust.
@@ -508,6 +584,7 @@ Danh mục key chuẩn (TSD §13.3 — giá trị mặc định):
 | `PAY_SCA_THRESHOLD` «v3.5» (thay PAY_MAX_PILOT) | 500.000 ct = 5.000 HTG — ngưỡng hai bậc: ≤ chỉ PIN · > thêm SMS OTP định chế | `PAY_DAY_MAX` «v3.5» | 2.500.000 ct & ≤20 lệnh/ngày — CHỈ đếm lệnh bậc-PIN |
 | `OPERATOR_DIRECTORY` «vòng 2» | JSONB 9332xx↔bank_code (seed cùng D1) | — | — |
 
+<a id="muc-2-24-market-dich-vu-back-office-schema-backoffice"></a>
 ### 2.24. `market` — dịch vụ **Back-office** · schema `backoffice`
 
 Danh mục chợ — seed 3 thành phố · 9 chợ (`/db/migrations/0002_seed_market.sql`, danh sách chốt với BRH trước T8/2026).
@@ -521,6 +598,7 @@ Danh mục chợ — seed 3 thành phố · 9 chợ (`/db/migrations/0002_seed_m
 | `created_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 | `updated_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 
+<a id="muc-2-25-appuser-dich-vu-back-office-schema-backoffice"></a>
 ### 2.25. `app_user` — dịch vụ **Back-office** · schema `backoffice`
 
 Người dùng portal BRH & console vận hành — 2FA TOTP bắt buộc (BRH-01), RBAC 5 vai trò (C11), nguyên tắc không vai trò nào vừa tạo vừa duyệt (`/docs/rbac.csv`).
@@ -536,6 +614,7 @@ Người dùng portal BRH & console vận hành — 2FA TOTP bắt buộc (BRH-0
 | `created_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 | `updated_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 
+<a id="muc-2-26-auditlog-dich-vu-back-office-schema-backoffice"></a>
 ### 2.26. `audit_log` — dịch vụ **Back-office** · schema `backoffice`
 
 Nhật ký bất biến append-only với **hash chain** — chỉ ghi sự kiện CÓ actor (thao tác người dùng/quyết định); sự kiện kỹ thuật thuần đi vào observability, không vào audit; job `audit-verify` kiểm chuỗi hằng đêm (AC-6.5); phục vụ thanh tra (US-31).
@@ -554,6 +633,7 @@ Nhật ký bất biến append-only với **hash chain** — chỉ ghi sự ki�
 - **Không bổ sung** `id`/`created_at`/`updated_at` — bảng append-only, mốc thời gian là `at`, cấm UPDATE/DELETE.
 - Retention **10 năm** (C17); thiết kế sẵn partition RANGE theo tháng khi >5.000 merchant.
 
+<a id="muc-2-27-notification-dich-vu-notification-schema-notification"></a>
 ### 2.27. `notification` — dịch vụ **Notification** · schema `notification`
 
 Thông báo đa kênh (I5): ưu tiên push (FCM/WebPush) → chờ ack 60s → SMS N1 brandname «PEYE-HAITI» (đổi từ PINASSI — cần đăng ký lại template với Natcom); template FR/Creole đăng ký trước (D6).
@@ -574,6 +654,7 @@ Thông báo đa kênh (I5): ưu tiên push (FCM/WebPush) → chờ ack 60s → S
 
 - Rate limit 5 SMS/merchant/giờ (`SMS_RATE_LIMIT`, trừ OTP). Retention **12 tháng**; thiết kế sẵn partition RANGE theo tháng.
 
+<a id="muc-2-28-report-dich-vu-back-office-schema-backoffice"></a>
 ### 2.28. `report` — dịch vụ **Back-office** · schema `backoffice`
 
 Báo cáo/KPI tổng hợp chốt theo ngày (BRH-08; chế độ ngày/tuần/tháng — C15) — sinh bởi các job `kpi-*`; số liệu chốt theo ngày đối soát.
@@ -588,6 +669,7 @@ Báo cáo/KPI tổng hợp chốt theo ngày (BRH-08; chế độ ngày/tuần/t
 | `created_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 | `updated_at` | timestamptz | Có | «bổ sung chuẩn» | default `now()` |
 
+<a id="muc-2-29-idemkey-ha-tang-tang-api-schema-shared-khong-thuoc-dich"></a>
 ### 2.29. `idem_key` — hạ tầng tầng API · schema `shared` *(không thuộc dịch vụ nào)*
 
 Kho Idempotency-Key của mọi POST ghi (TSD §1): bản ghi tạo NGAY khi bắt đầu xử lý; trùng key + cùng body đã có response → replay kèm `Idempotency-Replayed: true`; `response` còn NULL (đang xử lý) → `409` `details.state="processing"` + `Retry-After: 1` — client giữ key retry («v3.7»); TTL 48h, cron purge.
@@ -601,6 +683,7 @@ Kho Idempotency-Key của mọi POST ghi (TSD §1): bản ghi tạo NGAY khi b�
 
 - **Không bổ sung** `updated_at` — bản ghi bất biến, ghi một lần rồi purge.
 
+<a id="muc-2-30-application-dich-vu-merchant-identity-schema-merchantid"></a>
 ### 2.30. `application` — dịch vụ **Merchant & Identity** · schema `merchant_identity` *(module Gian hàng)* «bổ sung chuẩn v1.1»
 
 Hồ sơ đăng ký (application) từng lần nộp onboarding — bảng nguồn cho trạng thái NB-1C (`GET /applications/me`, E.2.3) và danh sách HẬU KIỂM BRH-03 (`GET /admin/applications`, E.11.1 «v3.6»); tách khỏi `merchant.status` để giữ vết từng lần nộp + kết luận hậu kiểm (đóng cờ E.11.2 / tạm khóa).
@@ -624,6 +707,7 @@ Hồ sơ đăng ký (application) từng lần nộp onboarding — bảng ngu�
 
 - Map hiển thị API (E.2.3/E.11.1): `processing` ⇔ `submitted`; `approved` (API) ⇔ `auto_approved` (tự động C10) HOẶC `approved` (duyệt tay đồng ý — E.11.2, ghi `decided_by`/`decided_at`).
 
+<a id="muc-2-31-payment-dich-vu-commerce-schema-commerce-module-payment"></a>
 ### 2.31. `payment` — dịch vụ **Commerce** · schema `commerce` *(module Payment — profile người mua)* «Peye-Haiti 15/08»
 
 Lệnh trả do NGƯỜI DÙNG (mọi vai «v3.7») khởi tạo trên app Peye-Haiti (quét QR HTQR → xác nhận tên merchant → trả một chạm). **Tiền KHÔNG chạm Peye-Haiti**: server chuyển lệnh sang định chế TRẢ qua M-PAY (consent token scope `payment`), định chế thực hiện chuyển tiền (Switch/on-us) rồi báo kết quả về webhook; bên NHẬN vẫn nhận M4 và khớp bill như luồng S2 — hai phía độc lập, đối chiếu qua `ref_id`. Số TK đích (từ QR) chỉ đi QUA server tới định chế trả — KHÔNG lưu bản đầy đủ.
@@ -657,6 +741,7 @@ Lệnh trả do NGƯỜI DÙNG (mọi vai «v3.7») khởi tạo trên app Peye-
 - Khiếu nại: người mua tạo case từ NM-04 → `case.source='buyer_app'`, tham chiếu bằng cột `case.payment_id` (ref logic xuyên schema); người mua theo dõi qua trường `dispute` của E.16.3.
 - Quá `PAY_TIMEOUT` không có kết quả → `timeout` + job hỏi lại M-PAY.2; retention 5 năm.
 
+<a id="muc-2-32-outbox-ha-tang-moi-schema-mot-bang-mau-transactional-ou"></a>
 ### 2.32. `outbox` — hạ tầng **mỗi schema một bảng** (mẫu transactional outbox)
 
 Bảng phát sự kiện tin cậy: dịch vụ ghi bản ghi nghiệp vụ **và** dòng `outbox` trong **CÙNG một transaction**; tiến trình relay đọc bảng này rồi publish sang **Kafka SAU COMMIT** → không bao giờ có chuyện «đã đổi DB nhưng mất sự kiện» (TSD §4, §5). Có mặt trong **cả 4 schema dịch vụ** (`merchant_identity` · `commerce` · `backoffice` · `notification`).
@@ -676,6 +761,7 @@ Bảng phát sự kiện tin cậy: dịch vụ ghi bản ghi nghiệp vụ **v�
 
 ---
 
+<a id="muc-3-bang-enum-tap-trung"></a>
 ## 3. Bảng enum tập trung
 
 Toàn bộ 28 enum (`TEXT` + `CHECK`) trong schema — giá trị đúng theo DDL TSD §5 (gồm «bổ sung chuẩn v1.1»), nghĩa tiếng Việt:
@@ -797,6 +883,7 @@ Giá trị quy ước không có CHECK trong DDL (tham khảo): `case.evidence[]
 
 ---
 
+<a id="muc-4-quan-he-khoa-ngoai-fk-tham-chieu-logic-xuyen-schema"></a>
 ## 4. Quan hệ khóa ngoại (FK) & tham chiếu logic xuyên schema
 
 **Quy tắc chốt (TSD §5)**: **FK vật lý (`REFERENCES`) CHỈ trong cùng schema**. Quan hệ **xuyên schema** = **tham chiếu LOGIC** — cột UUID trần, **không có ràng buộc `REFERENCES`**, không cascade, không join trực tiếp; dữ liệu lấy qua REST nội bộ hoặc sự kiện Kafka (bên nhận snapshot lại field cần dùng). Cột «Loại» dưới đây phân biệt hai nhóm — đây là **thay đổi so với v1.0/v1.1** (trước khi tách schema, mọi quan hệ đều là FK vật lý trong một schema `mms` duy nhất).
@@ -852,8 +939,10 @@ Giá trị quy ước không có CHECK trong DDL (tham khảo): `case.evidence[]
 
 ---
 
+<a id="muc-5-retention-du-lieu-ca-nhan-pii"></a>
 ## 5. Retention & dữ liệu cá nhân (PII)
 
+<a id="muc-5-1-thoi-han-luu-tru-tsd-5"></a>
 ### 5.1. Thời hạn lưu trữ (TSD §5)
 
 | Dữ liệu | Thời hạn | Ghi chú |
@@ -865,6 +954,7 @@ Giá trị quy ước không có CHECK trong DDL (tham khảo): `case.evidence[]
 | `idem_key` | 48 giờ | Cron purge |
 | Các bảng còn lại | Theo đời hệ thống | TSD không quy định thời hạn riêng |
 
+<a id="muc-5-2-ban-do-truong-pii-bi-mat-danh-dau-trong-2"></a>
 ### 5.2. Bản đồ trường PII/bí mật (đánh dấu 🔒 trong §2)
 
 | Nhóm | Trường | Biện pháp |
@@ -882,6 +972,7 @@ Giá trị quy ước không có CHECK trong DDL (tham khảo): `case.evidence[]
 | Portal | `app_user.email` | — |
 | Gián tiếp | `audit_log.payload` · `case.evidence[].object_key` (+object) | Có thể chứa PII — truy cập theo RBAC (inspector_read/supervisor_aml) |
 
+<a id="muc-5-3-ghi-chu-tuan-thu"></a>
 ### 5.3. Ghi chú tuân thủ
 
 - **Không có bảng tài khoản ảo**: kiến trúc chốt là QR/standee in **số TK thật đã liên kết** (Q4) — mọi truy vết dòng tiền dựa trên `account_link` + `credit_event`; MMS ngoài đường tiền, không giữ số dư.
@@ -893,6 +984,7 @@ Giá trị quy ước không có CHECK trong DDL (tham khảo): `case.evidence[]
 
 *Tài liệu sinh từ DDL TSD §5 (Peye-Haiti-TSD-001) — mọi sai khác giữa tài liệu này và migration thực tế tại `/db/migrations` phải được cập nhật ngược về cả hai phía. Tổng hợp: **28 bảng nghiệp vụ · 310 trường (20/08: +4 cột sca_* «v3.5»)** (15/08 Peye-Haiti: +bảng `payment` 18 trường, +`kyc_level`/`public_phone`/`account_link.person_id`; vòng 2: +`account_no_hmac`/`case.payment_id`; trước đó +7 trường CR-1/2/4/5/6/7) **+ bảng hạ tầng `outbox` 6 trường** (mỗi schema một bảng) · 28 enum/110 giá trị · **45 quan hệ: 25 FK vật lý (cùng schema) · 17 tham chiếu logic (xuyên schema) · 3 đa hình**. (v3.4 (CANON2): bỏ M7/M4b/qr_intent/report_schedule/buyer_profile, gộp device→auth_session (di 2 cột `fingerprint`/`is_agent_session`), matching 2 mức [bỏ `HIST`] — −4 bảng, −32 trường, −2 enum/−7 giá trị, −6 quan hệ; v3.3: bỏ API M5 + gộp còn 1 bậc KYC — bỏ 1 cột phân hạng định danh (−1 trường), 1 enum tương ứng (−1 enum/−2 giá trị), 2 tham số liên quan; v3.1: **mỗi dịch vụ một schema** — gộp `ingest`→`commerce`, `compliance`+`admin`→`backoffice`; bỏ cơ chế cửa sổ an toàn thiết bị (2 cột `device`), 4 quan hệ nâng lên FK vật lý; v3.0: **4 dịch vụ** — gộp biên lai vào `match_result`, chứng cứ vào `case.evidence` JSONB, danh mục agent vào `param` (bỏ 3 bảng `receipt`/`evidence`/`field_agent`); cờ khớp-muộn `late_auto` ghi trong chính transaction khớp; v2.0: event bus **Kafka**, bỏ mọi lệnh ghi nội bộ và khóa lạc quan xuyên dịch vụ, thêm bảng `outbox`; v1.1: +2 bảng `application`/`report_schedule` — bỏ cột hash PIN kênh USSD dự phòng của `person`.)*
 
+<a id="muc-6-phu-luc-ban-do-khai-bao-nhat-ky-giao-dich-quoc-gia-cr-8-15"></a>
 ## 6. Phụ lục — Bản đồ khai báo nhật ký giao dịch quốc gia (CR-8 · 15/08)
 
 Văn bản BRH 12/08 (Phần III.3) định nghĩa bản ghi nhật ký quốc gia gồm 7 nhóm trường A–G. MMS **ngoài đường tiền**, chỉ nhìn thấy PHÍA NHẬN — bảng dưới chứng minh MMS khai báo được góc nhìn merchant-system từ dữ liệu sẵn có, **không thêm bảng mới, không xây pipeline** (JNT trong dự án này là module nhỏ; hợp đồng dữ liệu bàn khi có thật).
